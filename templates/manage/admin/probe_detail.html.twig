@@ -1,0 +1,97 @@
+<div class="content-panel">
+    <div class="content-panel-body">
+        <p>
+            <a class="btn btn-secondary" href="{{ path('manage_probes') }}">Back to probes</a>
+            <a class="btn btn-primary" href="{{ runUrl }}">Run probe</a>
+        </p>
+
+        <h2>{{ probe.label }}</h2>
+        <table class="table datagrid">
+            <tbody>
+            <tr><th>Component</th><td><code>{{ probe.componentKey }}</code></td></tr>
+            <tr><th>Probe</th><td><code>{{ probe.probeKey }}</code></td></tr>
+            <tr><th>Enabled</th><td>{{ probe.enabled ? 'yes' : 'no' }}</td></tr>
+            <tr><th>Native runner</th><td>{{ nativeRunner ? 'yes' : 'no' }}</td></tr>
+            <tr><th>Description</th><td>{{ probe.description ?? 'n/a' }}</td></tr>
+            <tr>
+                <th>Component registered</th>
+                <td>
+                    {% if component %}
+                        yes — {{ component.label }}
+                    {% else %}
+                        <span class="text-muted">no component definition was found for this probe component key</span>
+                    {% endif %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Component resource context</h3>
+        <table class="table datagrid">
+            <thead><tr><th>Resource</th><th>Label</th><th>Mode</th><th>Entity</th></tr></thead>
+            <tbody>
+            {% for resource in relatedResources %}
+                <tr>
+                    <td><code>{{ resource.resourceKey }}</code></td>
+                    <td>{{ resource.label }}</td>
+                    <td><code>{{ resource.mode }}</code></td>
+                    <td><code>{{ resource.entityClass }}</code></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">No resources registered for this probe component.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Component route context</h3>
+        <table class="table datagrid">
+            <thead><tr><th>Route</th><th>Label</th><th>Kind</th><th>Enabled</th></tr></thead>
+            <tbody>
+            {% for route in relatedRoutes %}
+                <tr>
+                    <td><code>{{ route.routeName }}</code></td>
+                    <td>{{ route.label }}</td>
+                    <td><code>{{ route.kind }}</code></td>
+                    <td>{{ route.enabled ? 'yes' : 'no' }}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">No routes registered for this probe component.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Component form context</h3>
+        <table class="table datagrid">
+            <thead><tr><th>Form</th><th>Label</th><th>Form type</th><th>Resource</th></tr></thead>
+            <tbody>
+            {% for form in relatedForms %}
+                <tr>
+                    <td><code>{{ form.formKey }}</code></td>
+                    <td>{{ form.label }}</td>
+                    <td><code>{{ form.formTypeClass }}</code></td>
+                    <td>{% if form.resourceKey %}<code>{{ form.resourceKey }}</code>{% else %}<span class="text-muted">n/a</span>{% endif %}</td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">No forms registered for this probe component.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h3>Component relation context</h3>
+        <table class="table datagrid">
+            <thead><tr><th>Relation</th><th>Source</th><th>Target</th><th>Kind</th></tr></thead>
+            <tbody>
+            {% for relation in relatedRelations %}
+                <tr>
+                    <td><code>{{ relation.relationKey }}</code></td>
+                    <td><code>{{ relation.sourceResourceKey }}</code></td>
+                    <td><code>{{ relation.targetResourceKey }}</code></td>
+                    <td><code>{{ relation.kind }}</code></td>
+                </tr>
+            {% else %}
+                <tr><td colspan="4">No relations registered for this probe component.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

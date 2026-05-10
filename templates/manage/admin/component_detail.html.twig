@@ -1,0 +1,72 @@
+<p><a href="{{ path('manage_components') }}">← Back to components</a></p>
+
+<div class="content-panel">
+    <h2>{{ component.label }}</h2>
+    <p><code>{{ component.key }}</code></p>
+    {% if component.description %}<p>{{ component.description }}</p>{% endif %}
+</div>
+
+<h3>Resources</h3>
+<table class="table datagrid">
+    <thead><tr><th>Key</th><th>Label</th><th>Mode</th><th>Detail</th></tr></thead>
+    <tbody>
+    {% for resource in resources %}
+        <tr>
+            <td><code>{{ resource.resourceKey }}</code></td>
+            <td>{{ resource.label }}</td>
+            <td><code>{{ resource.mode }}</code></td>
+            <td><a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Open</a></td>
+        </tr>
+    {% else %}
+        <tr><td colspan="4">No resources.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Routes</h3>
+<table class="table datagrid">
+    <thead><tr><th>Name</th><th>Label</th><th>Kind</th></tr></thead>
+    <tbody>
+    {% for route in routes %}
+        <tr><td><code>{{ route.routeName }}</code></td><td>{{ route.label }}</td><td><code>{{ route.kind }}</code></td></tr>
+    {% else %}
+        <tr><td colspan="3">No routes.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Forms</h3>
+<table class="table datagrid">
+    <thead><tr><th>Key</th><th>Label</th><th>Form type</th></tr></thead>
+    <tbody>
+    {% for form in forms %}
+        <tr><td><code>{{ form.formKey }}</code></td><td>{{ form.label }}</td><td><code>{{ form.formTypeClass }}</code></td></tr>
+    {% else %}
+        <tr><td colspan="3">No forms.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Relations</h3>
+<table class="table datagrid">
+    <thead><tr><th>Key</th><th>Source</th><th>Target</th><th>Kind</th><th>Detail</th></tr></thead>
+    <tbody>
+    {% for relation in relations %}
+        <tr><td><code>{{ relation.relationKey }}</code></td><td><code>{{ relation.sourceResourceKey }}</code></td><td><code>{{ relation.targetResourceKey }}</code></td><td><code>{{ relation.kind }}</code></td><td><a class="btn btn-sm btn-secondary" href="{{ path('manage_relation_detail', {componentKey: relation.componentKey, relationKey: relation.relationKey}) }}">Open</a></td></tr>
+    {% else %}
+        <tr><td colspan="5">No relations.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Probes</h3>
+<table class="table datagrid">
+    <thead><tr><th>Key</th><th>Label</th><th>Description</th><th>Detail</th></tr></thead>
+    <tbody>
+    {% for probe in probes %}
+        <tr><td><code>{{ probe.probeKey }}</code></td><td>{{ probe.label }}</td><td>{{ probe.description ?? '' }}</td><td><a class="btn btn-sm btn-secondary" href="{{ path('manage_probe_detail', {componentKey: probe.componentKey, probeKey: probe.probeKey}) }}">Open</a></td></tr>
+    {% else %}
+        <tr><td colspan="4">No probes.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>

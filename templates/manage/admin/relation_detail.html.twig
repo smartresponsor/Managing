@@ -1,0 +1,51 @@
+{% set relation = relation %}
+
+<div class="content-panel">
+    <table class="table">
+        <tbody>
+        <tr><th>Component</th><td><code>{{ relation.componentKey }}</code></td></tr>
+        <tr><th>Relation key</th><td><code>{{ relation.relationKey }}</code></td></tr>
+        <tr><th>Label</th><td>{{ relation.label }}</td></tr>
+        <tr><th>Kind</th><td><code>{{ relation.kind }}</code></td></tr>
+        <tr><th>Menu group</th><td>{{ relation.menuGroup ?? 'n/a' }}</td></tr>
+        <tr><th>Surface</th><td><code>{{ relation.surface }}</code></td></tr>
+        <tr><th>Enabled</th><td>{{ relation.enabled ? 'yes' : 'no' }}</td></tr>
+        <tr><th>Description</th><td>{{ relation.description ?? 'n/a' }}</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h3>Endpoints</h3>
+<table class="table datagrid">
+    <thead><tr><th>Side</th><th>Resource key</th><th>Registered resource</th><th>Field</th><th>Detail</th></tr></thead>
+    <tbody>
+    <tr>
+        <td>Source</td>
+        <td><code>{{ relation.sourceResourceKey }}</code></td>
+        <td>{{ sourceResource ? sourceResource.label : 'missing' }}</td>
+        <td><code>{{ relation.sourceField ?? 'n/a' }}</code></td>
+        <td>
+            {% if sourceResource %}
+                <a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: sourceResource.componentKey, resourceKey: sourceResource.resourceKey}) }}">Open resource</a>
+            {% else %}
+                <span class="text-muted">not registered</span>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>Target</td>
+        <td><code>{{ relation.targetResourceKey }}</code></td>
+        <td>{{ targetResource ? targetResource.label : 'missing' }}</td>
+        <td><code>{{ relation.targetField ?? 'n/a' }}</code></td>
+        <td>
+            {% if targetResource %}
+                <a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: targetResource.componentKey, resourceKey: targetResource.resourceKey}) }}">Open resource</a>
+            {% else %}
+                <span class="text-muted">not registered</span>
+            {% endif %}
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<p><a class="btn btn-secondary" href="{{ path('manage_relations') }}">Back to relations</a></p>

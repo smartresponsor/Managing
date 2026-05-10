@@ -1,0 +1,68 @@
+<div class="content-panel">
+    <div class="content-panel-body">
+        <p class="text-muted">
+            This page shows the active Managing configuration that controls which connected components, resources,
+            routes and probes are visible in the native <code>/manage</code> admin console.
+        </p>
+
+        <h2 class="h5">Contribution filters</h2>
+        <table class="table table-sm table-striped">
+            <tbody>
+            <tr>
+                <th>Enabled components</th>
+                <td>{{ configuration.enabled_components is empty ? 'all' : configuration.enabled_components|join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Disabled resources</th>
+                <td>{{ configuration.disabled_resources is empty ? 'none' : configuration.disabled_resources|join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Menu order</th>
+                <td>{{ configuration.menu_order is empty ? 'provider order' : configuration.menu_order|join(', ') }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 class="h5 mt-4">Admin route guard</h2>
+        <table class="table table-sm table-striped">
+            <tbody>
+            <tr>
+                <th>Admin enabled</th>
+                <td>{{ configuration.admin_enabled ? 'yes' : 'no' }}</td>
+            </tr>
+            <tr>
+                <th>Admin route prefix</th>
+                <td><code>{{ configuration.admin_route_prefix }}</code></td>
+            </tr>
+            <tr>
+                <th>Allowed environments</th>
+                <td>{{ configuration.admin_allowed_environments is empty ? 'all' : configuration.admin_allowed_environments|join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Required role hint</th>
+                <td><code>{{ configuration.admin_required_role }}</code></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 class="h5 mt-4">Configured contribution counts</h2>
+        <table class="table table-sm table-striped">
+            <thead>
+            <tr>
+                <th>Section</th>
+                <th>Count</th>
+                <th>Keys</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for section in ['configured_components', 'configured_resources', 'configured_routes', 'configured_forms', 'configured_relations', 'configured_probes'] %}
+                <tr>
+                    <th>{{ section }}</th>
+                    <td>{{ configuration[section].count }}</td>
+                    <td>{{ configuration[section].keys is empty ? 'none' : configuration[section].keys|join(', ') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

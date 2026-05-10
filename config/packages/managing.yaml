@@ -1,0 +1,14 @@
+managing:
+  admin_enabled: true
+  admin_route_prefix: '/manage'
+  admin_allowed_environments: []
+  admin_required_role: 'ROLE_ADMIN'
+  admin_show_security_notes: true
+  enabled_components: []
+  disabled_resources: []
+  menu_order: []
+  configured_components: {}
+  configured_resources: []
+  configured_routes: []
+  configured_forms: []
+  configured_probes: []

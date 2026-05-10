@@ -1,0 +1,61 @@
+<div class="content-panel">
+    <div class="content-panel-body">
+        <p class="text-muted">
+            This page shows the active security/config guard for the native <code>/manage</code> admin console.
+            The bundle guards enabled state and environment scope; host-level authentication and role checks stay in the host security configuration.
+        </p>
+
+        <h2 class="h5">Admin guard</h2>
+        <table class="table table-sm table-striped">
+            <tbody>
+            <tr>
+                <th>Enabled</th>
+                <td>{{ security.policy.enabled ? 'yes' : 'no' }}</td>
+            </tr>
+            <tr>
+                <th>Route prefix</th>
+                <td><code>{{ security.policy.route_prefix }}</code></td>
+            </tr>
+            <tr>
+                <th>Current environment</th>
+                <td>{{ security.policy.current_environment }}</td>
+            </tr>
+            <tr>
+                <th>Allowed environments</th>
+                <td>{{ security.policy.allowed_environments is empty ? 'all' : security.policy.allowed_environments|join(', ') }}</td>
+            </tr>
+            <tr>
+                <th>Environment allowed</th>
+                <td>{{ security.policy.environment_allowed ? 'yes' : 'no' }}</td>
+            </tr>
+            <tr>
+                <th>Required role hint</th>
+                <td><code>{{ security.policy.required_role }}</code></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h2 class="h5 mt-4">Host access-control hint</h2>
+        <p class="text-muted">
+            Configure this in the host application if role-based protection is desired for the admin route.
+        </p>
+        <pre><code>access_control:
+  - { path: '{{ security.suggested_access_control }}', roles: {{ security.suggested_role }} }</code></pre>
+
+        <h2 class="h5 mt-4">Enforcement boundary</h2>
+        <ul>
+            {% for item in security.policy.enforcement %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+
+        {% if security.policy.warnings is not empty %}
+            <h2 class="h5 mt-4">Warnings</h2>
+            <ul>
+                {% for warning in security.policy.warnings %}
+                    <li>{{ warning }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>

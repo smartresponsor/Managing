@@ -1,0 +1,27 @@
+<table class="table datagrid">
+    <thead><tr><th>Component</th><th>Resource</th><th>Label</th><th>Entity</th><th>Mode</th><th>Resource path</th><th>Enabled</th><th>Inspect</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for row in rows %}
+        {% set resource = row.resource %}
+        <tr>
+            <td><code>{{ resource.componentKey }}</code></td>
+            <td><code>{{ resource.resourceKey }}</code></td>
+            <td>{{ resource.label }}</td>
+            <td><code>{{ resource.entityClass }}</code></td>
+            <td><code>{{ resource.mode }}</code></td>
+            <td>{% if resource.resourcePath %}<code>{{ resource.resourcePath }}</code>{% else %}<span class="text-muted">n/a</span>{% endif %}</td>
+            <td>{{ resource.enabled ? 'yes' : 'no' }}</td>
+            <td><a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Details</a></td>
+            <td>
+                {% for action, url in row.actions %}
+                    <a class="btn btn-sm btn-secondary" href="{{ url }}">{{ action }}</a>
+                {% else %}
+                    <span class="text-muted">No generated admin action</span>
+                {% endfor %}
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="9">No Manage CRUD resources registered yet.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>

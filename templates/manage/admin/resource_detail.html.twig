@@ -1,0 +1,65 @@
+<p><a href="{{ path('manage_resources') }}">← Back to resources</a></p>
+
+<div class="content-panel">
+    <h2>{{ resource.label }}</h2>
+    <p><code>{{ resource.componentKey }}.{{ resource.resourceKey }}</code></p>
+</div>
+
+<h3>Resource contract</h3>
+<table class="table datagrid">
+    <tbody>
+        <tr><th>Entity</th><td><code>{{ resource.entityClass }}</code></td></tr>
+        <tr><th>CRUD controller</th><td>{% if resource.crudControllerClass %}<code>{{ resource.crudControllerClass }}</code>{% else %}<span class="text-muted">n/a</span>{% endif %}</td></tr>
+        <tr><th>Form type</th><td>{% if resource.formTypeClass %}<code>{{ resource.formTypeClass }}</code>{% else %}<span class="text-muted">n/a</span>{% endif %}</td></tr>
+        <tr><th>Mode</th><td><code>{{ resource.mode }}</code></td></tr>
+        <tr><th>Resource path</th><td>{% if resource.resourcePath %}<code>{{ resource.resourcePath }}</code>{% else %}<span class="text-muted">n/a</span>{% endif %}</td></tr>
+        <tr><th>Identifier field</th><td><code>{{ resource.identifierField }}</code></td></tr>
+        <tr><th>Surface</th><td><code>{{ resource.surface }}</code></td></tr>
+        <tr><th>Template prefix</th><td><code>{{ resource.templatePrefix }}</code></td></tr>
+    </tbody>
+</table>
+
+<h3>Generated actions</h3>
+<p>
+    {% for action, url in actions %}
+        <a class="btn btn-secondary" href="{{ url }}">{{ action }}</a>
+    {% else %}
+        <span class="text-muted">No generated actions for this resource.</span>
+    {% endfor %}
+</p>
+
+<h3>Linked forms</h3>
+<table class="table datagrid">
+    <thead><tr><th>Key</th><th>Label</th><th>Form type</th></tr></thead>
+    <tbody>
+    {% for form in forms %}
+        <tr><td><code>{{ form.formKey }}</code></td><td>{{ form.label }}</td><td><code>{{ form.formTypeClass }}</code></td></tr>
+    {% else %}
+        <tr><td colspan="3">No linked forms.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Outgoing relations</h3>
+<table class="table datagrid">
+    <thead><tr><th>Key</th><th>Target</th><th>Kind</th><th>Description</th></tr></thead>
+    <tbody>
+    {% for relation in outgoingRelations %}
+        <tr><td><code>{{ relation.relationKey }}</code></td><td><code>{{ relation.targetResourceKey }}</code></td><td><code>{{ relation.kind }}</code></td><td>{{ relation.description ?? '' }}</td></tr>
+    {% else %}
+        <tr><td colspan="4">No outgoing relations.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h3>Incoming relations</h3>
+<table class="table datagrid">
+    <thead><tr><th>Key</th><th>Source</th><th>Kind</th><th>Description</th></tr></thead>
+    <tbody>
+    {% for relation in incomingRelations %}
+        <tr><td><code>{{ relation.relationKey }}</code></td><td><code>{{ relation.sourceResourceKey }}</code></td><td><code>{{ relation.kind }}</code></td><td>{{ relation.description ?? '' }}</td></tr>
+    {% else %}
+        <tr><td colspan="4">No incoming relations.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>

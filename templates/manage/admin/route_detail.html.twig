@@ -1,0 +1,28 @@
+{% set route = route %}
+
+<div class="content-panel">
+    <table class="table">
+        <tbody>
+        <tr><th>Component</th><td><code>{{ route.componentKey }}</code></td></tr>
+        <tr><th>Route name</th><td><code>{{ route.routeName }}</code></td></tr>
+        <tr><th>Label</th><td>{{ route.label }}</td></tr>
+        <tr><th>Kind</th><td><code>{{ route.kind }}</code></td></tr>
+        <tr><th>Menu group</th><td>{{ route.menuGroup ?? 'n/a' }}</td></tr>
+        <tr><th>Enabled</th><td>{{ route.enabled ? 'yes' : 'no' }}</td></tr>
+        <tr>
+            <th>Resolved URL</th>
+            <td>
+                {% if url %}
+                    <a class="btn btn-sm btn-secondary" href="{{ url }}">open route</a>
+                    <code>{{ url }}</code>
+                {% else %}
+                    <span class="text-muted">not resolvable without parameters or unavailable route</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr><th>Routable</th><td>{{ routable ? 'yes' : 'no' }}</td></tr>
+        </tbody>
+    </table>
+
+    <p><a class="btn btn-secondary" href="{{ path('manage_routes') }}">Back to routes</a></p>
+</div>

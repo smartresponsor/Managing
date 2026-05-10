@@ -1,0 +1,67 @@
+<div class="content-panel">
+    <div class="content-panel-body">
+        <h2>Workbench status</h2>
+        <table class="table datagrid">
+            <tbody>
+            {% for key, value in diagnostics.counts %}
+                <tr>
+                    <th>{{ key }}</th>
+                    <td>{{ value }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Cruding bridge</h2>
+        <table class="table datagrid">
+            <tbody>
+                <tr>
+                    <th>Available</th>
+                    <td>{{ diagnostics.cruding.available ? 'yes' : 'no' }}</td>
+                </tr>
+                <tr>
+                    <th>Mode</th>
+                    <td><code>{{ diagnostics.cruding.mode }}</code></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Resource modes</h2>
+        <table class="table datagrid">
+            <thead><tr><th>Mode</th><th>Count</th></tr></thead>
+            <tbody>
+            {% for mode, count in diagnostics.modes %}
+                <tr>
+                    <td><code>{{ mode }}</code></td>
+                    <td>{{ count }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Resource action readiness</h2>
+        <table class="table datagrid">
+            <thead><tr><th>Component</th><th>Resource</th><th>Mode</th><th>Resource path</th><th>Enabled</th><th>Actions</th></tr></thead>
+            <tbody>
+            {% for row in diagnostics.resources %}
+                <tr>
+                    <td><code>{{ row.component }}</code></td>
+                    <td><code>{{ row.resource }}</code></td>
+                    <td><code>{{ row.mode }}</code></td>
+                    <td>{% if row.resourcePath %}<code>{{ row.resourcePath }}</code>{% else %}<span class="text-muted">n/a</span>{% endif %}</td>
+                    <td>{{ row.enabled ? 'yes' : 'no' }}</td>
+                    <td>
+                        {% for action in row.actions %}
+                            <span class="badge badge-secondary">{{ action }}</span>
+                        {% else %}
+                            <span class="text-muted">none</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="6">No resources registered yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

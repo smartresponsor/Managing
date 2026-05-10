@@ -1,0 +1,151 @@
+= Managing Component
+
+Managing is the Smart Responsor native management/admin console component.
+
+It mounts as a Symfony-native EasyAdmin workbench under `/manage` and aggregates explicit Manage contributions from connected standalone components. It is not the central application dashboard, does not render through Interfacing/Bridging, and does not own foreign business logic.
+
+== Canon
+
+* Component namespace: `App\Managing\...`
+* Component package: `smart-responsor/managing`
+* Business stem: `Manage`
+* Component classes use the `Manage*` prefix.
+* Database prefix: `manage_`
+* Public management route: `/manage`
+* EasyAdmin is the primary renderer for the `/manage` admin console.
+* CRUD route patterns remain owned by the CRUD component/repository.
+* Individual standalone routes are exposed only through explicit `ManageRouteDefinition` entries.
+* External components contribute metadata through DI-tagged providers.
+* Host applications may enable, disable, order, or secure contributions, but should not hardcode the full admin model.
+
+== Modes
+
+Standalone mode::
+Managing can boot with its own local providers and internal persistence such as `ManageSnapshot` or `ManageProbeRun`.
+
+Ecosystem mode::
+The host application wires providers from connected components through Symfony DI tags. Managing consumes those contributions and renders the working admin under `/manage`.
+
+== Provider tag
+
+Services implementing `ManageAdminProviderInterface` should be tagged as:
+
+[source,yaml]
+----
+tags: ['manage.admin_provider']
+----
+
+When autoconfiguration is enabled, the bundle adds this tag automatically for services implementing the interface.
+
+
+== Wave 3 admin workbench additions
+
+The component now registers its own `ManageSelfAdminProvider`, so `/manage` is useful in standalone mode before ecosystem components contribute resources.
+
+Wave 3 also adds generated EasyAdmin action links for enabled `ManageCrudResourceDefinition` entries and safe URL resolution for declared `ManageRouteDefinition` entries. The admin console remains EasyAdmin-native and independent from Interfacing/Bridging.
+
+== Wave 4 configurable ecosystem intake
+
+Wave 4 keeps the admin focused on `/manage` and adds two non-invasive ways for neighboring components to appear in the console without changing those repositories in this wave:
+
+* native DI-tagged providers implementing `ManageAdminProviderInterface`;
+* host-defined configuration in `managing.yaml` for temporary or explicit resources, routes, probes, and component labels.
+
+Example host configuration:
+
+[source,yaml]
+----
+managing:
+  enabled_components: []
+  disabled_resources: []
+  menu_order:
+    - managing
+    - paying
+    - ordering
+
+  configured_components:
+    paying:
+      label: Paying
+      description: Payment and refund workbench entries.
+
+  configured_resources:
+    - component: paying
+      key: payment
+      label: Payments
+      entity_class: App\Paying\Entity\Payment
+      mode: custom_route
+      route_name_pattern: paying_payment_index
+      resource_path: paying/payments
+
+  configured_routes:
+    - component: paying
+      route_name: paying_payment_index
+      label: Payment index
+      kind: crud
+      menu_group: Paying
+
+  configured_probes:
+    - component: paying
+      key: payment_smoke
+      label: Payment smoke probe
+      description: Placeholder probe shown by the Manage console.
+----
+
+`enabled_components`, `disabled_resources`, and `menu_order` are now applied by the `ManageContributionFilter` before dashboard counts, pages, and menu links are rendered.
+
+
+== Wave 5: optional Cruding bridge
+
+`Managing` can now expose `cruding_link` resources without taking a hard dependency on the `Cruding` repository.
+When `App\Cruding\ServiceInterface\Crud\CrudRouteNameResolverInterface` and `App\Cruding\Dto\Crud\CrudContext` are available in the host container, `ManageCrudingRouteBridge` builds `index` and `new` action URLs through the Cruding resolver.
+When Cruding is absent, `/manage` remains operational and simply emits no generated Cruding actions.
+
+Example configured resource:
+
+[source,yaml]
+----
+managing:
+  configured_resources:
+    - component: paying
+      key: payment
+      label: Payments
+      entity_class: App\Paying\Entity\Payment
+      mode: cruding_link
+      resource_path: paying/payments
+      identifier_field: id
+      surface: admin
+      template_prefix: crud
+----
+
+
+== Wave 8: configuration inspection
+
+The native `/manage` admin console now exposes `/manage/configuration` for checking enabled components, disabled resources, menu ordering, and configured contribution counts without touching host or neighbor repositories.
+
+
+== Wave 14
+
+Adds relation detail inspection under `/manage/relations/{componentKey}/{relationKey}`.
+
+== Wave 16 admin navigation
+
+The native `/manage` console exposes a primary navigation model through `ManageAdminNavigationBuilder`.
+This keeps dashboard quick-links aligned with registered Manage contribution counts without depending on Interfacing or Bridging.
+
+
+== Wave 17: Manage admin security/config guard
+
+The native `/manage` admin console now exposes a security/config inspection page and a lightweight request guard.
+The bundle enforces `admin_enabled` and `admin_allowed_environments` for the configured route prefix.
+Host-level authentication and role checks remain host-owned and should be configured through the host application's security `access_control` rules.
+
+Canonical defaults:
+
+[source,yaml]
+----
+managing:
+  admin_enabled: true
+  admin_route_prefix: '/manage'
+  admin_allowed_environments: []
+  admin_required_role: 'ROLE_ADMIN'
+----
