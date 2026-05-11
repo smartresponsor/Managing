@@ -21,7 +21,7 @@ final class ManageWorkbenchController extends AbstractController
     #[Route('/manage/workbench', name: 'manage_workbench', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Manage workbench index',
             'content_title' => 'Manage workbench index',
             'content' => $this->renderView('manage/admin/workbench.html.twig', [

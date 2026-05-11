@@ -28,6 +28,8 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
         $container->setParameter('managing.admin_allowed_environments', $config['admin_allowed_environments']);
         $container->setParameter('managing.admin_required_role', $config['admin_required_role']);
         $container->setParameter('managing.admin_show_security_notes', $config['admin_show_security_notes']);
+        $container->setParameter('managing.admin_logout_path', $config['admin_logout_path']);
+        $container->setParameter('managing.admin_logout_label', $config['admin_logout_label']);
         $container->setParameter('managing.configured_components', $config['configured_components']);
         $container->setParameter('managing.configured_resources', $config['configured_resources']);
         $container->setParameter('managing.configured_routes', $config['configured_routes']);

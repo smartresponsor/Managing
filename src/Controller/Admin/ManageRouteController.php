@@ -38,7 +38,7 @@ final class ManageRouteController extends AbstractController
             ];
         }
 
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Manage routes',
             'content_title' => 'Manage routes',
             'content' => $this->renderView('manage/admin/routes.html.twig', [
@@ -56,7 +56,7 @@ final class ManageRouteController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage route "%s/%s" was not found.', $componentKey, $routeName));
         }
 
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Manage route detail',
             'content_title' => 'Manage route detail',
             'content' => $this->renderView('manage/admin/route_detail.html.twig', $detail),

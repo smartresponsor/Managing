@@ -32,6 +32,14 @@
                 <th>Required role hint</th>
                 <td><code>{{ security.policy.required_role }}</code></td>
             </tr>
+            <tr>
+                <th>Logout path</th>
+                <td><code>{{ security.policy.logout_path }}</code></td>
+            </tr>
+            <tr>
+                <th>Logout label</th>
+                <td>{{ security.policy.logout_label }}</td>
+            </tr>
             </tbody>
         </table>
 
@@ -41,6 +49,16 @@
         </p>
         <pre><code>access_control:
   - { path: '{{ security.suggested_access_control }}', roles: {{ security.suggested_role }} }</code></pre>
+
+        <h2 class="h5 mt-4">Host logout hint</h2>
+        <p class="text-muted">
+            The EasyAdmin user menu keeps a visible logout entry. The host firewall should intercept the configured path.
+        </p>
+        <pre><code>firewalls:
+  main:
+    logout:
+      path: '{{ security.policy.logout_path }}'
+      target: '/'</code></pre>
 
         <h2 class="h5 mt-4">Enforcement boundary</h2>
         <ul>

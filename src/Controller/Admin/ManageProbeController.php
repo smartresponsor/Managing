@@ -41,7 +41,7 @@ final class ManageProbeController extends AbstractController
             ];
         }
 
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Manage probes',
             'content_title' => 'Manage probes',
             'content' => $this->renderView('manage/admin/probes.html.twig', [
@@ -59,7 +59,7 @@ final class ManageProbeController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage probe "%s/%s" was not found.', $componentKey, $probeKey));
         }
 
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Manage probe detail',
             'content_title' => 'Manage probe detail',
             'content' => $this->renderView('manage/admin/probe_detail.html.twig', array_merge($detail, [
@@ -79,7 +79,7 @@ final class ManageProbeController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage probe "%s/%s" was not found.', $componentKey, $probeKey));
         }
 
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Run Manage probe',
             'content_title' => 'Run Manage probe',
             'content' => $this->renderView('manage/admin/probe_result.html.twig', [

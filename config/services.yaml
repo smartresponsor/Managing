@@ -42,6 +42,14 @@ services:
   App\Managing\ServiceInterface\Admin\ManageAdminNavigationBuilderInterface:
     alias: App\Managing\Service\Admin\ManageAdminNavigationBuilder
 
+  App\Managing\Service\Admin\ManageAdminUserMenuBuilder:
+    arguments:
+      $logoutPath: '%managing.admin_logout_path%'
+      $logoutLabel: '%managing.admin_logout_label%'
+
+  App\Managing\ServiceInterface\Admin\ManageAdminUserMenuBuilderInterface:
+    alias: App\Managing\Service\Admin\ManageAdminUserMenuBuilder
+
   App\Managing\ServiceInterface\Resource\ManageResourceRegistryInterface:
     alias: App\Managing\Service\Resource\ManageResourceRegistry
 
@@ -97,6 +105,8 @@ services:
       $adminAllowedEnvironments: '%managing.admin_allowed_environments%'
       $adminRequiredRole: '%managing.admin_required_role%'
       $adminShowSecurityNotes: '%managing.admin_show_security_notes%'
+      $adminLogoutPath: '%managing.admin_logout_path%'
+      $adminLogoutLabel: '%managing.admin_logout_label%'
       $configuredComponents: '%managing.configured_components%'
       $configuredResources: '%managing.configured_resources%'
       $configuredRoutes: '%managing.configured_routes%'
@@ -137,6 +147,8 @@ services:
       $allowedEnvironments: '%managing.admin_allowed_environments%'
       $requiredRole: '%managing.admin_required_role%'
       $showSecurityNotes: '%managing.admin_show_security_notes%'
+      $logoutPath: '%managing.admin_logout_path%'
+      $logoutLabel: '%managing.admin_logout_label%'
       $currentEnvironment: '%kernel.environment%'
 
   App\Managing\ServiceInterface\Security\ManageAdminAccessPolicyInterface:

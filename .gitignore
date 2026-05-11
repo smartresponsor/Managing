@@ -3,6 +3,7 @@
 /var/
 /vendor/
 .phpunit.result.cache
+*.zip
 
 ###> symfony/framework-bundle ###
 /.env.local

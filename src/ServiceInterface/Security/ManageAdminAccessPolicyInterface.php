@@ -7,7 +7,7 @@ namespace App\Managing\ServiceInterface\Security;
 interface ManageAdminAccessPolicyInterface
 {
     /**
-     * @return array{enabled: bool, route_prefix: string, allowed_environments: array<int, string>, current_environment: string, environment_allowed: bool, required_role: string, show_security_notes: bool, enforcement: array<int, string>, warnings: array<int, string>}
+     * @return array{enabled: bool, route_prefix: string, allowed_environments: array<int, string>, current_environment: string, environment_allowed: bool, required_role: string, show_security_notes: bool, logout_path: string, logout_label: string, enforcement: array<int, string>, warnings: array<int, string>}
      */
     public function describe(): array;
 
@@ -16,4 +16,8 @@ interface ManageAdminAccessPolicyInterface
     public function isEnvironmentAllowed(): bool;
 
     public function getRoutePrefix(): string;
+
+    public function getLogoutPath(): string;
+
+    public function getLogoutLabel(): string;
 }

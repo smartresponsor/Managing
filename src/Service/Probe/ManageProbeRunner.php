@@ -56,11 +56,11 @@ final readonly class ManageProbeRunner implements ManageProbeRunnerInterface
             $messages[] = 'Missing ManageDashboardController.';
         } else {
             $dashboardSource = (string) file_get_contents($dashboardPath);
-            if (!str_contains($dashboardSource, "#[Route('/manage'")) {
+            if (!str_contains($dashboardSource, "#[AdminDashboard(routePath: '/manage', routeName: 'manage_dashboard')]")) {
                 $status = ManageProbeResult::STATUS_FAILED;
-                $messages[] = 'ManageDashboardController does not declare /manage route.';
+                $messages[] = 'ManageDashboardController does not declare native EasyAdmin /manage dashboard.';
             } else {
-                $messages[] = 'ManageDashboardController declares /manage route.';
+                $messages[] = 'ManageDashboardController declares native EasyAdmin /manage dashboard.';
             }
         }
 

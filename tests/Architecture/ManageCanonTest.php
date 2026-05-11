@@ -60,7 +60,7 @@ final class ManageCanonTest extends TestCase
         $dashboard = file_get_contents(dirname(__DIR__, 2).'/src/Controller/Admin/ManageDashboardController.php');
 
         self::assertIsString($dashboard);
-        self::assertStringContainsString("#[Route('/manage', name: 'manage_dashboard')]", $dashboard);
+        self::assertStringContainsString("#[AdminDashboard(routePath: '/manage', routeName: 'manage_dashboard')]", $dashboard);
         self::assertStringNotContainsString("#[Route('/admin'", $dashboard);
     }
 }

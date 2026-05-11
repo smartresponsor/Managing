@@ -34,7 +34,7 @@ final class ManageResourceController extends AbstractController
             ];
         }
 
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Manage resources',
             'content_title' => 'Manage resources',
             'content' => $this->renderView('manage/admin/resources.html.twig', [
@@ -52,7 +52,7 @@ final class ManageResourceController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage resource "%s.%s" was not found.', $componentKey, $resourceKey));
         }
 
-        return $this->render('manage/page/content.html.twig', [
+        return $this->render('@EasyAdmin/page/content.html.twig', [
             'page_title' => 'Manage resource detail',
             'content_title' => 'Manage resource detail',
             'content' => $this->renderView('manage/admin/resource_detail.html.twig', $detail),

@@ -4,6 +4,8 @@ managing:
   admin_allowed_environments: []
   admin_required_role: 'ROLE_ADMIN'
   admin_show_security_notes: true
+  admin_logout_path: '/logout'
+  admin_logout_label: 'Logout'
   enabled_components: []
   disabled_resources: []
   menu_order: []
