@@ -30,15 +30,9 @@ final class ManageDashboardController extends AbstractDashboardController
 
     public function index(): Response
     {
-        $summary = $this->summaryBuilder->buildSummary();
-
-        return $this->render('@EasyAdmin/page/content.html.twig', [
-            'page_title' => 'Managing admin',
-            'content_title' => 'Managing admin',
-            'content' => $this->renderView('manage/admin/dashboard_summary.html.twig', [
-                'summary' => $summary,
-                'navigation' => $this->navigationBuilder->buildPrimaryNavigation(),
-            ]),
+        return $this->render('manage/admin/dashboard.html.twig', [
+            'summary' => $this->summaryBuilder->buildSummary(),
+            'navigation' => $this->navigationBuilder->buildPrimaryNavigation(),
         ]);
     }
 

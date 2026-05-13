@@ -31,6 +31,10 @@ foreach ($iterator as $file) {
         $violations[] = $relative.' depends on Interfacing/Bridging; /manage must stay EasyAdmin-native';
     }
 
+    if (str_contains($contents, 'MenuItem::linkToCrud(')) {
+        $violations[] = $relative.' uses removed/unsupported EasyAdmin MenuItem::linkToCrud(); use Manage detail/action links instead';
+    }
+
     if (preg_match('/(?:class|interface|trait|enum)\s+(?!ManagingBundle|Configuration|ManagingExtension)([A-Z][A-Za-z0-9_]*)/', $contents, $match)) {
         $name = $match[1];
         if (!str_starts_with($name, 'Manage')) {
@@ -68,6 +72,17 @@ $composerPath = $root.'/composer.json';
 $composer = is_file($composerPath) ? json_decode((string) file_get_contents($composerPath), true) : null;
 if (!is_array($composer) || (($composer['require']['twig/html-extra'] ?? null) === null)) {
     $violations[] = 'composer.json must require twig/html-extra for EasyAdmin html_classes() support';
+}
+
+
+$shimPath = $root.'/src/Twig/ManageHtmlClassesExtension.php';
+if (!is_file($shimPath)) {
+    $violations[] = 'Managing must provide ManageHtmlClassesExtension shim until every host reliably installs twig/html-extra';
+} else {
+    $shim = file_get_contents($shimPath) ?: '';
+    if (!str_contains($shim, "new TwigFunction('html_classes'")) {
+        $violations[] = 'ManageHtmlClassesExtension must expose html_classes() Twig function';
+    }
 }
 
 $servicesPath = $root.'/config/services.yaml';

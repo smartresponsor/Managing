@@ -44,8 +44,10 @@ final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
                     continue;
                 }
 
-                $items[] = MenuItem::linkToCrud($resource->label, 'fa fa-table', $resource->entityClass)
-                    ->setController($resource->crudControllerClass);
+                $items[] = MenuItem::linkToRoute($resource->label, 'fa fa-table', 'manage_resource_detail', [
+                    'componentKey' => $resource->componentKey,
+                    'resourceKey' => $resource->resourceKey,
+                ]);
             }
 
             foreach ($provider->getRoutes() as $route) {
