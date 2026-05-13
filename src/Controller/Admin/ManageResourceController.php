@@ -34,12 +34,12 @@ final class ManageResourceController extends AbstractController
             ];
         }
 
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage resources',
-            'content_title' => 'Manage resources',
-            'content' => $this->renderView('manage/admin/resources.html.twig', [
+            'body_template' => 'manage/admin/resources.html.twig',
+            'body_context' => [
                 'rows' => $rows,
-            ]),
+            ],
         ]);
     }
 
@@ -52,10 +52,10 @@ final class ManageResourceController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage resource "%s.%s" was not found.', $componentKey, $resourceKey));
         }
 
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage resource detail',
-            'content_title' => 'Manage resource detail',
-            'content' => $this->renderView('manage/admin/resource_detail.html.twig', $detail),
+            'body_template' => 'manage/admin/resource_detail.html.twig',
+            'body_context' => $detail,
         ]);
     }
 }

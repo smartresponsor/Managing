@@ -23,12 +23,12 @@ final class ManageComponentController extends AbstractController
     #[Route('/manage/components', name: 'manage_components', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage components',
-            'content_title' => 'Manage components',
-            'content' => $this->renderView('manage/admin/components.html.twig', [
+            'body_template' => 'manage/admin/components.html.twig',
+            'body_context' => [
                 'components' => $this->adminRegistry->getComponents(),
-            ]),
+            ],
         ]);
     }
 
@@ -41,10 +41,10 @@ final class ManageComponentController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage component "%s" was not found.', $componentKey));
         }
 
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage component detail',
-            'content_title' => 'Manage component detail',
-            'content' => $this->renderView('manage/admin/component_detail.html.twig', $detail),
+            'body_template' => 'manage/admin/component_detail.html.twig',
+            'body_context' => $detail,
         ]);
     }
 }

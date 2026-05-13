@@ -21,12 +21,12 @@ final class ManageConfigurationController extends AbstractController
     #[Route('/manage/configuration', name: 'manage_configuration', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage configuration',
-            'content_title' => 'Manage configuration',
-            'content' => $this->renderView('manage/admin/configuration.html.twig', [
+            'body_template' => 'manage/admin/configuration.html.twig',
+            'body_context' => [
                 'configuration' => $this->configurationViewBuilder->buildConfigurationView(),
-            ]),
+            ],
         ]);
     }
 }

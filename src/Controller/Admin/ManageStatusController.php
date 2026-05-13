@@ -21,12 +21,12 @@ final class ManageStatusController extends AbstractController
     #[Route('/manage/status', name: 'manage_status', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage status',
-            'content_title' => 'Manage status',
-            'content' => $this->renderView('manage/admin/status.html.twig', [
+            'body_template' => 'manage/admin/status.html.twig',
+            'body_context' => [
                 'diagnostics' => $this->diagnosticsBuilder->buildDiagnostics(),
-            ]),
+            ],
         ]);
     }
 }

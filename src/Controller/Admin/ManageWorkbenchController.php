@@ -21,12 +21,12 @@ final class ManageWorkbenchController extends AbstractController
     #[Route('/manage/workbench', name: 'manage_workbench', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage workbench index',
-            'content_title' => 'Manage workbench index',
-            'content' => $this->renderView('manage/admin/workbench.html.twig', [
+            'body_template' => 'manage/admin/workbench.html.twig',
+            'body_context' => [
                 'index' => $this->workbenchIndexBuilder->buildIndex(),
-            ]),
+            ],
         ]);
     }
 }

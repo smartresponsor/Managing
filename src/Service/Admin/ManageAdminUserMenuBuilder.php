@@ -26,6 +26,7 @@ final readonly class ManageAdminUserMenuBuilder implements ManageAdminUserMenuBu
             ->addMenuItems([
                 MenuItem::linkToRoute('Security contract', 'fa fa-shield-halved', 'manage_security'),
                 MenuItem::section(),
+                MenuItem::linkToUrl('Switch account', 'fa fa-right-left', '/switch-account'),
                 MenuItem::linkToUrl($this->resolveLogoutLabel(), 'fa fa-sign-out-alt', $this->resolveLogoutPath()),
             ]);
 

@@ -23,12 +23,12 @@ final class ManageRelationController extends AbstractController
     #[Route('/manage/relations', name: 'manage_relations', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage relations',
-            'content_title' => 'Manage relations',
-            'content' => $this->renderView('manage/admin/relations.html.twig', [
+            'body_template' => 'manage/admin/relations.html.twig',
+            'body_context' => [
                 'relations' => $this->relationRegistry->getRelations(),
-            ]),
+            ],
         ]);
     }
 
@@ -41,10 +41,10 @@ final class ManageRelationController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage relation "%s/%s" was not found.', $componentKey, $relationKey));
         }
 
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage relation detail',
-            'content_title' => 'Manage relation detail',
-            'content' => $this->renderView('manage/admin/relation_detail.html.twig', $detail),
+            'body_template' => 'manage/admin/relation_detail.html.twig',
+            'body_context' => $detail,
         ]);
     }
 }

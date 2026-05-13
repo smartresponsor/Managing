@@ -20,12 +20,12 @@ final class ManageSecurityController extends AbstractController
     #[Route('/manage/security', name: 'manage_security')]
     public function index(): Response
     {
-        return $this->render('@EasyAdmin/page/content.html.twig', [
+        return $this->render('manage/admin/page.html.twig', [
             'page_title' => 'Manage security',
-            'content_title' => 'Manage security',
-            'content' => $this->renderView('manage/admin/security.html.twig', [
+            'body_template' => 'manage/admin/security.html.twig',
+            'body_context' => [
                 'security' => $this->securityViewBuilder->buildSecurityView(),
-            ]),
+            ],
         ]);
     }
 }
