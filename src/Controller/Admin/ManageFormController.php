@@ -35,12 +35,12 @@ final class ManageFormController extends AbstractController
             ];
         }
 
-        return $this->render('manage/admin/page.html.twig', [
+        return $this->render('manage/admin/content.html.twig', [
             'page_title' => 'Manage forms',
-            'body_template' => 'manage/admin/forms.html.twig',
-            'body_context' => [
+            'content_title' => 'Manage forms',
+            'content' => $this->renderView('manage/admin/forms.html.twig', [
                 'rows' => $rows,
-            ],
+            ]),
         ]);
     }
 
@@ -53,10 +53,10 @@ final class ManageFormController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage form "%s/%s" was not found.', $componentKey, $formKey));
         }
 
-        return $this->render('manage/admin/page.html.twig', [
+        return $this->render('manage/admin/content.html.twig', [
             'page_title' => 'Manage form detail',
-            'body_template' => 'manage/admin/form_detail.html.twig',
-            'body_context' => $detail,
+            'content_title' => 'Manage form detail',
+            'content' => $this->renderView('manage/admin/form_detail.html.twig', $detail),
         ]);
     }
 }

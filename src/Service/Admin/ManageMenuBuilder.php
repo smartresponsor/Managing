@@ -7,7 +7,6 @@ namespace App\Managing\Service\Admin;
 use App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface;
 use App\Managing\ServiceInterface\Admin\ManageContributionFilterInterface;
 use App\Managing\ServiceInterface\Admin\ManageMenuBuilderInterface;
-use App\Managing\Value\ManageCrudResourceDefinition;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
 final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
@@ -37,10 +36,7 @@ final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
             $items = [];
 
             foreach ($provider->getCrudResources() as $resource) {
-                if (!$this->contributionFilter->isCrudResourceEnabled($resource)
-                    || ManageCrudResourceDefinition::MODE_EASYADMIN !== $resource->mode
-                    || null === $resource->crudControllerClass
-                ) {
+                if (!$this->contributionFilter->isCrudResourceEnabled($resource)) {
                     continue;
                 }
 
@@ -51,7 +47,7 @@ final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
             }
 
             foreach ($provider->getRoutes() as $route) {
-                if (!$this->contributionFilter->isRouteEnabled($route)) {
+                if (!$this->contributionFilter->isRouteEnabled($route) || 'host_route' === $route->kind) {
                     continue;
                 }
 

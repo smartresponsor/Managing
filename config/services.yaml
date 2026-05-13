@@ -17,6 +17,18 @@ services:
       $disabledResources: '%managing.disabled_resources%'
       $menuOrder: '%managing.menu_order%'
 
+
+
+  App\Managing\Service\Admin\ManageHostApplicationAdminProvider:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $router: '@?router'
+      $enabled: '%managing.host_scan_enabled%'
+      $sourceRoots: '%managing.host_scan_source_roots%'
+      $namespacePrefixes: '%managing.host_scan_namespace_prefixes%'
+      $excludedNamespaces: '%managing.host_scan_excluded_namespaces%'
+    tags: ['manage.admin_provider']
+
   App\Managing\Service\Admin\ManageConfiguredAdminProvider:
     arguments:
       $components: '%managing.configured_components%'
@@ -113,6 +125,10 @@ services:
       $configuredForms: '%managing.configured_forms%'
       $configuredRelations: '%managing.configured_relations%'
       $configuredProbes: '%managing.configured_probes%'
+      $hostScanEnabled: '%managing.host_scan_enabled%'
+      $hostScanSourceRoots: '%managing.host_scan_source_roots%'
+      $hostScanNamespacePrefixes: '%managing.host_scan_namespace_prefixes%'
+      $hostScanExcludedNamespaces: '%managing.host_scan_excluded_namespaces%'
 
   App\Managing\ServiceInterface\Admin\ManageConfigurationViewBuilderInterface:
     alias: App\Managing\Service\Admin\ManageConfigurationViewBuilder

@@ -19,6 +19,9 @@ final readonly class ManageConfigurationViewBuilder implements ManageConfigurati
      * @param array<mixed>       $configuredForms
      * @param array<mixed>       $configuredRelations
      * @param array<mixed>       $configuredProbes
+     * @param array<int, string> $hostScanSourceRoots
+     * @param array<int, string> $hostScanNamespacePrefixes
+     * @param array<int, string> $hostScanExcludedNamespaces
      */
     public function __construct(
         private array $enabledComponents,
@@ -37,6 +40,10 @@ final readonly class ManageConfigurationViewBuilder implements ManageConfigurati
         private array $configuredForms,
         private array $configuredRelations,
         private array $configuredProbes,
+        private bool $hostScanEnabled = false,
+        private array $hostScanSourceRoots = [],
+        private array $hostScanNamespacePrefixes = [],
+        private array $hostScanExcludedNamespaces = [],
     ) {
     }
 
@@ -62,6 +69,10 @@ final readonly class ManageConfigurationViewBuilder implements ManageConfigurati
             'configured_forms' => $this->summarizeConfiguredList($this->configuredForms),
             'configured_relations' => $this->summarizeConfiguredList($this->configuredRelations),
             'configured_probes' => $this->summarizeConfiguredList($this->configuredProbes),
+            'host_scan_enabled' => $this->hostScanEnabled,
+            'host_scan_source_roots' => $this->hostScanSourceRoots,
+            'host_scan_namespace_prefixes' => $this->hostScanNamespacePrefixes,
+            'host_scan_excluded_namespaces' => $this->hostScanExcludedNamespaces,
         ];
     }
 

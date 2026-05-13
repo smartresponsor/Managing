@@ -41,12 +41,12 @@ final class ManageProbeController extends AbstractController
             ];
         }
 
-        return $this->render('manage/admin/page.html.twig', [
+        return $this->render('manage/admin/content.html.twig', [
             'page_title' => 'Manage probes',
-            'body_template' => 'manage/admin/probes.html.twig',
-            'body_context' => [
+            'content_title' => 'Manage probes',
+            'content' => $this->renderView('manage/admin/probes.html.twig', [
                 'rows' => $rows,
-            ],
+            ]),
         ]);
     }
 
@@ -59,15 +59,15 @@ final class ManageProbeController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage probe "%s/%s" was not found.', $componentKey, $probeKey));
         }
 
-        return $this->render('manage/admin/page.html.twig', [
+        return $this->render('manage/admin/content.html.twig', [
             'page_title' => 'Manage probe detail',
-            'body_template' => 'manage/admin/probe_detail.html.twig',
-            'body_context' => array_merge($detail, [
+            'content_title' => 'Manage probe detail',
+            'content' => $this->renderView('manage/admin/probe_detail.html.twig', array_merge($detail, [
                 'runUrl' => $this->generateUrl('manage_probe_run', [
                     'componentKey' => $componentKey,
                     'probeKey' => $probeKey,
                 ]),
-            ]),
+            ])),
         ]);
     }
 
@@ -79,13 +79,13 @@ final class ManageProbeController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage probe "%s/%s" was not found.', $componentKey, $probeKey));
         }
 
-        return $this->render('manage/admin/page.html.twig', [
+        return $this->render('manage/admin/content.html.twig', [
             'page_title' => 'Run Manage probe',
-            'body_template' => 'manage/admin/probe_result.html.twig',
-            'body_context' => [
+            'content_title' => 'Run Manage probe',
+            'content' => $this->renderView('manage/admin/probe_result.html.twig', [
                 'probe' => $probe,
                 'result' => $this->probeRunner->runProbe($probe),
-            ],
+            ]),
         ]);
     }
 

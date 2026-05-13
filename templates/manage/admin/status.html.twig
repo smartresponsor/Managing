@@ -12,6 +12,40 @@
             </tbody>
         </table>
 
+
+        <h2>Registered providers</h2>
+        <table class="table datagrid">
+            <thead><tr><th>Component</th><th>Provider class</th><th>Diagnostics</th></tr></thead>
+            <tbody>
+            {% for provider in diagnostics.providers %}
+                <tr>
+                    <td><code>{{ provider.component }}</code><br>{{ provider.label }}</td>
+                    <td><code>{{ provider.class }}</code></td>
+                    <td>
+                        {% if provider.diagnostics is empty %}
+                            <span class="text-muted">none</span>
+                        {% else %}
+                            <dl class="mb-0">
+                                {% for key, value in provider.diagnostics %}
+                                    <dt><code>{{ key }}</code></dt>
+                                    <dd>
+                                        {% if value is iterable %}
+                                            <pre class="small mb-2">{{ value|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                        {% else %}
+                                            <code>{{ value }}</code>
+                                        {% endif %}
+                                    </dd>
+                                {% endfor %}
+                            </dl>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="3">No providers registered yet.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
         <h2>Cruding bridge</h2>
         <table class="table datagrid">
             <tbody>

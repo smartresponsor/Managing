@@ -30,6 +30,10 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
         $container->setParameter('managing.admin_show_security_notes', $config['admin_show_security_notes']);
         $container->setParameter('managing.admin_logout_path', $config['admin_logout_path']);
         $container->setParameter('managing.admin_logout_label', $config['admin_logout_label']);
+        $container->setParameter('managing.host_scan_enabled', $config['host_scan_enabled']);
+        $container->setParameter('managing.host_scan_source_roots', $config['host_scan_source_roots']);
+        $container->setParameter('managing.host_scan_namespace_prefixes', $config['host_scan_namespace_prefixes']);
+        $container->setParameter('managing.host_scan_excluded_namespaces', $config['host_scan_excluded_namespaces']);
         $container->setParameter('managing.configured_components', $config['configured_components']);
         $container->setParameter('managing.configured_resources', $config['configured_resources']);
         $container->setParameter('managing.configured_routes', $config['configured_routes']);

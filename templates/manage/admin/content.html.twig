@@ -4,11 +4,13 @@
 
 {% block body %}
     <section class="manage-panel">
-        {% if page_title is defined and page_title is not empty %}
+        {% if content_title is defined and content_title is not empty %}
+            <h1 class="manage-title">{{ content_title }}</h1>
+        {% elseif page_title is defined and page_title is not empty %}
             <h1 class="manage-title">{{ page_title }}</h1>
         {% endif %}
-        {% if body_template is defined %}
-            {% include body_template with body_context|default({}) only %}
+        {% if content is not empty %}
+            {{ content|raw }}
         {% endif %}
     </section>
 {% endblock %}

@@ -65,7 +65,28 @@ final readonly class ManageAdminDiagnosticsBuilder implements ManageAdminDiagnos
             ];
         }
 
+        $providerRows = [];
+        foreach ($this->adminRegistry->getProviders() as $provider) {
+            $component = $provider->getComponent();
+            $row = [
+                'class' => $provider::class,
+                'component' => $component->key,
+                'label' => $component->label,
+                'diagnostics' => [],
+            ];
+
+            if (method_exists($provider, 'getDiagnostics')) {
+                $diagnostics = $provider->getDiagnostics();
+                if (is_array($diagnostics)) {
+                    $row['diagnostics'] = $diagnostics;
+                }
+            }
+
+            $providerRows[] = $row;
+        }
+
         return [
+            'providers' => $providerRows,
             'counts' => [
                 'providers' => count($this->adminRegistry->getProviders()),
                 'components' => count($this->adminRegistry->getComponents()),
