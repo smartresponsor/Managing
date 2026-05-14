@@ -6,6 +6,7 @@ namespace App\Managing\Service\Admin;
 
 use App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface;
 use App\Managing\ServiceInterface\Admin\ManageComponentDetailBuilderInterface;
+use App\Managing\ServiceInterface\Crud\ManageCrudActionUrlBuilderInterface;
 use App\Managing\ServiceInterface\Crud\ManageCrudResourceRegistryInterface;
 use App\Managing\ServiceInterface\Form\ManageFormRegistryInterface;
 use App\Managing\ServiceInterface\Probe\ManageProbeRegistryInterface;
@@ -18,6 +19,7 @@ final readonly class ManageComponentDetailBuilder implements ManageComponentDeta
     public function __construct(
         private ManageAdminRegistryInterface $adminRegistry,
         private ManageCrudResourceRegistryInterface $crudResourceRegistry,
+        private ManageCrudActionUrlBuilderInterface $actionUrlBuilder,
         private ManageRouteRegistryInterface $routeRegistry,
         private ManageFormRegistryInterface $formRegistry,
         private ManageRelationRegistryInterface $relationRegistry,
@@ -35,7 +37,7 @@ final readonly class ManageComponentDetailBuilder implements ManageComponentDeta
 
         return [
             'component' => $component,
-            'resources' => $this->filterByComponent($this->crudResourceRegistry->getCrudResources(), $componentKey),
+            'resourceRows' => $this->buildResourceRows($componentKey),
             'routes' => $this->filterByComponent($this->routeRegistry->getRoutes(), $componentKey),
             'forms' => $this->filterByComponent($this->formRegistry->getForms(), $componentKey),
             'relations' => $this->filterByComponent($this->relationRegistry->getRelations(), $componentKey),
@@ -70,5 +72,26 @@ final readonly class ManageComponentDetailBuilder implements ManageComponentDeta
         }
 
         return $filtered;
+    }
+
+    /**
+     * @return list<array{resource: object, actions: array<string, string>}>
+     */
+    private function buildResourceRows(string $componentKey): array
+    {
+        $rows = [];
+
+        foreach ($this->crudResourceRegistry->getCrudResources() as $resource) {
+            if (!property_exists($resource, 'componentKey') || $resource->componentKey !== $componentKey) {
+                continue;
+            }
+
+            $rows[] = [
+                'resource' => $resource,
+                'actions' => $this->actionUrlBuilder->buildActionUrls($resource),
+            ];
+        }
+
+        return $rows;
     }
 }

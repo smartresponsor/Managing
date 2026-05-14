@@ -144,8 +144,8 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
                 routeNamePattern: null,
                 menuGroup: 'Host application',
                 enabled: true,
-                mode: ManageCrudResourceDefinition::MODE_CUSTOM_ROUTE,
-                resourcePath: $this->relativePath($file),
+                mode: ManageCrudResourceDefinition::MODE_CRUDING_LINK,
+                resourcePath: sprintf('%s/%s', $componentKey, $this->resourcePathSegmentFromClass($className)),
                 identifierField: 'id',
                 surface: 'admin',
                 templatePrefix: 'crud',
@@ -471,6 +471,14 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     private function resourceKeyFromClass(string $className): string
     {
         return $this->slug($this->shortClassName($className));
+    }
+
+    private function resourcePathSegmentFromClass(string $className): string
+    {
+        $shortName = $this->shortClassName($className);
+        $shortName = preg_replace('/Entity$/', '', $shortName) ?? $shortName;
+
+        return $this->slug($shortName);
     }
 
     private function componentLabel(string $componentKey): string

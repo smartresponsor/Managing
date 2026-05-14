@@ -1,0 +1,52 @@
+<div class="content-panel">
+    <div class="content-panel-body">
+        <div class="d-flex justify-content-between align-items-start mb-3">
+            <div>
+                <h2 class="h4 mb-1">{{ resource.label }}</h2>
+                <p class="text-muted mb-0"><code>{{ resource.componentKey }}.{{ resource.resourceKey }}</code></p>
+            </div>
+            <a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Contract</a>
+        </div>
+
+        <p class="text-muted">
+            Resource index resolved from the host application. When Cruding or a native EasyAdmin CRUD controller is available,
+            the action buttons below point to the real CRUD surface.
+        </p>
+
+        <div class="mb-3">
+            {% if actions.index is defined %}<a class="btn btn-primary" href="{{ actions.index }}">Index</a>{% endif %}
+            {% if actions.new is defined %}<a class="btn btn-secondary" href="{{ actions.new }}">New</a>{% endif %}
+            {% if actions.edit is defined %}<a class="btn btn-secondary" href="{{ actions.edit }}">Edit</a>{% endif %}
+            {% if actions.delete is defined %}<a class="btn btn-danger" href="{{ actions.delete }}">Delete</a>{% endif %}
+            {% if actions is empty %}<span class="text-muted">No generated CRUD action URLs yet.</span>{% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="content-panel mt-3">
+    <div class="content-panel-body">
+        <h3 class="h5">Entity records preview</h3>
+        {% if not sample.available %}
+            <p class="text-muted">{{ sample.note }}</p>
+        {% elseif sample.columns is empty %}
+            <p class="text-muted">No scalar Doctrine fields were detected for this entity.</p>
+        {% else %}
+            <table class="table datagrid">
+                <thead>
+                <tr>
+                    {% for column in sample.columns %}<th>{{ column }}</th>{% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in sample.rows %}
+                    <tr>
+                        {% for column in sample.columns %}<td>{{ row[column] }}</td>{% endfor %}
+                    </tr>
+                {% else %}
+                    <tr><td colspan="{{ sample.columns|length }}">No records found.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</div>

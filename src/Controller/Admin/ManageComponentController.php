@@ -42,8 +42,8 @@ final class ManageComponentController extends AbstractController
         }
 
         return $this->render('manage/admin/content.html.twig', [
-            'page_title' => 'Manage component detail',
-            'content_title' => 'Manage component detail',
+            'page_title' => sprintf('%s index', $detail['component']->label),
+            'content_title' => sprintf('%s index', $detail['component']->label),
             'content' => $this->renderView('manage/admin/component_detail.html.twig', $detail),
         ]);
     }
