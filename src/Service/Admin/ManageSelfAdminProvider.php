@@ -57,7 +57,7 @@ final readonly class ManageSelfAdminProvider implements ManageAdminProviderInter
         yield new ManageRouteDefinition('managing', 'manage_dashboard', 'Dashboard', 'admin', 'Workbench');
         yield new ManageRouteDefinition('managing', 'manage_status', 'Status', 'inspection', 'Workbench');
         yield new ManageRouteDefinition('managing', 'manage_workbench', 'Workbench index', 'inspection', 'Workbench');
-        yield new ManageRouteDefinition('managing', 'manage_components', 'Components', 'inspection', 'Workbench');
+        yield new ManageRouteDefinition('managing', 'manage_dashboard_components_index', 'Components', 'inspection', 'Workbench');
         yield new ManageRouteDefinition('managing', 'manage_resources', 'Resources', 'inspection', 'Workbench');
         yield new ManageRouteDefinition('managing', 'manage_routes', 'Routes', 'inspection', 'Workbench');
         yield new ManageRouteDefinition('managing', 'manage_forms', 'Forms', 'inspection', 'Workbench');

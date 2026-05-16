@@ -17,11 +17,21 @@ services:
       $disabledResources: '%managing.disabled_resources%'
       $menuOrder: '%managing.menu_order%'
 
+  App\Managing\Service\Admin\ManageMenuBuilder:
+    arguments:
+      $menuComponents: '%managing.menu_components%'
+
+  App\Managing\Service\Admin\ManageComponentDetailBuilder:
+    arguments:
+      $businessIndexResources: '%managing.business_index_resources%'
+      $businessIndexRoutes: '%managing.business_index_routes%'
+
 
 
   App\Managing\Service\Admin\ManageHostApplicationAdminProvider:
     arguments:
       $projectDir: '%kernel.project_dir%'
+      $cache: '@cache.app'
       $router: '@?router'
       $enabled: '%managing.host_scan_enabled%'
       $sourceRoots: '%managing.host_scan_source_roots%'

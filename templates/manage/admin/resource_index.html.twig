@@ -8,18 +8,10 @@
             <a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Contract</a>
         </div>
 
-        <p class="text-muted">
-            Resource index resolved from the host application. When Cruding or a native EasyAdmin CRUD controller is available,
-            the action buttons below point to the real CRUD surface.
-        </p>
-
-        <div class="mb-3">
-            {% if actions.index is defined %}<a class="btn btn-primary" href="{{ actions.index }}">Index</a>{% endif %}
-            {% if actions.new is defined %}<a class="btn btn-secondary" href="{{ actions.new }}">New</a>{% endif %}
-            {% if actions.edit is defined %}<a class="btn btn-secondary" href="{{ actions.edit }}">Edit</a>{% endif %}
-            {% if actions.delete is defined %}<a class="btn btn-danger" href="{{ actions.delete }}">Delete</a>{% endif %}
-            {% if actions is empty %}<span class="text-muted">No generated CRUD action URLs yet.</span>{% endif %}
-        </div>
+        <p class="text-muted">Business records stay inside the Manage surface. Native CRUD actions, if present, are treated as backend capability, not as the primary navigation target.</p>
+        {% if actions.index is defined %}
+            <p class="text-muted mb-0">Native CRUD controller detected for this resource.</p>
+        {% endif %}
     </div>
 </div>
 

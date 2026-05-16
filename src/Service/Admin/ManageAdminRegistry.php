@@ -8,6 +8,7 @@ use App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface;
 use App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface;
 use App\Managing\ServiceInterface\Admin\ManageContributionFilterInterface;
 use App\Managing\Value\ManageComponentDefinition;
+use App\Managing\Value\ManageCrudResourceDefinition;
 
 final class ManageAdminRegistry implements ManageAdminRegistryInterface
 {
@@ -48,5 +49,28 @@ final class ManageAdminRegistry implements ManageAdminRegistryInterface
         }
 
         return $this->contributionFilter->sortComponents(array_values($components));
+    }
+
+    /**
+     * @return list<ManageCrudResourceDefinition>
+     */
+    public function getCrudResources(): array
+    {
+        $resources = [];
+
+        foreach ($this->getProviders() as $provider) {
+            foreach ($provider->getCrudResources() as $resource) {
+                if ($resource instanceof ManageCrudResourceDefinition && $this->contributionFilter->isCrudResourceEnabled($resource)) {
+                    $resources[] = $resource;
+                }
+            }
+        }
+
+        usort(
+            $resources,
+            static fn (ManageCrudResourceDefinition $left, ManageCrudResourceDefinition $right): int => [$left->componentKey, $left->label, $left->resourceKey] <=> [$right->componentKey, $right->label, $right->resourceKey],
+        );
+
+        return $resources;
     }
 }

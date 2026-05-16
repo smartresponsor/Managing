@@ -9,6 +9,32 @@ managing:
   enabled_components: []
   disabled_resources: []
   menu_order: []
+  menu_components:
+    - accessing
+    - analysing
+    - applicating
+    - attaching
+    - billing
+    - bridging
+    - cataloging
+    - commissioning
+    - cruding
+    - currencing
+    - exchanging
+    - indexing
+    - interfacing
+    - localizing
+    - managing
+    - messaging
+    - ordering
+    - paging
+    - paying
+    - rolling
+    - shipping
+    - subscripting
+    - tagging
+    - taxating
+    - vendoring
   host_scan_enabled: true
   host_scan_source_roots: ['src']
   host_scan_namespace_prefixes: ['App\\']
@@ -18,3 +44,6 @@ managing:
   configured_routes: []
   configured_forms: []
   configured_probes: []
+  business_index_resources:
+    cataloging:
+      - catalog_category_entity

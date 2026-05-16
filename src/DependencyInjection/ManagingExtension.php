@@ -23,6 +23,7 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
         $container->setParameter('managing.enabled_components', $config['enabled_components']);
         $container->setParameter('managing.disabled_resources', $config['disabled_resources']);
         $container->setParameter('managing.menu_order', $config['menu_order']);
+        $container->setParameter('managing.menu_components', $config['menu_components']);
         $container->setParameter('managing.admin_enabled', $config['admin_enabled']);
         $container->setParameter('managing.admin_route_prefix', $config['admin_route_prefix']);
         $container->setParameter('managing.admin_allowed_environments', $config['admin_allowed_environments']);
@@ -40,6 +41,8 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
         $container->setParameter('managing.configured_forms', $config['configured_forms']);
         $container->setParameter('managing.configured_relations', $config['configured_relations']);
         $container->setParameter('managing.configured_probes', $config['configured_probes']);
+        $container->setParameter('managing.business_index_resources', $config['business_index_resources']);
+        $container->setParameter('managing.business_index_routes', $config['business_index_routes']);
 
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__, 2).'/config'));
         $loader->load('services.yaml');

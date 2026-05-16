@@ -34,7 +34,14 @@ final class ManageResourceController extends AbstractController
         foreach ($this->crudResourceRegistry->getCrudResources() as $resource) {
             $rows[] = [
                 'resource' => $resource,
-                'actions' => $this->actionUrlBuilder->buildActionUrls($resource),
+                'indexUrl' => $this->generateUrl('manage_resource_index', [
+                    'componentKey' => $resource->componentKey,
+                    'resourceKey' => $resource->resourceKey,
+                ]),
+                'detailUrl' => $this->generateUrl('manage_resource_detail', [
+                    'componentKey' => $resource->componentKey,
+                    'resourceKey' => $resource->resourceKey,
+                ]),
             ];
         }
 
@@ -56,15 +63,15 @@ final class ManageResourceController extends AbstractController
             throw $this->createNotFoundException(sprintf('Manage resource "%s.%s" was not found.', $componentKey, $resourceKey));
         }
 
-        $sample = $this->buildEntitySample($resource);
+        $actions = $this->actionUrlBuilder->buildActionUrls($resource);
 
         return $this->render('manage/admin/content.html.twig', [
             'page_title' => $resource->label,
             'content_title' => $resource->label,
             'content' => $this->renderView('manage/admin/resource_index.html.twig', [
                 'resource' => $resource,
-                'actions' => $this->actionUrlBuilder->buildActionUrls($resource),
-                'sample' => $sample,
+                'actions' => $actions,
+                'sample' => $this->buildEntitySample($resource),
             ]),
         ]);
     }

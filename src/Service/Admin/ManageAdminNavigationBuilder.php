@@ -28,7 +28,7 @@ final readonly class ManageAdminNavigationBuilder implements ManageAdminNavigati
             ],
             [
                 'label' => 'Components',
-                'route' => 'manage_components',
+                'route' => 'manage_dashboard_components_index',
                 'icon' => 'fa fa-cubes',
                 'count' => $summary['components'],
                 'description' => 'Registered component contributions visible to the admin console.',

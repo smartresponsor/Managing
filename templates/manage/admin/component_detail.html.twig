@@ -1,34 +1,83 @@
-<p><a href="{{ path('manage_components') }}">← Back to components</a></p>
+<p><a href="{{ path('manage_dashboard_components_index') }}">← Back to components</a></p>
 
 <div class="content-panel">
-    <h2>{{ component.label }}</h2>
-    <p><code>{{ component.key }}</code></p>
-    {% if component.description %}<p>{{ component.description }}</p>{% endif %}
+    <div class="content-panel-body">
+        <h2 class="h3 mb-1">{{ component.label }} index</h2>
+        <p class="text-muted mb-0">Business content backed by live Doctrine records.</p>
+    </div>
 </div>
 
-<h3>Resources</h3>
-<table class="table datagrid">
-    <thead><tr><th>Key</th><th>Label</th><th>Entity</th><th>Mode</th><th>Index</th><th>Details</th><th>Actions</th></tr></thead>
-    <tbody>
-    {% for row in resourceRows %}
-        {% set resource = row.resource %}
-        <tr>
-            <td><code>{{ resource.resourceKey }}</code></td>
-            <td>{{ resource.label }}</td>
-            <td><code>{{ resource.entityClass }}</code></td>
-            <td><code>{{ resource.mode }}</code></td>
-            <td><a class="btn btn-sm btn-primary" href="{{ path('manage_resource_index', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Open</a></td>
-            <td><a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Details</a></td>
-            <td>
-                {% for action, url in row.actions %}
-                    <a class="btn btn-sm btn-secondary" href="{{ url }}">{{ action }}</a>
-                {% else %}
-                    <span class="text-muted">No generated admin action</span>
-                {% endfor %}
-            </td>
-        </tr>
-    {% else %}
-        <tr><td colspan="7">No resources.</td></tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% if businessIndex is null %}
+    <div class="content-panel mt-3">
+        <div class="content-panel-body text-muted">No business index is configured for this component.</div>
+    </div>
+{% elseif businessIndex.kind == 'routes' %}
+    <div class="row g-3 mt-3">
+        {% for item in businessIndex.routes %}
+            {% set route = item.route %}
+            <div class="col-12 col-xl-6">
+                <div class="content-panel h-100">
+                    <div class="content-panel-body">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div>
+                                <h3 class="h5 mb-1">{{ route.label }}</h3>
+                                <p class="text-muted mb-0"><code>{{ route.routeName }}</code></p>
+                            </div>
+                            <a class="btn btn-sm btn-primary" href="{{ path('manage_route_detail', {componentKey: route.componentKey, routeName: route.routeName}) }}">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-12">
+                <div class="content-panel">
+                    <div class="content-panel-body text-muted">No business routes configured.</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    {% set resource = businessIndex.resource %}
+    {% set sample = businessIndex.sample %}
+    <div class="content-panel mt-3">
+        <div class="content-panel-body">
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                <div>
+                    <h3 class="h5 mb-1">{{ resource.label }}</h3>
+                    <p class="text-muted mb-0">Live Doctrine content index.</p>
+                </div>
+                <a class="btn btn-sm btn-primary" href="{{ path('manage_resource_index', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Open</a>
+                <a class="btn btn-sm btn-secondary" href="{{ path('manage_resource_detail', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Contract</a>
+            </div>
+
+            {% if not sample.available %}
+                <p class="text-muted mb-0">{{ sample.note }}</p>
+            {% elseif sample.columns is empty %}
+                <p class="text-muted mb-0">No scalar Doctrine fields were detected for this entity.</p>
+            {% else %}
+                <table class="table datagrid">
+                    <thead>
+                    <tr>
+                        {% for column in sample.columns %}
+                            <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in sample.rows %}
+                        <tr>
+                            {% for column in sample.columns %}
+                                <td>{{ row[column] }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="{{ sample.columns|length }}">No records found.</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

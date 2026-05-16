@@ -10,6 +10,7 @@ use App\Managing\Value\ManageCrudResourceDefinition;
 use App\Managing\Value\ManageFormDefinition;
 use App\Managing\Value\ManageRouteDefinition;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Contracts\Cache\CacheInterface;
 
 final class ManageHostApplicationAdminProvider implements ManageAdminProviderInterface
 {
@@ -32,6 +33,7 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
      */
     public function __construct(
         private readonly string $projectDir,
+        private readonly CacheInterface $cache,
         private readonly ?RouterInterface $router = null,
         private readonly bool $enabled = true,
         private readonly array $sourceRoots = ['src'],
@@ -52,7 +54,7 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     /** @return iterable<ManageCrudResourceDefinition> */
     public function getCrudResources(): iterable
     {
-        foreach ($this->resources ??= $this->discoverResources() as $resource) {
+        foreach ($this->resources ??= $this->cache->get('managing.host_app.crud_resources', fn (): array => $this->discoverResources()) as $resource) {
             yield $resource;
         }
     }
@@ -60,7 +62,7 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     /** @return iterable<ManageRouteDefinition> */
     public function getRoutes(): iterable
     {
-        foreach ($this->routes ??= $this->discoverRoutes() as $route) {
+        foreach ($this->routes ??= $this->cache->get('managing.host_app.routes', fn (): array => $this->discoverRoutes()) as $route) {
             yield $route;
         }
     }
@@ -68,7 +70,7 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     /** @return iterable<ManageFormDefinition> */
     public function getForms(): iterable
     {
-        foreach ($this->forms ??= $this->discoverForms() as $form) {
+        foreach ($this->forms ??= $this->cache->get('managing.host_app.forms', fn (): array => $this->discoverForms()) as $form) {
             yield $form;
         }
     }
@@ -134,17 +136,19 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
             $resourceKey = $this->resourceKeyFromClass($className);
             $shortName = $this->shortClassName($className);
 
+            $crudControllerClass = $this->discoverCrudControllerClass($className);
+
             $resources[$componentKey.'.'.$resourceKey] = new ManageCrudResourceDefinition(
                 componentKey: $componentKey,
                 resourceKey: $resourceKey,
                 label: $this->humanize($shortName),
                 entityClass: $className,
-                crudControllerClass: null,
+                crudControllerClass: $crudControllerClass,
                 formTypeClass: null,
                 routeNamePattern: null,
                 menuGroup: 'Host application',
                 enabled: true,
-                mode: ManageCrudResourceDefinition::MODE_CRUDING_LINK,
+                mode: null !== $crudControllerClass ? ManageCrudResourceDefinition::MODE_EASYADMIN : ManageCrudResourceDefinition::MODE_CRUDING_LINK,
                 resourcePath: sprintf('%s/%s', $componentKey, $this->resourcePathSegmentFromClass($className)),
                 identifierField: 'id',
                 surface: 'admin',
@@ -304,61 +308,63 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
             return $this->psr4Roots;
         }
 
-        $roots = [];
-        $composerFile = $this->projectDir.'/composer.json';
+        return $this->psr4Roots = $this->cache->get('managing.host_app.psr4_roots', function (): array {
+            $roots = [];
+            $composerFile = $this->projectDir.'/composer.json';
 
-        if (is_file($composerFile)) {
-            $json = json_decode((string) file_get_contents($composerFile), true);
-            $autoload = is_array($json) ? ($json['autoload']['psr-4'] ?? []) : [];
+            if (is_file($composerFile)) {
+                $json = json_decode((string) file_get_contents($composerFile), true);
+                $autoload = is_array($json) ? ($json['autoload']['psr-4'] ?? []) : [];
 
-            if (is_array($autoload)) {
-                foreach ($autoload as $namespace => $paths) {
-                    foreach ((array) $paths as $path) {
-                        if (!is_string($namespace) || !is_string($path)) {
-                            continue;
+                if (is_array($autoload)) {
+                    foreach ($autoload as $namespace => $paths) {
+                        foreach ((array) $paths as $path) {
+                            if (!is_string($namespace) || !is_string($path)) {
+                                continue;
+                            }
+
+                            $roots[$namespace] = $this->absolutePath($path);
                         }
-
-                        $roots[$namespace] = $this->absolutePath($path);
                     }
                 }
             }
-        }
 
-        foreach ($this->namespacePrefixes as $namespacePrefix) {
-            if (!isset($roots[$namespacePrefix])) {
-                $roots[$namespacePrefix] = $this->projectDir.'/src';
-            }
-        }
-
-        foreach ($this->workspaceComposerFiles() as $composerFile) {
-            $json = json_decode((string) file_get_contents($composerFile), true);
-            $autoload = is_array($json) ? ($json['autoload']['psr-4'] ?? []) : [];
-            if (!is_array($autoload)) {
-                continue;
+            foreach ($this->namespacePrefixes as $namespacePrefix) {
+                if (!isset($roots[$namespacePrefix])) {
+                    $roots[$namespacePrefix] = $this->projectDir.'/src';
+                }
             }
 
-            $packageDir = dirname($composerFile);
-            foreach ($autoload as $namespace => $paths) {
-                if (!is_string($namespace) || $this->isExcludedNamespace($namespace)) {
+            foreach ($this->workspaceComposerFiles() as $composerFile) {
+                $json = json_decode((string) file_get_contents($composerFile), true);
+                $autoload = is_array($json) ? ($json['autoload']['psr-4'] ?? []) : [];
+                if (!is_array($autoload)) {
                     continue;
                 }
 
-                foreach ((array) $paths as $path) {
-                    if (!is_string($path)) {
+                $packageDir = dirname($composerFile);
+                foreach ($autoload as $namespace => $paths) {
+                    if (!is_string($namespace) || $this->isExcludedNamespace($namespace)) {
                         continue;
                     }
 
-                    $absolute = $this->absolutePathFrom($packageDir, $path);
-                    if (is_dir($absolute)) {
-                        $roots[$namespace] = $absolute;
+                    foreach ((array) $paths as $path) {
+                        if (!is_string($path)) {
+                            continue;
+                        }
+
+                        $absolute = $this->absolutePathFrom($packageDir, $path);
+                        if (is_dir($absolute)) {
+                            $roots[$namespace] = $absolute;
+                        }
                     }
                 }
             }
-        }
 
-        krsort($roots);
+            krsort($roots);
 
-        return $this->psr4Roots = $roots;
+            return $roots;
+        });
     }
 
     /**
@@ -366,29 +372,31 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
      */
     private function workspaceComposerFiles(): array
     {
-        $workspaceDir = realpath(dirname($this->projectDir));
-        if (false === $workspaceDir || !is_dir($workspaceDir)) {
-            return [];
-        }
-
-        $composerFiles = [];
-
-        foreach (new \DirectoryIterator($workspaceDir) as $directory) {
-            if ($directory->isDot() || !$directory->isDir()) {
-                continue;
+        return $this->cache->get('managing.host_app.workspace_composer_files', function (): array {
+            $workspaceDir = realpath(dirname($this->projectDir));
+            if (false === $workspaceDir || !is_dir($workspaceDir)) {
+                return [];
             }
 
-            $composerFile = $directory->getPathname().DIRECTORY_SEPARATOR.'composer.json';
-            if (!is_file($composerFile)) {
-                continue;
+            $composerFiles = [];
+
+            foreach (new \DirectoryIterator($workspaceDir) as $directory) {
+                if ($directory->isDot() || !$directory->isDir()) {
+                    continue;
+                }
+
+                $composerFile = $directory->getPathname().DIRECTORY_SEPARATOR.'composer.json';
+                if (!is_file($composerFile)) {
+                    continue;
+                }
+
+                $composerFiles[] = $composerFile;
             }
 
-            $composerFiles[] = $composerFile;
-        }
+            sort($composerFiles);
 
-        sort($composerFiles);
-
-        return $composerFiles;
+            return $composerFiles;
+        });
     }
 
     private function absolutePathFrom(string $baseDir, string $path): string
@@ -466,6 +474,35 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         $prefix = strtok($routeName, '_');
 
         return is_string($prefix) && '' !== $prefix ? $this->slug($prefix) : 'host_application';
+    }
+
+    private function discoverCrudControllerClass(string $entityClass): ?string
+    {
+        $parts = explode('\\', $entityClass);
+        $shortName = $this->shortClassName($entityClass);
+        $componentPrefix = isset($parts[1]) && !in_array($parts[1], ['Entity', 'Form', 'Controller'], true) ? $parts[1] : '';
+
+        $candidates = [];
+        if (str_contains($entityClass, '\\Entity\\')) {
+            $candidates[] = str_replace('\\Entity\\', '\\Controller\\Crud\\', $entityClass).'CrudController';
+        }
+
+        if ('' !== $componentPrefix && str_contains($entityClass, sprintf('\\%s\\Entity\\', $componentPrefix))) {
+            $candidates[] = sprintf('App\\%s\\Controller\\Crud\\%s%sCrudController', $componentPrefix, $componentPrefix, $shortName);
+            $candidates[] = sprintf('App\\%s\\Controller\\Admin\\%s%sCrudController', $componentPrefix, $componentPrefix, $shortName);
+            $candidates[] = sprintf('App\\%s\\Controller\\Admin\\%sCrudController', $componentPrefix, $shortName);
+        }
+
+        $candidates[] = sprintf('App\\Controller\\Crud\\%sCrudController', $shortName);
+        $candidates[] = sprintf('App\\Controller\\Admin\\%sCrudController', $shortName);
+
+        foreach (array_unique($candidates) as $candidate) {
+            if (class_exists($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return null;
     }
 
     private function resourceKeyFromClass(string $className): string

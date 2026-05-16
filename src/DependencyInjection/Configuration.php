@@ -28,6 +28,36 @@ final class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                     ->defaultValue([])
                 ->end()
+                ->arrayNode('menu_components')
+                    ->scalarPrototype()->end()
+                    ->defaultValue([
+                        'accessing',
+                        'analysing',
+                        'applicating',
+                        'attaching',
+                        'billing',
+                        'bridging',
+                        'cataloging',
+                        'commissioning',
+                        'cruding',
+                        'currencing',
+                        'exchanging',
+                        'indexing',
+                        'interfacing',
+                        'localizing',
+                        'managing',
+                        'messaging',
+                        'ordering',
+                        'paging',
+                        'paying',
+                        'rolling',
+                        'shipping',
+                        'subscripting',
+                        'tagging',
+                        'taxating',
+                        'vendoring',
+                    ])
+                ->end()
                 ->booleanNode('admin_enabled')
                     ->defaultTrue()
                 ->end()
@@ -81,6 +111,12 @@ final class Configuration implements ConfigurationInterface
                     ->defaultValue([])
                 ->end()
                 ->variableNode('configured_probes')
+                    ->defaultValue([])
+                ->end()
+                ->variableNode('business_index_resources')
+                    ->defaultValue([])
+                ->end()
+                ->variableNode('business_index_routes')
                     ->defaultValue([])
                 ->end()
             ->end();

@@ -6,7 +6,7 @@
             <td><code>{{ component.key }}</code></td>
             <td>{{ component.label }}</td>
             <td>{{ component.description ?? '' }}</td>
-            <td><a class="btn btn-sm btn-secondary" href="{{ path('manage_component_detail', {componentKey: component.key}) }}">Details</a></td>
+            <td><a class="btn btn-sm btn-secondary" href="{{ path('manage_dashboard_components_detail', {componentKey: component.key}) }}">Details</a></td>
         </tr>
     {% else %}
         <tr><td colspan="4">No Manage component contributions registered yet.</td></tr>

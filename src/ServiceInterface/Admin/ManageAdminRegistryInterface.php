@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Managing\ServiceInterface\Admin;
 
 use App\Managing\Value\ManageComponentDefinition;
+use App\Managing\Value\ManageCrudResourceDefinition;
 
 interface ManageAdminRegistryInterface
 {
@@ -19,4 +20,9 @@ interface ManageAdminRegistryInterface
      * @return list<ManageComponentDefinition>
      */
     public function getComponents(): array;
+
+    /**
+     * @return list<ManageCrudResourceDefinition>
+     */
+    public function getCrudResources(): array;
 }

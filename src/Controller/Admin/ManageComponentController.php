@@ -6,12 +6,13 @@ namespace App\Managing\Controller\Admin;
 
 use App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface;
 use App\Managing\ServiceInterface\Admin\ManageComponentDetailBuilderInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Attribute\Route;
 
 #[AsController]
+#[AdminRoute(path: '/components', name: 'components')]
 final class ManageComponentController extends AbstractController
 {
     public function __construct(
@@ -20,7 +21,7 @@ final class ManageComponentController extends AbstractController
     ) {
     }
 
-    #[Route('/manage/components', name: 'manage_components', methods: ['GET'])]
+    #[AdminRoute(path: '', name: 'index')]
     public function index(): Response
     {
         return $this->render('manage/admin/content.html.twig', [
@@ -32,7 +33,7 @@ final class ManageComponentController extends AbstractController
         ]);
     }
 
-    #[Route('/manage/components/{componentKey}', name: 'manage_component_detail', methods: ['GET'])]
+    #[AdminRoute(path: '/{componentKey}', name: 'detail')]
     public function detail(string $componentKey): Response
     {
         $detail = $this->componentDetailBuilder->buildComponentDetail($componentKey);

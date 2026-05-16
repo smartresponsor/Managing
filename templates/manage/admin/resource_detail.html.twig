@@ -1,4 +1,8 @@
-<p><a href="{{ path('manage_resources') }}">← Back to resources</a> · <a href="{{ path('manage_resource_index', {componentKey: resource.componentKey, resourceKey: resource.resourceKey}) }}">Open resource index</a></p>
+<p><a href="{{ path('manage_resources') }}">← Back to resources</a>
+    {% if actions.index is defined %}
+        · <a href="{{ actions.index }}">Open resource index</a>
+    {% endif %}
+</p>
 
 <div class="content-panel">
     <h2>{{ resource.label }}</h2>
