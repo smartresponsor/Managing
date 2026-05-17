@@ -1,9 +1,3 @@
 manage:
   resource: '../../src/Controller/Admin/ManageDashboardController.php'
   type: easyadmin.routes
-
-manage_admin:
-  resource: '../../src/Controller/Admin/'
-  type: easyadmin.routes
-  exclude:
-    - '../../src/Controller/Admin/ManageDashboardController.php'

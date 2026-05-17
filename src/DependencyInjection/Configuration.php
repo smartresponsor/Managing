@@ -31,21 +31,15 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('menu_components')
                     ->scalarPrototype()->end()
                     ->defaultValue([
-                        'accessing',
                         'analysing',
                         'applicating',
                         'attaching',
                         'billing',
-                        'bridging',
                         'cataloging',
                         'commissioning',
-                        'cruding',
                         'currencing',
                         'exchanging',
-                        'indexing',
-                        'interfacing',
                         'localizing',
-                        'managing',
                         'messaging',
                         'ordering',
                         'paging',
@@ -62,26 +56,9 @@ final class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                     ->defaultValue([
                         'managing',
+                        'cruding',
+                        'interfacing',
                     ])
-                ->end()
-                ->booleanNode('content_enabled')
-                    ->defaultTrue()
-                ->end()
-                ->scalarNode('content_route_prefix')
-                    ->defaultValue('/manage')
-                ->end()
-                ->arrayNode('content_allowed_environments')
-                    ->scalarPrototype()->end()
-                    ->defaultValue([])
-                ->end()
-                ->scalarNode('content_required_role')
-                    ->defaultValue('ROLE_ADMIN')
-                ->end()
-                ->scalarNode('content_logout_path')
-                    ->defaultValue('/logout')
-                ->end()
-                ->scalarNode('content_logout_label')
-                    ->defaultValue('Logout')
                 ->end()
                 ->booleanNode('host_scan_enabled')
                     ->defaultTrue()
@@ -98,8 +75,27 @@ final class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                     ->defaultValue(['App\\Managing\\'])
                 ->end()
-                ->variableNode('business_index_resources')
+                ->booleanNode('admin_enabled')
+                    ->defaultTrue()
+                ->end()
+                ->scalarNode('admin_route_prefix')
+                    ->defaultValue('/manage')
+                ->end()
+                ->arrayNode('admin_allowed_environments')
+                    ->scalarPrototype()->end()
                     ->defaultValue([])
+                ->end()
+                ->scalarNode('admin_required_role')
+                    ->defaultValue('ROLE_ADMIN')
+                ->end()
+                ->booleanNode('admin_show_security_notes')
+                    ->defaultTrue()
+                ->end()
+                ->scalarNode('admin_logout_path')
+                    ->defaultValue('/logout')
+                ->end()
+                ->scalarNode('admin_logout_label')
+                    ->defaultValue('Logout')
                 ->end()
             ->end();
 

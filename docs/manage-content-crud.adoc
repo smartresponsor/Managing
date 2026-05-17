@@ -1,0 +1,74 @@
+= Manage Content CRUD Baseline
+:toc:
+
+This document defines the CMS/content-management baseline for `/manage`.
+
+== Boundary
+
+`Managing` is the content-management surface. It is not the primary place for system diagnostics.
+
+The left menu must point to business content resources only. System resources, provider metadata, route dumps and internal readiness screens belong outside the content sidebar.
+
+== Controller baseline
+
+A component can opt in to the shared CMS behavior by making its EasyAdmin CRUD controller extend:
+
+[source,php]
+----
+App\Managing\Controller\Crud\AbstractManageContentCrudController
+----
+
+The concrete component controller still owns the entity:
+
+[source,php]
+----
+final class ProductCrudController extends AbstractManageContentCrudController
+{
+    public static function getEntityFqcn(): string
+    {
+        return Product::class;
+    }
+}
+----
+
+== What the base controller provides
+
+The base controller provides defaults for content-manager screens:
+
+* Native EasyAdmin index/detail/new/edit pages.
+* Common index fields: ID, title/name, status, publication state, publication time, created/updated timestamps.
+* Search fields based on actual entity fields.
+* Filters for status, publication state and dates.
+* Row actions: detail, edit, delete, publish, unpublish.
+* Batch actions: delete, publish selected, unpublish selected.
+* Pagination and default sorting.
+
+== Business fields, not system metadata
+
+Content index pages must show business data such as:
+
+* `id`
+* `title`, `firstTitle`, `name` or `label`
+* `status` or `state`
+* `published`, `enabled` or `active`
+* `publishedAt`
+* `createdAt`
+* `updatedAt`
+
+They must not show Manage registry metadata such as:
+
+* `componentKey`
+* `resourceKey`
+* `entityClass`
+* `crudControllerClass`
+* provider names
+* route names
+
+== Publication convention
+
+The base controller supports common publication fields automatically:
+
+* Boolean-like fields: `published`, `isPublished`, `enabled`, `active`
+* Date fields: `publishedAt`, `publishAt`
+
+If a domain needs a different publication model, override the relevant methods in the concrete component CRUD controller instead of adding a custom Managing index page.

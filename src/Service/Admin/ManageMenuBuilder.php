@@ -4,41 +4,23 @@ declare(strict_types=1);
 
 namespace App\Managing\Service\Admin;
 
-use App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface;
 use App\Managing\ServiceInterface\Admin\ManageMenuBuilderInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
-final class ManageMenuBuilder implements ManageMenuBuilderInterface
+final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
 {
-    /** @var list<string> */
-    private array $menuComponents;
-    /** @var list<string> */
-    private array $menuExcludedComponents;
-
     public function __construct(
-        private readonly ManageAdminRegistryInterface $adminRegistry,
-        array|object $menuComponents = [],
-        array $menuExcludedComponents = [],
+        private array $menuComponents = [],
+        private array $menuExcludedComponents = [],
     ) {
-        $this->menuComponents = is_array($menuComponents) ? array_values(array_filter($menuComponents, 'is_string')) : [];
-        $this->menuExcludedComponents = array_values(array_filter(array_map('strval', $menuExcludedComponents), static fn (string $value): bool => '' !== $value));
     }
 
     public function buildMenuItems(): iterable
     {
-        yield MenuItem::linkToUrl('Manage', 'fa fa-home', '/manage');
+        yield MenuItem::linkToDashboard('Manage', 'fa fa-home');
 
-        $components = [];
-        foreach ($this->adminRegistry->getCrudResources() as $resource) {
-            if (!$this->isAllowedComponent($resource->componentKey) || $this->isExcludedComponent($resource->componentKey)) {
-                continue;
-            }
-
-            $components[$resource->componentKey][] = $resource;
-        }
-
-        foreach ($this->orderedComponentKeys(array_keys($components)) as $componentKey) {
-            if ([] === $components[$componentKey]) {
+        foreach ($this->orderedComponentKeys($this->menuComponents) as $componentKey) {
+            if ($this->isExcludedComponent($componentKey)) {
                 continue;
             }
 
@@ -55,11 +37,6 @@ final class ManageMenuBuilder implements ManageMenuBuilderInterface
         return in_array($componentKey, $this->menuExcludedComponents, true);
     }
 
-    private function isAllowedComponent(string $componentKey): bool
-    {
-        return [] === $this->menuComponents || in_array($componentKey, $this->menuComponents, true);
-    }
-
     /**
      * @param list<string> $componentKeys
      *
@@ -67,7 +44,7 @@ final class ManageMenuBuilder implements ManageMenuBuilderInterface
      */
     private function orderedComponentKeys(array $componentKeys): array
     {
-        $componentKeys = array_values(array_unique($componentKeys));
+        $componentKeys = array_values(array_unique(array_filter($componentKeys, static fn (mixed $value): bool => is_string($value) && '' !== $value)));
         $position = array_flip($this->menuComponents);
 
         usort(
@@ -89,8 +66,6 @@ final class ManageMenuBuilder implements ManageMenuBuilderInterface
 
     private function resolveComponentLabel(string $componentKey): string
     {
-        $value = str_replace(['_', '-'], ' ', $componentKey);
-
-        return ucwords($value);
+        return ucwords(str_replace(['_', '-'], ' ', $componentKey));
     }
 }

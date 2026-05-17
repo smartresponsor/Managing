@@ -32,6 +32,20 @@ services:
       $excludedNamespaces: '%managing.host_scan_excluded_namespaces%'
     tags: ['manage.admin_provider']
 
+  App\Managing\Service\Admin\ManageAdminRegistry:
+    arguments:
+      $contributionFilter: '@App\Managing\Service\Admin\ManageContributionFilter'
+
+  App\Managing\Service\Crud\ManageCrudResourceRegistry:
+    arguments:
+      $adminRegistry: '@App\Managing\Service\Admin\ManageAdminRegistry'
+      $contributionFilter: '@App\Managing\Service\Admin\ManageContributionFilter'
+
+  App\Managing\Service\Admin\ManageAdminUserMenuBuilder:
+    arguments:
+      $logoutPath: '%managing.admin_logout_path%'
+      $logoutLabel: '%managing.admin_logout_label%'
+
   App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface:
     alias: App\Managing\Service\Admin\ManageAdminRegistry
 
@@ -40,11 +54,6 @@ services:
 
   App\Managing\ServiceInterface\Admin\ManageMenuBuilderInterface:
     alias: App\Managing\Service\Admin\ManageMenuBuilder
-
-  App\Managing\Service\Admin\ManageAdminUserMenuBuilder:
-    arguments:
-      $logoutPath: '%managing.content_logout_path%'
-      $logoutLabel: '%managing.content_logout_label%'
 
   App\Managing\ServiceInterface\Admin\ManageAdminUserMenuBuilderInterface:
     alias: App\Managing\Service\Admin\ManageAdminUserMenuBuilder

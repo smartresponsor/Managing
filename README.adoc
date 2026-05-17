@@ -1,40 +1,32 @@
-= Managing Component
+= Managing
 
-Managing is the Smart Responsor `/manage` business CRUD surface.
+`Managing` is the EasyAdmin-backed CMS surface mounted at `/manage`.
+
+It discovers business CRUD resources from connected sibling components through Symfony DI providers and renders native EasyAdmin index/detail/new/edit screens.
 
 == Canon
 
 * Component namespace: `App\Managing\...`
-* Component package: `smart-responsor/managing`
-* Business stem: `Manage`
-* Public management route: `/manage`
-* EasyAdmin is the renderer for published business CRUD entries in `/manage`
-* The left menu is built from published business CRUD resources
-* Host applications contribute components and CRUD resources through DI-tagged providers
-* Host applications may enable, disable, or order menu entries through `managing.yaml`
+* Business prefix: `Manage`
+* Public admin mount point: `/manage`
+* Primary renderer: EasyAdmin dashboard plus one universal component controller
+* Left menu: one entry per business component
+* Menu entries open the universal component index controller keyed by the last URL token
+* Host application decides which sibling components are listed and which are excluded
 
-== Providers
+== Extension points
 
-Services implementing `ManageAdminProviderInterface` should be tagged as:
+* `App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface`
+* `App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface`
+* `App\Managing\ServiceInterface\Crud\ManageCrudResourceRegistryInterface`
+* `App\Managing\ServiceInterface\Crud\ManageCrudActionUrlBuilderInterface`
 
-[source,yaml]
-----
-tags: ['manage.admin_provider']
-----
+Providers are tagged with `manage.admin_provider`.
 
-When autoconfiguration is enabled, the bundle adds this tag automatically for services implementing the interface.
+== Rules
 
-== Business CRUD
+* No separate system screens.
+* No legacy route, form, probe, or relation layer.
+* No custom HTML shell in PHP.
 
-A business entry appears in the left menu only when it is a published EasyAdmin CRUD resource.
-
-[source,yaml]
-----
-managing:
-  business_index_resources:
-    paying:
-      - payment
-----
-
-The resulting menu item is generated as an EasyAdmin business index entry from the host business resources.
-Host URL resolution stays inside the provider layer and is not rendered as standalone system pages.
+The dashboard should stay native to EasyAdmin and the menu should point to a single component index controller, not to per-component hardcoded pages.

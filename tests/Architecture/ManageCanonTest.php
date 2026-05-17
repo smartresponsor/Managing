@@ -48,7 +48,9 @@ final class ManageCanonTest extends TestCase
             }
 
             if (
-                str_contains($contents, 'ManageRouteDefinition')
+                str_contains($contents, 'ManageSelfAdminProvider')
+                || str_contains($contents, 'ManageConfiguredAdminProvider')
+                || str_contains($contents, 'ManageRouteDefinition')
                 || str_contains($contents, 'ManageFormDefinition')
                 || str_contains($contents, 'ManageProbeDefinition')
                 || str_contains($contents, 'ManageRelationDefinition')
@@ -69,5 +71,7 @@ final class ManageCanonTest extends TestCase
         self::assertIsString($dashboard);
         self::assertStringContainsString("#[AdminDashboard(routePath: '/manage', routeName: 'manage')]", $dashboard);
         self::assertStringNotContainsString("#[Route('/admin'", $dashboard);
+        self::assertStringNotContainsString('function component(', $dashboard);
+        self::assertStringNotContainsString('routeName: \'component\'', $dashboard);
     }
 }

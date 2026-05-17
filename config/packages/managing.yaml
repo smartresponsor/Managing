@@ -1,13 +1,15 @@
 managing:
-  content_enabled: true
-  content_route_prefix: '/manage'
-  content_allowed_environments: []
-  content_required_role: 'ROLE_ADMIN'
-  content_logout_path: '/logout'
-  content_logout_label: 'Logout'
+  admin_enabled: true
+  admin_route_prefix: '/manage'
+  admin_allowed_environments: []
+  admin_required_role: 'ROLE_ADMIN'
+  admin_show_security_notes: true
+  admin_logout_path: '/logout'
+  admin_logout_label: 'Logout'
   enabled_components: []
   disabled_resources: []
   menu_order: []
+
   menu_components:
     - analysing
     - applicating
@@ -34,8 +36,7 @@ managing:
     - interfacing
   host_scan_enabled: true
   host_scan_source_roots: ['src']
-  host_scan_namespace_prefixes: ['App\\']
-  host_scan_excluded_namespaces: ['App\\Managing\\']
-  business_index_resources:
-    cataloging:
-      - catalog_category_entity
+  host_scan_namespace_prefixes:
+    - 'App\'
+  host_scan_excluded_namespaces:
+    - 'App\Managing\'

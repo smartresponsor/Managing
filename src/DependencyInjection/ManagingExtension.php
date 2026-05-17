@@ -25,18 +25,17 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
         $container->setParameter('managing.menu_order', $config['menu_order']);
         $container->setParameter('managing.menu_components', $config['menu_components']);
         $container->setParameter('managing.menu_excluded_components', $config['menu_excluded_components']);
-        $container->setParameter('managing.content_enabled', $config['content_enabled']);
-        $container->setParameter('managing.content_route_prefix', $config['content_route_prefix']);
-        $container->setParameter('managing.content_allowed_environments', $config['content_allowed_environments']);
-        $container->setParameter('managing.content_required_role', $config['content_required_role']);
-        $container->setParameter('managing.content_logout_path', $config['content_logout_path']);
-        $container->setParameter('managing.content_logout_label', $config['content_logout_label']);
         $container->setParameter('managing.host_scan_enabled', $config['host_scan_enabled']);
         $container->setParameter('managing.host_scan_source_roots', $config['host_scan_source_roots']);
         $container->setParameter('managing.host_scan_namespace_prefixes', $config['host_scan_namespace_prefixes']);
         $container->setParameter('managing.host_scan_excluded_namespaces', $config['host_scan_excluded_namespaces']);
-        $container->setParameter('managing.business_index_resources', $config['business_index_resources']);
-
+        $container->setParameter('managing.admin_enabled', $config['admin_enabled']);
+        $container->setParameter('managing.admin_route_prefix', $config['admin_route_prefix']);
+        $container->setParameter('managing.admin_allowed_environments', $config['admin_allowed_environments']);
+        $container->setParameter('managing.admin_required_role', $config['admin_required_role']);
+        $container->setParameter('managing.admin_show_security_notes', $config['admin_show_security_notes']);
+        $container->setParameter('managing.admin_logout_path', $config['admin_logout_path']);
+        $container->setParameter('managing.admin_logout_label', $config['admin_logout_label']);
         $loader = new YamlFileLoader($container, new FileLocator(dirname(__DIR__, 2).'/config'));
         $loader->load('services.yaml');
     }
