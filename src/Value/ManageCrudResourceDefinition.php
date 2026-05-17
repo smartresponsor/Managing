@@ -9,6 +9,7 @@ final readonly class ManageCrudResourceDefinition
     public const MODE_EASYADMIN = 'easyadmin';
     public const MODE_CRUDING_LINK = 'cruding_link';
     public const MODE_CUSTOM_ROUTE = 'custom_route';
+    public const MODE_GENERIC_DOCTRINE = 'generic_doctrine';
 
     public function __construct(
         public string $componentKey,

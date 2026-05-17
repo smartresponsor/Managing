@@ -8,10 +8,6 @@ use App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface;
 use App\Managing\ServiceInterface\Admin\ManageContributionFilterInterface;
 use App\Managing\Value\ManageComponentDefinition;
 use App\Managing\Value\ManageCrudResourceDefinition;
-use App\Managing\Value\ManageFormDefinition;
-use App\Managing\Value\ManageProbeDefinition;
-use App\Managing\Value\ManageRelationDefinition;
-use App\Managing\Value\ManageRouteDefinition;
 
 final readonly class ManageContributionFilter implements ManageContributionFilterInterface
 {
@@ -40,36 +36,6 @@ final readonly class ManageContributionFilter implements ManageContributionFilte
 
         return !$this->isDisabledResource($resource->componentKey.'.'.$resource->resourceKey)
             && !$this->isDisabledResource($resource->resourceKey);
-    }
-
-    public function isRouteEnabled(ManageRouteDefinition $route): bool
-    {
-        return $route->enabled && $this->isComponentEnabled($route->componentKey);
-    }
-
-    public function isFormEnabled(ManageFormDefinition $form): bool
-    {
-        if (!$form->enabled || !$this->isComponentEnabled($form->componentKey)) {
-            return false;
-        }
-
-        return !$this->isDisabledResource($form->componentKey.'.'.$form->formKey)
-            && !$this->isDisabledResource($form->formKey);
-    }
-
-    public function isProbeEnabled(ManageProbeDefinition $probe): bool
-    {
-        return $probe->enabled && $this->isComponentEnabled($probe->componentKey);
-    }
-
-    public function isRelationEnabled(ManageRelationDefinition $relation): bool
-    {
-        if (!$relation->enabled || !$this->isComponentEnabled($relation->componentKey)) {
-            return false;
-        }
-
-        return !$this->isDisabledResource($relation->componentKey.'.'.$relation->relationKey)
-            && !$this->isDisabledResource($relation->relationKey);
     }
 
     public function filterAndSortProviders(array $providers): array
@@ -110,24 +76,6 @@ final readonly class ManageContributionFilter implements ManageContributionFilte
 
         foreach ($provider->getCrudResources() as $resource) {
             if ($this->isCrudResourceEnabled($resource)) {
-                return true;
-            }
-        }
-
-        foreach ($provider->getRoutes() as $route) {
-            if ($this->isRouteEnabled($route)) {
-                return true;
-            }
-        }
-
-        foreach ($provider->getForms() as $form) {
-            if ($this->isFormEnabled($form)) {
-                return true;
-            }
-        }
-
-        foreach ($provider->getProbes() as $probe) {
-            if ($this->isProbeEnabled($probe)) {
                 return true;
             }
         }

@@ -32,7 +32,7 @@ final class ManageCanonTest extends TestCase
         self::assertSame([], $violations);
     }
 
-    public function testManagingDoesNotDependOnInterfacingOrBridging(): void
+    public function testManagingDoesNotReferenceDeletedSystemLayers(): void
     {
         $violations = [];
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator(dirname(__DIR__, 2).'/src'));
@@ -47,7 +47,14 @@ final class ManageCanonTest extends TestCase
                 continue;
             }
 
-            if (str_contains($contents, 'Interfacing') || str_contains($contents, 'Bridging')) {
+            if (
+                str_contains($contents, 'ManageRouteDefinition')
+                || str_contains($contents, 'ManageFormDefinition')
+                || str_contains($contents, 'ManageProbeDefinition')
+                || str_contains($contents, 'ManageRelationDefinition')
+                || str_contains($contents, 'ManageProbeResult')
+                || str_contains($contents, 'ManageCrudingRouteBridge')
+            ) {
                 $violations[] = str_replace(dirname(__DIR__, 2).'/', '', $file->getPathname());
             }
         }
@@ -60,7 +67,7 @@ final class ManageCanonTest extends TestCase
         $dashboard = file_get_contents(dirname(__DIR__, 2).'/src/Controller/Admin/ManageDashboardController.php');
 
         self::assertIsString($dashboard);
-        self::assertStringContainsString("#[AdminDashboard(routePath: '/manage', routeName: 'manage_dashboard')]", $dashboard);
+        self::assertStringContainsString("#[AdminDashboard(routePath: '/manage', routeName: 'manage')]", $dashboard);
         self::assertStringNotContainsString("#[Route('/admin'", $dashboard);
     }
 }

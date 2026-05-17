@@ -7,9 +7,6 @@ namespace App\Managing\Service\Admin;
 use App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface;
 use App\Managing\Value\ManageComponentDefinition;
 use App\Managing\Value\ManageCrudResourceDefinition;
-use App\Managing\Value\ManageFormDefinition;
-use App\Managing\Value\ManageRouteDefinition;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 
 final class ManageHostApplicationAdminProvider implements ManageAdminProviderInterface
@@ -20,12 +17,6 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     /** @var list<ManageCrudResourceDefinition>|null */
     private ?array $resources = null;
 
-    /** @var list<ManageFormDefinition>|null */
-    private ?array $forms = null;
-
-    /** @var list<ManageRouteDefinition>|null */
-    private ?array $routes = null;
-
     /**
      * @param list<string> $sourceRoots
      * @param list<string> $namespacePrefixes
@@ -34,7 +25,6 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     public function __construct(
         private readonly string $projectDir,
         private readonly CacheInterface $cache,
-        private readonly ?RouterInterface $router = null,
         private readonly bool $enabled = true,
         private readonly array $sourceRoots = ['src'],
         private readonly array $namespacePrefixes = ['App\\'],
@@ -45,9 +35,9 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     public function getComponent(): ManageComponentDefinition
     {
         return new ManageComponentDefinition(
-            key: 'host_application',
-            label: 'Host application',
-            description: 'Auto-discovered Symfony host application resources, forms and routes.',
+            key: 'app',
+            label: 'App',
+            description: 'Auto-discovered Symfony application resources.',
         );
     }
 
@@ -56,64 +46,6 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     {
         foreach ($this->resources ??= $this->cache->get('managing.host_app.crud_resources', fn (): array => $this->discoverResources()) as $resource) {
             yield $resource;
-        }
-    }
-
-    /** @return iterable<ManageRouteDefinition> */
-    public function getRoutes(): iterable
-    {
-        foreach ($this->routes ??= $this->cache->get('managing.host_app.routes', fn (): array => $this->discoverRoutes()) as $route) {
-            yield $route;
-        }
-    }
-
-    /** @return iterable<ManageFormDefinition> */
-    public function getForms(): iterable
-    {
-        foreach ($this->forms ??= $this->cache->get('managing.host_app.forms', fn (): array => $this->discoverForms()) as $form) {
-            yield $form;
-        }
-    }
-
-    public function getRelations(): iterable
-    {
-        return [];
-    }
-
-    public function getProbes(): iterable
-    {
-        return [];
-    }
-
-    /** @return iterable<ManageComponentDefinition> */
-    public function getConfiguredComponents(): iterable
-    {
-        $components = [];
-
-        foreach ($this->getCrudResources() as $resource) {
-            $components[$resource->componentKey] = $this->componentLabel($resource->componentKey);
-        }
-
-        foreach ($this->getForms() as $form) {
-            $components[$form->componentKey] = $this->componentLabel($form->componentKey);
-        }
-
-        foreach ($this->getRoutes() as $route) {
-            $components[$route->componentKey] = $this->componentLabel($route->componentKey);
-        }
-
-        if ([] === $components) {
-            return;
-        }
-
-        ksort($components);
-
-        foreach ($components as $key => $label) {
-            yield new ManageComponentDefinition(
-                key: $key,
-                label: $label,
-                description: 'Auto-discovered from the Symfony host application.',
-            );
         }
     }
 
@@ -146,12 +78,12 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
                 crudControllerClass: $crudControllerClass,
                 formTypeClass: null,
                 routeNamePattern: null,
-                menuGroup: 'Host application',
+                menuGroup: $this->componentLabel($componentKey),
                 enabled: true,
-                mode: null !== $crudControllerClass ? ManageCrudResourceDefinition::MODE_EASYADMIN : ManageCrudResourceDefinition::MODE_CRUDING_LINK,
+                mode: null !== $crudControllerClass ? ManageCrudResourceDefinition::MODE_EASYADMIN : ManageCrudResourceDefinition::MODE_CUSTOM_ROUTE,
                 resourcePath: sprintf('%s/%s', $componentKey, $this->resourcePathSegmentFromClass($className)),
                 identifierField: 'id',
-                surface: 'admin',
+                surface: 'manage',
                 templatePrefix: 'crud',
             );
         }
@@ -159,83 +91,6 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         ksort($resources);
 
         return array_values($resources);
-    }
-
-    /** @return list<ManageFormDefinition> */
-    private function discoverForms(): array
-    {
-        if (!$this->enabled) {
-            return [];
-        }
-
-        $forms = [];
-
-        foreach ($this->findPhpFiles('/Form/') as $file) {
-            if (!str_ends_with($file->getFilename(), 'Type.php')) {
-                continue;
-            }
-
-            $className = $this->classNameFromFile($file);
-            if (null === $className || $this->isExcludedClass($className)) {
-                continue;
-            }
-
-            $componentKey = $this->componentKeyFromClass($className);
-            $formKey = $this->resourceKeyFromClass($className);
-
-            $forms[$componentKey.'.'.$formKey] = new ManageFormDefinition(
-                componentKey: $componentKey,
-                formKey: $formKey,
-                label: $this->humanize($this->shortClassName($className)),
-                formTypeClass: $className,
-                resourceKey: str_ends_with($formKey, '_type') ? substr($formKey, 0, -5) : null,
-                description: sprintf('Auto-discovered host form at %s.', $this->relativePath($file)),
-                menuGroup: 'Host application',
-                enabled: true,
-                surface: 'admin',
-                mode: 'symfony_form',
-            );
-        }
-
-        ksort($forms);
-
-        return array_values($forms);
-    }
-
-    /** @return list<ManageRouteDefinition> */
-    private function discoverRoutes(): array
-    {
-        if (!$this->enabled || null === $this->router) {
-            return [];
-        }
-
-        $routes = [];
-
-        foreach ($this->router->getRouteCollection()->all() as $name => $route) {
-            if (str_starts_with($name, '_') || str_starts_with($name, 'manage_')) {
-                continue;
-            }
-
-            $controller = $route->getDefault('_controller');
-            if (is_string($controller) && $this->isExcludedController($controller)) {
-                continue;
-            }
-
-            $componentKey = $this->componentKeyFromRouteName($name, is_string($controller) ? $controller : null);
-
-            $routes[$name] = new ManageRouteDefinition(
-                componentKey: $componentKey,
-                routeName: $name,
-                label: $this->humanize($name),
-                kind: 'host_route',
-                menuGroup: 'Host application',
-                enabled: true,
-            );
-        }
-
-        ksort($routes);
-
-        return array_values($routes);
     }
 
     /** @return iterable<\SplFileInfo> */
@@ -282,20 +137,53 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
 
     private function classNameFromFile(\SplFileInfo $file): ?string
     {
-        $path = str_replace('\\', '/', realpath($file->getPathname()) ?: $file->getPathname());
+        $tokens = token_get_all((string) file_get_contents($file->getPathname()));
+        $namespace = '';
 
-        foreach ($this->psr4Roots() as $namespacePrefix => $root) {
-            $root = rtrim(str_replace('\\', '/', realpath($root) ?: $root), '/').'/';
-            if (!str_starts_with($path, $root)) {
+        for ($index = 0, $count = count($tokens); $index < $count; ++$index) {
+            $token = $tokens[$index];
+            if (!is_array($token) || T_NAMESPACE !== $token[0]) {
                 continue;
             }
 
-            $relative = substr($path, strlen($root));
-            if (!str_ends_with($relative, '.php')) {
+            for (++$index; $index < $count; ++$index) {
+                $part = $tokens[$index];
+                if (is_array($part) && in_array($part[0], [T_STRING, T_NAME_QUALIFIED], true)) {
+                    $namespace .= $part[1];
+                    continue;
+                }
+                if ('\\' === $part) {
+                    $namespace .= '\\';
+                    continue;
+                }
+                if (';' === $part || '{' === $part) {
+                    break;
+                }
+            }
+
+            break;
+        }
+
+        for ($index = 0, $count = count($tokens); $index < $count; ++$index) {
+            $token = $tokens[$index];
+            if (!is_array($token) || T_CLASS !== $token[0]) {
                 continue;
             }
 
-            return rtrim($namespacePrefix, '\\').'\\'.str_replace('/', '\\', substr($relative, 0, -4));
+            $previousIndex = $index - 1;
+            while ($previousIndex >= 0 && is_array($tokens[$previousIndex]) && T_WHITESPACE === $tokens[$previousIndex][0]) {
+                --$previousIndex;
+            }
+            if ($previousIndex >= 0 && is_array($tokens[$previousIndex]) && T_DOUBLE_COLON === $tokens[$previousIndex][0]) {
+                continue;
+            }
+
+            for (++$index; $index < $count; ++$index) {
+                $part = $tokens[$index];
+                if (is_array($part) && T_STRING === $part[0]) {
+                    return '' === $namespace ? $part[1] : $namespace.'\\'.$part[1];
+                }
+            }
         }
 
         return null;
@@ -439,41 +327,15 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         return false;
     }
 
-    private function isExcludedController(string $controller): bool
-    {
-        foreach ($this->excludedNamespaces as $excludedNamespace) {
-            if (str_starts_with($controller, $excludedNamespace)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private function componentKeyFromClass(string $className): string
     {
         $parts = explode('\\', $className);
 
-        if (isset($parts[1]) && !in_array($parts[1], ['Entity', 'Form', 'Controller'], true)) {
+        if (isset($parts[1]) && !in_array($parts[1], ['Entity', 'Controller'], true)) {
             return $this->slug($parts[1]);
         }
 
-        return 'host_application';
-    }
-
-    private function componentKeyFromRouteName(string $routeName, ?string $controller): string
-    {
-        if (null !== $controller) {
-            $controller = str_replace('::', '\\', $controller);
-            $componentKey = $this->componentKeyFromClass($controller);
-            if ('host_application' !== $componentKey) {
-                return $componentKey;
-            }
-        }
-
-        $prefix = strtok($routeName, '_');
-
-        return is_string($prefix) && '' !== $prefix ? $this->slug($prefix) : 'host_application';
+        return 'app';
     }
 
     private function discoverCrudControllerClass(string $entityClass): ?string
@@ -520,8 +382,34 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
 
     private function componentLabel(string $componentKey): string
     {
-        if ('host_application' === $componentKey) {
-            return 'Host application';
+        foreach ($this->workspaceComposerFiles() as $composerFile) {
+            $json = json_decode((string) file_get_contents($composerFile), true);
+            if (!is_array($json)) {
+                continue;
+            }
+
+            $name = isset($json['name']) && is_string($json['name']) ? $json['name'] : '';
+            if ('' === $name) {
+                continue;
+            }
+
+            $segments = array_values(array_filter(explode('/', strtolower($name)), static fn (string $segment): bool => '' !== $segment));
+            $normalizedComponentKey = strtolower($componentKey);
+
+            if (!in_array($normalizedComponentKey, $segments, true)) {
+                continue;
+            }
+
+            $description = isset($json['description']) && is_string($json['description']) ? trim($json['description']) : '';
+            if ('' !== $description) {
+                return $description;
+            }
+
+            return $this->humanize($componentKey);
+        }
+
+        if ('app' === $componentKey) {
+            return 'App';
         }
 
         return $this->humanize($componentKey);
@@ -534,20 +422,12 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         return false === $position ? $className : substr($className, $position + 1);
     }
 
-    private function relativePath(\SplFileInfo $file): string
-    {
-        $path = str_replace('\\', '/', realpath($file->getPathname()) ?: $file->getPathname());
-        $root = rtrim(str_replace('\\', '/', realpath($this->projectDir) ?: $this->projectDir), '/').'/';
-
-        return str_starts_with($path, $root) ? substr($path, strlen($root)) : $path;
-    }
-
     private function slug(string $value): string
     {
         $value = preg_replace('/(?<!^)[A-Z]/', '_$0', $value) ?? $value;
         $value = strtolower((string) preg_replace('/[^A-Za-z0-9]+/', '_', $value));
 
-        return trim($value, '_') ?: 'host_application';
+        return trim($value, '_') ?: 'app';
     }
 
     /** @return array<string, mixed> */
@@ -561,8 +441,6 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
             'psr4_roots' => $this->psr4Roots(),
             'excluded_namespaces' => $this->excludedNamespaces,
             'resources' => count($this->resources ??= $this->discoverResources()),
-            'forms' => count($this->forms ??= $this->discoverForms()),
-            'routes' => count($this->routes ??= $this->discoverRoutes()),
         ];
     }
 

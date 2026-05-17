@@ -1,0 +1,130 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}{{ page_title|default('Managing') }}{% endblock %}
+
+{% block content_title %}{{ content_title|default(page_title|default('Managing')) }}{% endblock %}
+
+{% block main %}
+    {% if back_url is defined and back_url %}
+        <p><a href="{{ back_url }}">{{ back_label|default('← Back') }}</a></p>
+    {% endif %}
+
+    {% if intro is defined and intro %}
+        <div class="content-panel">
+            <div class="content-panel-body">
+                <p class="text-muted mb-0">{{ intro }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if cards is defined and cards is not empty %}
+        <div class="row g-3">
+            {% for card in cards %}
+                <div class="col-12 col-lg-4">
+                    <div class="content-panel h-100">
+                        <div class="content-panel-body">
+                            <div class="d-flex justify-content-between align-items-start gap-3">
+                                <div>
+                                    <div class="fw-bold">{{ card.title }}</div>
+                                    {% if card.text is defined and card.text %}
+                                        <p class="text-muted small mt-2 mb-3">{{ card.text }}</p>
+                                    {% endif %}
+                                </div>
+                                {% if card.badge is defined and card.badge %}
+                                    <span class="badge badge-{{ card.badgeClass|default('secondary') }}">{{ card.badge }}</span>
+                                {% endif %}
+                            </div>
+                            {% if card.url is defined and card.url %}
+                                <a class="btn btn-sm btn-secondary" href="{{ card.url }}">{{ card.actionLabel|default('Open') }}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% for section in sections|default([]) %}
+        <div class="content-panel mt-3">
+            <div class="content-panel-body">
+                {% if section.title is defined and section.title %}
+                    <h2 class="h5">{{ section.title }}</h2>
+                {% endif %}
+                {% if section.text is defined and section.text %}
+                    <p class="text-muted">{{ section.text }}</p>
+                {% endif %}
+
+                {% if section.cards is defined and section.cards is not empty %}
+                    <div class="row g-3">
+                        {% for card in section.cards %}
+                            <div class="col-12 col-lg-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start gap-3">
+                                            <div>
+                                                <div class="fw-bold">{{ card.title }}</div>
+                                                {% if card.text is defined and card.text %}
+                                                    <p class="text-muted small mt-2 mb-3">{{ card.text }}</p>
+                                                {% endif %}
+                                            </div>
+                                            {% if card.badge is defined and card.badge %}
+                                                <span class="badge badge-{{ card.badgeClass|default('secondary') }}">{{ card.badge }}</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if card.url is defined and card.url %}
+                                            <a class="btn btn-sm btn-secondary" href="{{ card.url }}">{{ card.actionLabel|default('Open') }}</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                {% if section.table is defined and section.table %}
+                    {% set table = section.table %}
+                    <table class="{{ table.class|default('table datagrid') }}">
+                        {% if table.headers is defined and table.headers is not empty %}
+                            <thead>
+                            <tr>
+                                {% for header in table.headers %}
+                                    <th>{{ header }}</th>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                        {% endif %}
+                        <tbody>
+                        {% if table.rows is defined and table.rows is not empty %}
+                            {% for row in table.rows %}
+                                <tr>
+                                    {% for cell in row %}
+                                        <td>
+                                            {% if cell is iterable and cell.url is defined %}
+                                                <a class="{{ cell.class|default('btn btn-sm btn-secondary') }}" href="{{ cell.url }}">{{ cell.label|default(cell.text|default(cell.title|default('Open'))) }}</a>
+                                            {% elseif cell is iterable and cell.html is defined %}
+                                                {{ cell.html|raw }}
+                                            {% else %}
+                                                {{ cell }}
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="{{ table.headers is defined ? table.headers|length : 1 }}" class="text-muted">
+                                    {{ table.emptyMessage|default('No records found.') }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                {% endif %}
+
+                {% if section.content is defined and section.content %}
+                    {{ section.content|raw }}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

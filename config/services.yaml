@@ -20,33 +20,16 @@ services:
   App\Managing\Service\Admin\ManageMenuBuilder:
     arguments:
       $menuComponents: '%managing.menu_components%'
-
-  App\Managing\Service\Admin\ManageComponentDetailBuilder:
-    arguments:
-      $businessIndexResources: '%managing.business_index_resources%'
-      $businessIndexRoutes: '%managing.business_index_routes%'
-
-
+      $menuExcludedComponents: '%managing.menu_excluded_components%'
 
   App\Managing\Service\Admin\ManageHostApplicationAdminProvider:
     arguments:
       $projectDir: '%kernel.project_dir%'
       $cache: '@cache.app'
-      $router: '@?router'
       $enabled: '%managing.host_scan_enabled%'
       $sourceRoots: '%managing.host_scan_source_roots%'
       $namespacePrefixes: '%managing.host_scan_namespace_prefixes%'
       $excludedNamespaces: '%managing.host_scan_excluded_namespaces%'
-    tags: ['manage.admin_provider']
-
-  App\Managing\Service\Admin\ManageConfiguredAdminProvider:
-    arguments:
-      $components: '%managing.configured_components%'
-      $resources: '%managing.configured_resources%'
-      $routes: '%managing.configured_routes%'
-      $forms: '%managing.configured_forms%'
-      $relations: '%managing.configured_relations%'
-      $probes: '%managing.configured_probes%'
     tags: ['manage.admin_provider']
 
   App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface:
@@ -58,127 +41,16 @@ services:
   App\Managing\ServiceInterface\Admin\ManageMenuBuilderInterface:
     alias: App\Managing\Service\Admin\ManageMenuBuilder
 
-  App\Managing\ServiceInterface\Admin\ManageDashboardSummaryBuilderInterface:
-    alias: App\Managing\Service\Admin\ManageDashboardSummaryBuilder
-
-  App\Managing\ServiceInterface\Admin\ManageAdminNavigationBuilderInterface:
-    alias: App\Managing\Service\Admin\ManageAdminNavigationBuilder
-
   App\Managing\Service\Admin\ManageAdminUserMenuBuilder:
     arguments:
-      $logoutPath: '%managing.admin_logout_path%'
-      $logoutLabel: '%managing.admin_logout_label%'
+      $logoutPath: '%managing.content_logout_path%'
+      $logoutLabel: '%managing.content_logout_label%'
 
   App\Managing\ServiceInterface\Admin\ManageAdminUserMenuBuilderInterface:
     alias: App\Managing\Service\Admin\ManageAdminUserMenuBuilder
 
-  App\Managing\ServiceInterface\Resource\ManageResourceRegistryInterface:
-    alias: App\Managing\Service\Resource\ManageResourceRegistry
-
-  App\Managing\ServiceInterface\Route\ManageRouteRegistryInterface:
-    alias: App\Managing\Service\Route\ManageRouteRegistry
-
   App\Managing\ServiceInterface\Crud\ManageCrudResourceRegistryInterface:
     alias: App\Managing\Service\Crud\ManageCrudResourceRegistry
 
-  App\Managing\ServiceInterface\Probe\ManageProbeRegistryInterface:
-    alias: App\Managing\Service\Probe\ManageProbeRegistry
-
-  App\Managing\ServiceInterface\Form\ManageFormRegistryInterface:
-    alias: App\Managing\Service\Form\ManageFormRegistry
-
-  App\Managing\ServiceInterface\Relation\ManageRelationRegistryInterface:
-    alias: App\Managing\Service\Relation\ManageRelationRegistry
-
-  App\Managing\ServiceInterface\Relation\ManageRelationDetailBuilderInterface:
-    alias: App\Managing\Service\Relation\ManageRelationDetailBuilder
-
-
-  App\Managing\Service\Probe\ManageProbeRunner:
-    arguments:
-      $projectDir: '%kernel.project_dir%'
-
-  App\Managing\ServiceInterface\Probe\ManageProbeRunnerInterface:
-    alias: App\Managing\Service\Probe\ManageProbeRunner
-
   App\Managing\ServiceInterface\Crud\ManageCrudActionUrlBuilderInterface:
     alias: App\Managing\Service\Crud\ManageCrudActionUrlBuilder
-
-  App\Managing\ServiceInterface\Route\ManageRouteUrlResolverInterface:
-    alias: App\Managing\Service\Route\ManageRouteUrlResolver
-
-
-
-  App\Managing\Service\Crud\ManageCrudingRouteBridge:
-    arguments:
-      $crudRouteNameResolver: '@?App\Cruding\ServiceInterface\Crud\CrudRouteNameResolverInterface'
-
-  App\Managing\ServiceInterface\Crud\ManageCrudingRouteBridgeInterface:
-    alias: App\Managing\Service\Crud\ManageCrudingRouteBridge
-
-
-  App\Managing\Service\Admin\ManageConfigurationViewBuilder:
-    arguments:
-      $enabledComponents: '%managing.enabled_components%'
-      $disabledResources: '%managing.disabled_resources%'
-      $menuOrder: '%managing.menu_order%'
-      $adminEnabled: '%managing.admin_enabled%'
-      $adminRoutePrefix: '%managing.admin_route_prefix%'
-      $adminAllowedEnvironments: '%managing.admin_allowed_environments%'
-      $adminRequiredRole: '%managing.admin_required_role%'
-      $adminShowSecurityNotes: '%managing.admin_show_security_notes%'
-      $adminLogoutPath: '%managing.admin_logout_path%'
-      $adminLogoutLabel: '%managing.admin_logout_label%'
-      $configuredComponents: '%managing.configured_components%'
-      $configuredResources: '%managing.configured_resources%'
-      $configuredRoutes: '%managing.configured_routes%'
-      $configuredForms: '%managing.configured_forms%'
-      $configuredRelations: '%managing.configured_relations%'
-      $configuredProbes: '%managing.configured_probes%'
-      $hostScanEnabled: '%managing.host_scan_enabled%'
-      $hostScanSourceRoots: '%managing.host_scan_source_roots%'
-      $hostScanNamespacePrefixes: '%managing.host_scan_namespace_prefixes%'
-      $hostScanExcludedNamespaces: '%managing.host_scan_excluded_namespaces%'
-
-  App\Managing\ServiceInterface\Admin\ManageConfigurationViewBuilderInterface:
-    alias: App\Managing\Service\Admin\ManageConfigurationViewBuilder
-
-  App\Managing\ServiceInterface\Diagnostics\ManageAdminDiagnosticsBuilderInterface:
-    alias: App\Managing\Service\Diagnostics\ManageAdminDiagnosticsBuilder
-
-  App\Managing\ServiceInterface\Admin\ManageComponentDetailBuilderInterface:
-    alias: App\Managing\Service\Admin\ManageComponentDetailBuilder
-
-  App\Managing\ServiceInterface\Resource\ManageResourceDetailBuilderInterface:
-    alias: App\Managing\Service\Resource\ManageResourceDetailBuilder
-
-  App\Managing\ServiceInterface\Route\ManageRouteDetailBuilderInterface:
-    alias: App\Managing\Service\Route\ManageRouteDetailBuilder
-
-  App\Managing\ServiceInterface\Form\ManageFormDetailBuilderInterface:
-    alias: App\Managing\Service\Form\ManageFormDetailBuilder
-
-  App\Managing\ServiceInterface\Probe\ManageProbeDetailBuilderInterface:
-    alias: App\Managing\Service\Probe\ManageProbeDetailBuilder
-
-
-  App\Managing\ServiceInterface\Workbench\ManageWorkbenchIndexBuilderInterface:
-    alias: App\Managing\Service\Workbench\ManageWorkbenchIndexBuilder
-
-
-  App\Managing\Service\Security\ManageAdminAccessPolicy:
-    arguments:
-      $enabled: '%managing.admin_enabled%'
-      $routePrefix: '%managing.admin_route_prefix%'
-      $allowedEnvironments: '%managing.admin_allowed_environments%'
-      $requiredRole: '%managing.admin_required_role%'
-      $showSecurityNotes: '%managing.admin_show_security_notes%'
-      $logoutPath: '%managing.admin_logout_path%'
-      $logoutLabel: '%managing.admin_logout_label%'
-      $currentEnvironment: '%kernel.environment%'
-
-  App\Managing\ServiceInterface\Security\ManageAdminAccessPolicyInterface:
-    alias: App\Managing\Service\Security\ManageAdminAccessPolicy
-
-  App\Managing\ServiceInterface\Security\ManageAdminSecurityViewBuilderInterface:
-    alias: App\Managing\Service\Security\ManageAdminSecurityViewBuilder

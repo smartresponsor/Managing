@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Managing\Controller\Admin;
 
-use App\Managing\ServiceInterface\Admin\ManageAdminNavigationBuilderInterface;
-use App\Managing\ServiceInterface\Admin\ManageAdminUserMenuBuilderInterface;
-use App\Managing\ServiceInterface\Admin\ManageDashboardSummaryBuilderInterface;
+use App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface;
 use App\Managing\ServiceInterface\Admin\ManageMenuBuilderInterface;
+use App\Managing\Value\ManageCrudResourceDefinition;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -17,22 +17,60 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AsController]
-#[AdminDashboard(routePath: '/manage', routeName: 'manage_dashboard')]
+#[AdminDashboard(routePath: '/manage', routeName: 'manage')]
 final class ManageDashboardController extends AbstractDashboardController
 {
     public function __construct(
-        private readonly ManageDashboardSummaryBuilderInterface $summaryBuilder,
-        private readonly ManageAdminNavigationBuilderInterface $navigationBuilder,
+        private readonly ManageAdminRegistryInterface $adminRegistry,
         private readonly ManageMenuBuilderInterface $menuBuilder,
-        private readonly ManageAdminUserMenuBuilderInterface $userMenuBuilder,
     ) {
     }
 
     public function index(): Response
     {
-        return $this->render('manage/admin/dashboard.html.twig', [
-            'summary' => $this->summaryBuilder->buildSummary(),
-            'navigation' => $this->navigationBuilder->buildPrimaryNavigation(),
+        return $this->render('manage/content.html.twig', [
+            'page_title' => 'Manage',
+            'content_title' => 'Business CRUD',
+            'intro' => 'Native EasyAdmin business CRUD surface mounted under /manage.',
+            'sections' => [
+                [
+                    'title' => 'Navigation',
+                    'text' => 'Use the left menu to open business CRUD index pages.',
+                ],
+            ],
+        ]);
+    }
+
+    #[AdminRoute(path: '/{componentKey}', name: 'component')]
+    public function component(string $componentKey): Response
+    {
+        $resources = array_values(array_filter(
+            $this->adminRegistry->getCrudResources(),
+            static fn (ManageCrudResourceDefinition $resource): bool => $resource->componentKey === $componentKey,
+        ));
+
+        return $this->render('manage/content.html.twig', [
+            'page_title' => ucfirst($componentKey).' index',
+            'content_title' => ucfirst($componentKey).' index',
+            'intro' => sprintf('Business records and resources for the %s component.', ucfirst($componentKey)),
+            'sections' => [
+                [
+                    'table' => [
+                        'headers' => ['Label', 'Resource', 'Mode'],
+                        'rows' => array_map(
+                            static function (ManageCrudResourceDefinition $resource): array {
+                                return [
+                                    $resource->label,
+                                    $resource->resourceKey,
+                                    $resource->mode,
+                                ];
+                            },
+                            $resources,
+                        ),
+                        'emptyMessage' => 'No business resources are registered for this component.',
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -50,6 +88,16 @@ final class ManageDashboardController extends AbstractDashboardController
 
     public function configureUserMenu(UserInterface $user): UserMenu
     {
-        return $this->userMenuBuilder->buildUserMenu($user);
+        return UserMenu::new()
+            ->setName($this->resolveUserName($user))
+            ->displayUserName(true)
+            ->displayUserAvatar(true);
+    }
+
+    private function resolveUserName(UserInterface $user): string
+    {
+        $identifier = trim($user->getUserIdentifier());
+
+        return '' !== $identifier ? $identifier : 'Managing user';
     }
 }

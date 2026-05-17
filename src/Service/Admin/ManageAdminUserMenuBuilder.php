@@ -7,7 +7,6 @@ namespace App\Managing\Service\Admin;
 use App\Managing\ServiceInterface\Admin\ManageAdminUserMenuBuilderInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 final readonly class ManageAdminUserMenuBuilder implements ManageAdminUserMenuBuilderInterface
@@ -15,7 +14,6 @@ final readonly class ManageAdminUserMenuBuilder implements ManageAdminUserMenuBu
     public function __construct(
         private string $logoutPath,
         private string $logoutLabel,
-        private UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -26,8 +24,6 @@ final readonly class ManageAdminUserMenuBuilder implements ManageAdminUserMenuBu
             ->displayUserName(true)
             ->displayUserAvatar(true)
             ->addMenuItems([
-                MenuItem::linkToUrl('Security contract', 'fa fa-shield-halved', $this->urlGenerator->generate('manage_security')),
-                MenuItem::section(),
                 MenuItem::linkToUrl('Switch account', 'fa fa-right-left', '/switch-account'),
                 MenuItem::linkToUrl($this->resolveLogoutLabel(), 'fa fa-sign-out-alt', $this->resolveLogoutPath()),
             ]);

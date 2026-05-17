@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Managing\Tests\Unit\Admin;
 
 use App\Managing\Service\Admin\ManageMenuBuilder;
+use App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface;
 use App\Managing\ServiceInterface\Admin\ManageAdminRegistryInterface;
-use App\Managing\Value\ManageComponentDefinition;
+use App\Managing\Value\ManageCrudResourceDefinition;
 use PHPUnit\Framework\TestCase;
 
 final class ManageMenuBuilderTest extends TestCase
 {
-    public function testMenuBuilderKeepsOnlyAllowlistedComponentsInConfiguredOrder(): void
+    public function testMenuBuilderPublishesOnlySiblingCrudResources(): void
     {
         $registry = new class implements ManageAdminRegistryInterface {
-            public function addProvider(\App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface $provider): void
+            public function addProvider(ManageAdminProviderInterface $provider): void
             {
             }
 
@@ -23,39 +24,31 @@ final class ManageMenuBuilderTest extends TestCase
                 return [];
             }
 
-            public function getComponents(): array
-            {
-                return [
-                    new ManageComponentDefinition('host_application', 'Host application'),
-                    new ManageComponentDefinition('billing', 'Billing'),
-                    new ManageComponentDefinition('bridge', 'Bridge'),
-                    new ManageComponentDefinition('accessing', 'Accessing'),
-                    new ManageComponentDefinition('vendoring', 'Vendoring'),
-                ];
-            }
-
             public function getCrudResources(): array
             {
-                return [];
+                return [
+                    new ManageCrudResourceDefinition(
+                        componentKey: 'cataloging',
+                        resourceKey: 'catalog_category_entity',
+                        label: 'Catalog categories',
+                        entityClass: 'App\\Cataloging\\Entity\\Catalog\\CatalogCategoryEntity',
+                        crudControllerClass: 'App\\Cataloging\\Controller\\Crud\\CatalogCategoryCrudController',
+                        mode: ManageCrudResourceDefinition::MODE_EASYADMIN,
+                        surface: 'manage',
+                    ),
+                ];
             }
         };
 
-        $builder = new ManageMenuBuilder($registry, ['accessing', 'billing', 'vendoring']);
+        $builder = new ManageMenuBuilder($registry, ['cataloging'], ['managing']);
 
         $items = iterator_to_array($builder->buildMenuItems(), false);
 
-        self::assertCount(3, $items);
-        self::assertSame(['Accessing', 'Billing', 'Vendoring'], array_map(
+        self::assertCount(2, $items);
+        self::assertSame(['Manage', 'Cataloging'], array_map(
             static fn ($item): string => (string) $item->getAsDto()->getLabel(),
             $items
         ));
-        self::assertSame(['manage_dashboard_components_detail', 'manage_dashboard_components_detail', 'manage_dashboard_components_detail'], array_map(
-            static fn ($item): string => $item->getAsDto()->getRouteName(),
-            $items
-        ));
-        self::assertSame(['accessing', 'billing', 'vendoring'], array_map(
-            static fn ($item): string => $item->getAsDto()->getRouteParameters()['componentKey'],
-            $items
-        ));
+        self::assertSame('/manage/cataloging', $items[1]->getAsDto()->getLinkUrl());
     }
 }
