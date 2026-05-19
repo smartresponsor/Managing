@@ -19,13 +19,14 @@ services:
 
   App\Managing\Service\Admin\ManageMenuBuilder:
     arguments:
-      $menuComponents: '%managing.menu_components%'
+      $leftMenu: '%managing.left_menu%'
       $menuExcludedComponents: '%managing.menu_excluded_components%'
+      $crudResourceRegistry: '@App\Managing\ServiceInterface\Crud\ManageCrudResourceRegistryInterface'
 
   App\Managing\Service\Admin\ManageHostApplicationAdminProvider:
     arguments:
       $projectDir: '%kernel.project_dir%'
-      $cache: '@cache.app'
+      $cacheDir: '%kernel.cache_dir%'
       $enabled: '%managing.host_scan_enabled%'
       $sourceRoots: '%managing.host_scan_source_roots%'
       $namespacePrefixes: '%managing.host_scan_namespace_prefixes%'

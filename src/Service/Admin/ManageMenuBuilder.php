@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Managing\Service\Admin;
 
 use App\Managing\ServiceInterface\Admin\ManageMenuBuilderInterface;
+use App\Managing\ServiceInterface\Crud\ManageCrudResourceRegistryInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 
 final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
 {
     public function __construct(
-        private array $menuComponents = [],
+        private readonly ManageCrudResourceRegistryInterface $crudResourceRegistry,
+        private array $leftMenu = [],
         private array $menuExcludedComponents = [],
     ) {
     }
@@ -19,8 +21,13 @@ final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
     {
         yield MenuItem::linkToDashboard('Manage', 'fa fa-home');
 
-        foreach ($this->orderedComponentKeys($this->menuComponents) as $componentKey) {
-            if ($this->isExcludedComponent($componentKey)) {
+        $availableComponents = [];
+        foreach ($this->crudResourceRegistry->getCrudResources() as $resource) {
+            $availableComponents[$resource->componentKey] = true;
+        }
+
+        foreach ($this->orderedComponentKeys($this->leftMenu) as $componentKey) {
+            if ($this->isExcludedComponent($componentKey) || !isset($availableComponents[$componentKey])) {
                 continue;
             }
 
@@ -45,7 +52,7 @@ final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
     private function orderedComponentKeys(array $componentKeys): array
     {
         $componentKeys = array_values(array_unique(array_filter($componentKeys, static fn (mixed $value): bool => is_string($value) && '' !== $value)));
-        $position = array_flip($this->menuComponents);
+        $position = array_flip($this->leftMenu);
 
         usort(
             $componentKeys,

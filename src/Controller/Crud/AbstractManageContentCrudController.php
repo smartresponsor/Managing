@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Managing\Controller\Crud;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping as ORM;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -12,11 +13,19 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
@@ -70,7 +79,6 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
     protected static function manageSearchFieldCandidates(): array
     {
         return [
-            'id',
             'firstTitle',
             'title',
             'name',
@@ -107,6 +115,11 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
         return ['publishedAt', 'publishAt'];
     }
 
+    protected static function manageIsReadOnly(): bool
+    {
+        return false;
+    }
+
     public function configureCrud(Crud $crud): Crud
     {
         $crud
@@ -122,13 +135,19 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
             ->setDefaultSort($this->defaultSort())
             ->showEntityActionsInlined()
             ->askConfirmationOnBatchActions()
-            ->setDefaultRowAction(Action::EDIT);
+            ->setDefaultRowAction(static::manageIsReadOnly() ? Action::DETAIL : Action::EDIT);
 
         return $crud;
     }
 
     public function configureActions(Actions $actions): Actions
     {
+        if (static::manageIsReadOnly()) {
+            return $actions
+                ->add(Crud::PAGE_INDEX, Action::DETAIL)
+                ->disable(Action::NEW, Action::EDIT, Action::DELETE);
+        }
+
         $publish = Action::new(self::ACTION_PUBLISH, 'Publish', 'fa fa-eye')
             ->linkToCrudAction('publish')
             ->asSuccessAction()
@@ -191,7 +210,9 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
     public function configureFields(string $pageName): iterable
     {
         if ($this->hasField('id')) {
-            yield IdField::new('id', 'ID')->onlyOnIndex();
+            yield IdField::new('id', 'ID')
+                ->formatValue(fn (mixed $value): string => $this->stringifyFieldValue($value))
+                ->onlyOnIndex();
         }
 
         foreach (['firstTitle', 'title', 'name', 'label'] as $field) {
@@ -203,13 +224,23 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
 
         foreach (['code', 'slug', 'sku'] as $field) {
             if ($this->hasField($field)) {
-                yield TextField::new($field, $this->labelFor($field))->setMaxLength(64)->hideOnForm();
+                yield TextField::new($field, $this->labelFor($field))->setMaxLength(64);
             }
         }
 
         foreach (static::manageStatusFieldCandidates() as $field) {
             if ($this->hasField($field)) {
-                yield TextField::new($field, $this->labelFor($field))->setMaxLength(32);
+                $enumType = $this->enumTypeFor($field);
+
+                if (null !== $enumType) {
+                    yield ChoiceField::new($field, $this->labelFor($field))
+                        ->setChoices($this->enumChoices($enumType));
+                } else {
+                    yield TextField::new($field, $this->labelFor($field))
+                        ->setMaxLength(32)
+                        ->setTemplatePath('admin/field/stringified_text.html.twig')
+                        ->formatValue(fn (mixed $value): string => $this->stringifyFieldValue($value));
+                }
                 break;
             }
         }
@@ -230,6 +261,10 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
 
         if ($this->hasField('description')) {
             yield TextareaField::new('description')->hideOnIndex();
+        }
+
+        foreach ($this->discoverFormFields($pageName) as $field) {
+            yield $field;
         }
 
         if ($this->hasField('createdAt')) {
@@ -463,13 +498,499 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
 
     private function labelFor(string $field): string
     {
-        $label = (string) preg_replace('/(?<!^)[A-Z]/', ' $0', $field);
+        $label = (string) preg_replace('/(?<!^)[A-Z_]/', ' $0', $field);
+        $label = str_replace('_', ' ', $label);
 
         return ucfirst($label);
+    }
+
+    /**
+     * @return iterable<int, object>
+     */
+    private function discoverFormFields(string $pageName): iterable
+    {
+        if (!\in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT], true)) {
+            return [];
+        }
+
+        $excludedFields = array_fill_keys([
+            'id',
+            'firstTitle',
+            'title',
+            'name',
+            'label',
+            'code',
+            'slug',
+            'sku',
+            'status',
+            'state',
+            'published',
+            'isPublished',
+            'enabled',
+            'active',
+            'publishedAt',
+            'publishAt',
+            'description',
+            'createdAt',
+            'updatedAt',
+        ], true);
+
+        try {
+            $reflection = new \ReflectionClass(static::getEntityFqcn());
+        } catch (\ReflectionException) {
+            return [];
+        }
+
+        $fields = [];
+        foreach ($reflection->getProperties() as $property) {
+            if ($property->isStatic()) {
+                continue;
+            }
+
+            $fieldName = $property->getName();
+            if (isset($excludedFields[$fieldName])) {
+                continue;
+            }
+
+            $field = $this->formFieldForProperty($property);
+            if (null !== $field) {
+                $fields[] = $field;
+            }
+        }
+
+        return $fields;
+    }
+
+    private function formFieldForProperty(\ReflectionProperty $property): mixed
+    {
+        if ($field = $this->associationFieldForProperty($property)) {
+            return $field;
+        }
+
+        $column = $this->attributeInstance($property, ORM\Column::class);
+        if (null === $column) {
+            return null;
+        }
+
+        $fieldName = $property->getName();
+        $label = $this->labelFor($fieldName);
+
+        if (isset($column->enumType) && is_string($column->enumType) && '' !== $column->enumType) {
+            return ChoiceField::new($fieldName, $label)
+                ->setChoices($this->enumChoices($column->enumType));
+        }
+
+        $propertyType = $this->propertyTypeName($property);
+        if ('array' === $propertyType) {
+            $field = $this->choiceFieldForArrayProperty($property);
+            if (null !== $field) {
+                return $field;
+            }
+        }
+
+        if ('bool' === $propertyType) {
+            return BooleanField::new($fieldName, $label);
+        }
+
+        if ('int' === $propertyType) {
+            return IntegerField::new($fieldName, $label);
+        }
+
+        if ('float' === $propertyType) {
+            return NumberField::new($fieldName, $label);
+        }
+
+        if (\DateTimeImmutable::class === $propertyType || \DateTimeInterface::class === $propertyType || \DateTime::class === $propertyType) {
+            return DateTimeField::new($fieldName, $label);
+        }
+
+        return match ($column->type ?? 'string') {
+            'boolean' => BooleanField::new($fieldName, $label),
+            'integer', 'smallint', 'bigint' => IntegerField::new($fieldName, $label),
+            'float', 'decimal' => NumberField::new($fieldName, $label),
+            'date', 'date_immutable' => DateField::new($fieldName, $label),
+            'datetime', 'datetime_immutable' => DateTimeField::new($fieldName, $label),
+            'time', 'time_immutable' => TimeField::new($fieldName, $label),
+            'text' => TextareaField::new($fieldName, $label),
+            'guid' => $this->guidFieldForProperty($fieldName, $label),
+            default => $this->stringFieldForProperty($fieldName, $label, $column->length ?? null),
+        };
+    }
+
+    private function associationFieldForProperty(\ReflectionProperty $property): ?object
+    {
+        $fieldName = $property->getName();
+        $label = $this->labelFor($fieldName);
+
+        foreach ([ORM\ManyToOne::class, ORM\OneToOne::class] as $attributeClass) {
+            $attribute = $this->attributeInstance($property, $attributeClass);
+            if (null === $attribute) {
+                continue;
+            }
+
+            return AssociationField::new($fieldName, $label)
+                ->renderAsNativeWidget()
+                ->setFormTypeOption('choice_label', fn (object $choice): string => $this->associationChoiceLabel($choice));
+        }
+
+        return null;
+    }
+
+    private function guidFieldForProperty(string $fieldName, string $label): object
+    {
+        if ($this->looksLikeEmailField($fieldName)) {
+            return EmailField::new($fieldName, $label);
+        }
+
+        if ($this->looksLikeUrlField($fieldName)) {
+            return UrlField::new($fieldName, $label);
+        }
+
+        return TextField::new($fieldName, $label);
+    }
+
+    private function choiceFieldForArrayProperty(\ReflectionProperty $property): ?object
+    {
+        $fieldName = $property->getName();
+        $label = $this->labelFor($fieldName);
+
+        if ('roles' !== $fieldName) {
+            return null;
+        }
+
+        $choices = $this->knownRoleChoicesForEntity();
+        if ([] === $choices) {
+            return null;
+        }
+
+        return ChoiceField::new($fieldName, $label)
+            ->setChoices($choices)
+            ->allowMultipleChoices()
+            ->renderExpanded(false)
+            ->autocomplete();
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function knownRoleChoicesForEntity(): array
+    {
+        $entityFqcn = static::getEntityFqcn();
+        if (\App\Applicating\Entity\ApplicationUser::class === $entityFqcn) {
+            return [
+                'Application admin' => 'ROLE_APPLICATION_ADMIN',
+                'Application manager' => 'ROLE_APPLICATION_MANAGER',
+                'Application viewer' => 'ROLE_APPLICATION_VIEWER',
+                'Application user' => 'ROLE_APPLICATION_USER',
+            ];
+        }
+
+        return [];
+    }
+
+    private function stringFieldForProperty(string $fieldName, string $label, ?int $length): object
+    {
+        if ($this->looksLikeEmailField($fieldName)) {
+            return EmailField::new($fieldName, $label);
+        }
+
+        if ($this->looksLikeUrlField($fieldName)) {
+            return UrlField::new($fieldName, $label);
+        }
+
+        if ($this->looksLikeLongTextField($fieldName) || (null !== $length && $length > 255)) {
+            return TextareaField::new($fieldName, $label);
+        }
+
+        return TextField::new($fieldName, $label);
+    }
+
+    private function looksLikeEmailField(string $fieldName): bool
+    {
+        return str_contains(strtolower($fieldName), 'email');
+    }
+
+    private function looksLikeUrlField(string $fieldName): bool
+    {
+        $fieldName = strtolower($fieldName);
+
+        return str_contains($fieldName, 'url') || str_contains($fieldName, 'link');
+    }
+
+    private function looksLikeLongTextField(string $fieldName): bool
+    {
+        $fieldName = strtolower($fieldName);
+
+        return str_contains($fieldName, 'description')
+            || str_contains($fieldName, 'summary')
+            || str_contains($fieldName, 'message')
+            || str_contains($fieldName, 'content')
+            || str_contains($fieldName, 'body')
+            || str_contains($fieldName, 'note')
+            || str_contains($fieldName, 'payload')
+            || str_contains($fieldName, 'details');
+    }
+
+    private function associationChoiceLabel(object $choice): string
+    {
+        if (method_exists($choice, '__toString')) {
+            try {
+                $label = (string) $choice;
+                if ('' !== trim($label)) {
+                    return $label;
+                }
+            } catch (\Throwable) {
+                // Fall through to reflective label guessing.
+            }
+        }
+
+        foreach (['firstTitle', 'title', 'name', 'label', 'code', 'slug', 'number', 'reference', 'identifier', 'email', 'username'] as $field) {
+            $value = $this->readField($choice, $field);
+            if (null === $value) {
+                continue;
+            }
+
+            $label = $this->stringifyFieldValue($value);
+            if ('' !== trim($label)) {
+                return $label;
+            }
+        }
+
+        if (method_exists($choice, 'getId')) {
+            $value = $choice->getId();
+            if (null !== $value) {
+                return $this->stringifyFieldValue($value);
+            }
+        }
+
+        if (method_exists($choice, 'id')) {
+            $value = $choice->id();
+            if (null !== $value) {
+                return $this->stringifyFieldValue($value);
+            }
+        }
+
+        return get_debug_type($choice);
+    }
+
+    private function propertyTypeName(\ReflectionProperty $property): ?string
+    {
+        $type = $property->getType();
+        if ($type instanceof \ReflectionNamedType) {
+            return $type->getName();
+        }
+
+        if ($type instanceof \ReflectionUnionType) {
+            foreach ($type->getTypes() as $namedType) {
+                if ($namedType->allowsNull()) {
+                    continue;
+                }
+
+                return $namedType->getName();
+            }
+
+            $namedTypes = $type->getTypes();
+            if ([] !== $namedTypes) {
+                return $namedTypes[0]->getName();
+            }
+        }
+
+        return null;
+    }
+
+    private function attributeInstance(\ReflectionProperty $property, string $attributeClass): ?object
+    {
+        $attributes = $property->getAttributes($attributeClass);
+        if ([] === $attributes) {
+            return null;
+        }
+
+        try {
+            return $attributes[0]->newInstance();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    private function enumTypeFor(string $field): ?string
+    {
+        try {
+            $reflection = new \ReflectionClass(static::getEntityFqcn());
+            if (!$reflection->hasProperty($field)) {
+                return null;
+            }
+
+            $property = $reflection->getProperty($field);
+            $attributes = $property->getAttributes(ORM\Column::class);
+            foreach ($attributes as $attribute) {
+                $instance = $attribute->newInstance();
+                if (isset($instance->enumType) && is_string($instance->enumType) && '' !== $instance->enumType) {
+                    return $instance->enumType;
+                }
+            }
+        } catch (\ReflectionException) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, \BackedEnum>
+     */
+    private function enumChoices(string $enumType): array
+    {
+        $choices = [];
+        foreach ($enumType::cases() as $case) {
+            $choices[ucfirst(str_replace('_', ' ', $case->value))] = $case;
+        }
+
+        return $choices;
     }
 
     private function redirectBack(?string $referer): RedirectResponse
     {
         return $this->redirect($referer ?: '/manage');
+    }
+
+    public function createEntity(string $entityFqcn): object
+    {
+        return $this->instantiateEntityForNewForm($entityFqcn);
+    }
+
+    private function instantiateEntityForNewForm(string $entityFqcn, array $stack = []): object
+    {
+        try {
+            $reflectionClass = new \ReflectionClass($entityFqcn);
+        } catch (\ReflectionException) {
+            return new $entityFqcn();
+        }
+
+        if (!$reflectionClass->isInstantiable()) {
+            return $reflectionClass->newInstanceWithoutConstructor();
+        }
+
+        $constructor = $reflectionClass->getConstructor();
+        if (null === $constructor || [] === $constructor->getParameters()) {
+            return $reflectionClass->newInstance();
+        }
+
+        if (in_array($entityFqcn, $stack, true)) {
+            return $reflectionClass->newInstanceWithoutConstructor();
+        }
+
+        $stack[] = $entityFqcn;
+
+        $arguments = [];
+        foreach ($constructor->getParameters() as $parameter) {
+            $arguments[] = $this->resolveConstructorArgument($parameter, $stack);
+        }
+
+        try {
+            return $reflectionClass->newInstanceArgs($arguments);
+        } catch (\Throwable) {
+            return $reflectionClass->newInstanceWithoutConstructor();
+        }
+    }
+
+    private function resolveConstructorArgument(\ReflectionParameter $parameter, array $stack): mixed
+    {
+        if ($parameter->isDefaultValueAvailable()) {
+            return $parameter->getDefaultValue();
+        }
+
+        $type = $parameter->getType();
+        if ($type instanceof \ReflectionUnionType) {
+            foreach ($type->getTypes() as $namedType) {
+                $value = $this->resolveNamedConstructorArgument($namedType, $stack);
+                if (null !== $value || $namedType->allowsNull()) {
+                    return $value;
+                }
+            }
+
+            return null;
+        }
+
+        if ($type instanceof \ReflectionNamedType) {
+            return $this->resolveNamedConstructorArgument($type, $stack);
+        }
+
+        return null;
+    }
+
+    private function resolveNamedConstructorArgument(\ReflectionNamedType $type, array $stack): mixed
+    {
+        if ($type->allowsNull()) {
+            return null;
+        }
+
+        if ($type->isBuiltin()) {
+            return match ($type->getName()) {
+                'string' => '',
+                'int' => 0,
+                'float' => 0.0,
+                'bool' => false,
+                'array' => [],
+                'callable' => static fn (): null => null,
+                'iterable' => [],
+                'mixed' => null,
+                default => null,
+            };
+        }
+
+        $typeName = $type->getName();
+
+        if (\DateTimeImmutable::class === $typeName || \DateTimeInterface::class === $typeName || \DateTime::class === $typeName) {
+            return new \DateTimeImmutable();
+        }
+
+        if (enum_exists($typeName)) {
+            $cases = $typeName::cases();
+
+            return $cases[0] ?? null;
+        }
+
+        if (!class_exists($typeName)) {
+            return null;
+        }
+
+        try {
+            return $this->instantiateEntityForNewForm($typeName, $stack);
+        } catch (\Throwable) {
+            $reflectionClass = new \ReflectionClass($typeName);
+
+            return $reflectionClass->isInstantiable() ? $reflectionClass->newInstanceWithoutConstructor() : null;
+        }
+    }
+
+    private function stringifyFieldValue(mixed $value): string
+    {
+        if (null === $value) {
+            return '';
+        }
+
+        if ($value instanceof \BackedEnum) {
+            return (string) $value->value;
+        }
+
+        if ($value instanceof \Stringable) {
+            return (string) $value;
+        }
+
+        if ($value instanceof \DateTimeInterface) {
+            return $value->format(DATE_ATOM);
+        }
+
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        if (is_array($value)) {
+            $encoded = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+            return false === $encoded ? 'array' : $encoded;
+        }
+
+        return (string) get_debug_type($value);
     }
 }

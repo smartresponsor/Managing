@@ -10,7 +10,7 @@ managing:
   disabled_resources: []
   menu_order: []
 
-  menu_components:
+  left_menu:
     - analysing
     - applicating
     - attaching

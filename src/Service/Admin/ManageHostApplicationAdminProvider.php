@@ -8,15 +8,14 @@ use App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface;
 use App\Managing\Value\ManageComponentDefinition;
 use App\Managing\Value\ManageCrudResourceDefinition;
 use EasyCorp\Bundle\EasyAdminBundle\Contracts\Controller\CrudControllerInterface;
-use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Component\Yaml\Yaml;
 
 final class ManageHostApplicationAdminProvider implements ManageAdminProviderInterface
 {
-    /** @var list<array{namespace: string, path: string}>|null */
-    private ?array $psr4Roots = null;
+    private const CACHE_VERSION = 'v8';
 
     /** @var list<ManageCrudResourceDefinition>|null */
-    private ?array $resources = null;
+    private ?array $cachedResources = null;
 
     /**
      * @param list<string> $sourceRoots
@@ -25,11 +24,11 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
      */
     public function __construct(
         private readonly string $projectDir,
-        private readonly CacheInterface $cache,
         private readonly bool $enabled = true,
         private readonly array $sourceRoots = ['src'],
         private readonly array $namespacePrefixes = ['App\\'],
         private readonly array $excludedNamespaces = ['App\\Managing\\'],
+        private readonly ?string $cacheDir = null,
     ) {
     }
 
@@ -45,7 +44,7 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     /** @return iterable<ManageCrudResourceDefinition> */
     public function getCrudResources(): iterable
     {
-        foreach ($this->resources ??= $this->cache->get($this->resourcesCacheKey(), fn (): array => $this->discoverResources()) as $resource) {
+        foreach ($this->discoverResources() as $resource) {
             yield $resource;
         }
     }
@@ -53,19 +52,43 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     /** @return list<ManageCrudResourceDefinition> */
     private function discoverResources(): array
     {
+        if (null !== $this->cachedResources) {
+            return $this->cachedResources;
+        }
+
         if (!$this->enabled) {
-            return [];
+            return $this->cachedResources = [];
+        }
+
+        $cachedResources = $this->loadCachedResources();
+        if (null !== $cachedResources) {
+            return $this->cachedResources = $cachedResources;
         }
 
         $resources = [];
 
-        foreach ($this->findPhpFiles('/Entity/') as $file) {
+        foreach ($this->findPhpFiles('/src/Entity/') as $file) {
+            if (!$this->isDoctrineEntityFile($file->getPathname())) {
+                continue;
+            }
+            if (!$this->hasSingleDoctrineIdentifier($file->getPathname())) {
+                continue;
+            }
+
             $className = $this->classNameFromFile($file);
-            if (null === $className || $this->isExcludedClass($className) || !class_exists($className)) {
+            if (
+                null === $className
+                || $this->isExcludedClass($className)
+                || !class_exists($className)
+                || !$this->isDoctrineManagedClass($className, $file->getPathname())
+            ) {
                 continue;
             }
 
             $componentKey = $this->componentKeyFromClass($className);
+            if ($this->isExcludedManageResource($componentKey, $className)) {
+                continue;
+            }
             $resourceKey = $this->resourceKeyFromClass($className);
             $shortName = $this->shortClassName($className);
 
@@ -89,7 +112,129 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
 
         ksort($resources);
 
-        return array_values($resources);
+        $resources = array_values($resources);
+        $this->storeCachedResources($resources);
+
+        return $this->cachedResources = $resources;
+    }
+
+    /**
+     * @return list<ManageCrudResourceDefinition>|null
+     */
+    private function loadCachedResources(): ?array
+    {
+        $cacheFile = $this->cacheFilePath();
+        if (!is_file($cacheFile)) {
+            return null;
+        }
+
+        $payload = require $cacheFile;
+        if (!is_array($payload) || !isset($payload['resources']) || !is_array($payload['resources'])) {
+            return null;
+        }
+
+        $resources = [];
+        foreach ($payload['resources'] as $item) {
+            if (!is_array($item)) {
+                return null;
+            }
+
+            $entityClass = (string) ($item['entityClass'] ?? '');
+            if ('' === $entityClass || !class_exists($entityClass)) {
+                return null;
+            }
+            if (!$this->isCachedResourceStillValid($entityClass)) {
+                return null;
+            }
+
+            $resources[] = new ManageCrudResourceDefinition(
+                componentKey: (string) ($item['componentKey'] ?? ''),
+                resourceKey: (string) ($item['resourceKey'] ?? ''),
+                label: (string) ($item['label'] ?? ''),
+                entityClass: $entityClass,
+                crudControllerClass: isset($item['crudControllerClass']) ? $this->nullableString($item['crudControllerClass']) : null,
+                formTypeClass: isset($item['formTypeClass']) ? $this->nullableString($item['formTypeClass']) : null,
+                routeNamePattern: isset($item['routeNamePattern']) ? $this->nullableString($item['routeNamePattern']) : null,
+                menuGroup: isset($item['menuGroup']) ? $this->nullableString($item['menuGroup']) : null,
+                enabled: (bool) ($item['enabled'] ?? true),
+                mode: (string) ($item['mode'] ?? ManageCrudResourceDefinition::MODE_EASYADMIN),
+                resourcePath: isset($item['resourcePath']) ? $this->nullableString($item['resourcePath']) : null,
+                identifierField: (string) ($item['identifierField'] ?? 'id'),
+                surface: (string) ($item['surface'] ?? ManageCrudResourceDefinition::SURFACE_MANAGE),
+                templatePrefix: (string) ($item['templatePrefix'] ?? 'crud'),
+            );
+        }
+
+        return $resources;
+    }
+
+    private function isCachedResourceStillValid(string $entityClass): bool
+    {
+        try {
+            $reflection = new \ReflectionClass($entityClass);
+        } catch (\ReflectionException) {
+            return false;
+        }
+
+        $filePath = $reflection->getFileName();
+        if (!is_string($filePath) || '' === $filePath || !is_file($filePath)) {
+            return false;
+        }
+
+        if ($this->isExcludedClass($entityClass) || !$this->isDoctrineManagedClass($entityClass, $filePath)) {
+            return false;
+        }
+
+        return $this->hasSingleDoctrineIdentifier($filePath);
+    }
+
+    /**
+     * @param list<ManageCrudResourceDefinition> $resources
+     */
+    private function storeCachedResources(array $resources): void
+    {
+        $cacheFile = $this->cacheFilePath();
+        $cacheDir = dirname($cacheFile);
+        if (!is_dir($cacheDir)) {
+            mkdir($cacheDir, 0777, true);
+        }
+
+        $payload = [
+            'resources' => array_map(
+                static fn (ManageCrudResourceDefinition $resource): array => [
+                    'componentKey' => $resource->componentKey,
+                    'resourceKey' => $resource->resourceKey,
+                    'label' => $resource->label,
+                    'entityClass' => $resource->entityClass,
+                    'crudControllerClass' => $resource->crudControllerClass,
+                    'formTypeClass' => $resource->formTypeClass,
+                    'routeNamePattern' => $resource->routeNamePattern,
+                    'menuGroup' => $resource->menuGroup,
+                    'enabled' => $resource->enabled,
+                    'mode' => $resource->mode,
+                    'resourcePath' => $resource->resourcePath,
+                    'identifierField' => $resource->identifierField,
+                    'surface' => $resource->surface,
+                    'templatePrefix' => $resource->templatePrefix,
+                ],
+                $resources,
+            ),
+        ];
+
+        $content = '<?php return '.var_export($payload, true).';';
+        file_put_contents($cacheFile, $content, LOCK_EX);
+    }
+
+    private function cacheFilePath(): string
+    {
+        $cacheDir = $this->cacheDir ?? ($this->projectDir.'/var/cache');
+
+        return rtrim($cacheDir, '/\\').'/managing_host_crud_resources_'.self::CACHE_VERSION.'.php';
+    }
+
+    private function nullableString(mixed $value): ?string
+    {
+        return null === $value ? null : (string) $value;
     }
 
     /** @return iterable<\SplFileInfo> */
@@ -199,39 +344,33 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     /** @return list<array{namespace: string, path: string}> */
     private function psr4Roots(): array
     {
-        if (null !== $this->psr4Roots) {
-            return $this->psr4Roots;
-        }
+        $roots = [...$this->composerPsr4Roots(), ...$this->runtimePsr4Roots()];
 
-        return $this->psr4Roots = $this->cache->get($this->psr4RootsCacheKey(), function (): array {
-            $roots = [...$this->composerPsr4Roots(), ...$this->runtimePsr4Roots()];
-
-            foreach ($this->namespacePrefixes as $namespacePrefix) {
-                if (!$this->containsNamespaceRoot($roots, $namespacePrefix)) {
-                    $roots[] = [
-                        'namespace' => $namespacePrefix,
-                        'path' => $this->projectDir.'/src',
-                    ];
-                }
-            }
-
-            $unique = [];
-            foreach ($roots as $root) {
-                if ($this->isExcludedNamespace($root['namespace']) || !is_dir($root['path'])) {
-                    continue;
-                }
-
-                $path = realpath($root['path']) ?: $root['path'];
-                $unique[$root['namespace'].'|'.$path] = [
-                    'namespace' => $root['namespace'],
-                    'path' => $path,
+        foreach ($this->namespacePrefixes as $namespacePrefix) {
+            if (!$this->containsNamespaceRoot($roots, $namespacePrefix)) {
+                $roots[] = [
+                    'namespace' => $namespacePrefix,
+                    'path' => $this->projectDir.'/src',
                 ];
             }
+        }
 
-            ksort($unique);
+        $unique = [];
+        foreach ($roots as $root) {
+            if ($this->isExcludedNamespace($root['namespace']) || !is_dir($root['path'])) {
+                continue;
+            }
 
-            return array_values($unique);
-        });
+            $path = realpath($root['path']) ?: $root['path'];
+            $unique[$root['namespace'].'|'.$path] = [
+                'namespace' => $root['namespace'],
+                'path' => $path,
+            ];
+        }
+
+        ksort($unique);
+
+        return array_values($unique);
     }
 
     /** @return list<array{namespace: string, path: string}> */
@@ -317,6 +456,13 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         return false;
     }
 
+    private function isDoctrineEntityFile(string $filePath): bool
+    {
+        $contents = (string) file_get_contents($filePath);
+
+        return 1 === preg_match('/#\\[\\s*(?:ORM\\\\)?Entity\\b/', $contents);
+    }
+
     private function absolutePath(string $path): string
     {
         if (str_starts_with($path, '/') || preg_match('/^[A-Za-z]:[\\\\\/]/', $path)) {
@@ -337,6 +483,15 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         return false;
     }
 
+    private function isExcludedManageResource(string $componentKey, string $className): bool
+    {
+        if ('tagging' !== $componentKey) {
+            return false;
+        }
+
+        return !str_ends_with($className, '\\TagAdminView');
+    }
+
     private function isExcludedNamespace(string $namespace): bool
     {
         foreach ($this->excludedNamespaces as $excludedNamespace) {
@@ -348,12 +503,122 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         return false;
     }
 
+    private function hasSingleDoctrineIdentifier(string $filePath): bool
+    {
+        $contents = (string) file_get_contents($filePath);
+        preg_match_all('/#\[\\s*(?:ORM\\\\)?Id\\b/', $contents, $matches);
+
+        return 1 === count($matches[0]);
+    }
+
+    private function isDoctrineManagedClass(string $className, string $filePath): bool
+    {
+        $normalizedFilePath = $this->normalizePath($filePath);
+
+        foreach ($this->doctrineMappings() as $mapping) {
+            if (!str_starts_with($className, $mapping['prefix'])) {
+                continue;
+            }
+
+            if ($normalizedFilePath === $mapping['dir'] || str_starts_with($normalizedFilePath, $mapping['dir'].'/')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @return list<array{dir: string, prefix: string}>
+     */
+    private function doctrineMappings(): array
+    {
+        static $mappings = null;
+        if (null !== $mappings) {
+            return $mappings;
+        }
+
+        $configFile = $this->projectDir.'/config/packages/doctrine.yaml';
+        if (!is_file($configFile)) {
+            return $mappings = [];
+        }
+
+        $config = Yaml::parseFile($configFile);
+        $entityManagers = $config['doctrine']['orm']['entity_managers'] ?? [];
+        if (!is_array($entityManagers)) {
+            return $mappings = [];
+        }
+
+        $mappings = [];
+        foreach ($entityManagers as $entityManagerConfig) {
+            if (!is_array($entityManagerConfig)) {
+                continue;
+            }
+
+            $entityManagerMappings = $entityManagerConfig['mappings'] ?? [];
+            if (!is_array($entityManagerMappings)) {
+                continue;
+            }
+
+            foreach ($entityManagerMappings as $mapping) {
+                if (!is_array($mapping)) {
+                    continue;
+                }
+
+                $dir = $mapping['dir'] ?? null;
+                $prefix = $mapping['prefix'] ?? null;
+                if (!is_string($dir) || '' === $dir || !is_string($prefix) || '' === $prefix) {
+                    continue;
+                }
+
+                $resolvedDir = str_replace('%kernel.project_dir%', $this->projectDir, $dir);
+                $resolvedDir = realpath($this->absolutePath($resolvedDir)) ?: $this->absolutePath($resolvedDir);
+                $mappings[] = [
+                    'dir' => $this->normalizePath($resolvedDir),
+                    'prefix' => $prefix,
+                ];
+            }
+        }
+
+        return $mappings;
+    }
+
+    private function normalizePath(string $path): string
+    {
+        return rtrim(str_replace('\\', '/', $path), '/');
+    }
+
     private function componentKeyFromClass(string $className): string
     {
         $parts = explode('\\', $className);
 
         if (isset($parts[1]) && !in_array($parts[1], ['Entity', 'Controller'], true)) {
             return $this->slug($parts[1]);
+        }
+
+        if (isset($parts[2])) {
+            $rootNamespaceComponentMap = [
+                'Attachment' => 'attaching',
+                'Billing' => 'billing',
+                'Catalog' => 'cataloging',
+                'Category' => 'cataloging',
+                'Currency' => 'currencing',
+                'Exchange' => 'exchanging',
+                'Message' => 'messaging',
+                'Order' => 'ordering',
+                'Page' => 'paging',
+                'Payment' => 'paying',
+                'Shipment' => 'shipping',
+                'Tag' => 'tagging',
+                'Tax' => 'taxating',
+                'Vendor' => 'vendoring',
+            ];
+
+            if (isset($rootNamespaceComponentMap[$parts[2]])) {
+                return $rootNamespaceComponentMap[$parts[2]];
+            }
+
+            return $this->slug($parts[2]);
         }
 
         return 'app';
@@ -364,8 +629,11 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         $parts = explode('\\', $entityClass);
         $shortName = $this->shortClassName($entityClass);
         $componentPrefix = isset($parts[1]) && !in_array($parts[1], ['Entity', 'Form', 'Controller'], true) ? $parts[1] : '';
+        $componentKey = $this->componentKeyFromClass($entityClass);
 
         $candidates = [];
+        $candidates[] = sprintf('App\\Managing\\Controller\\Crud\\Generated\\%sCrudController', $this->studly($componentKey));
+
         if (str_contains($entityClass, '\\Entity\\')) {
             $candidates[] = str_replace('\\Entity\\', '\\Controller\\Crud\\', $entityClass).'CrudController';
         }
@@ -418,6 +686,14 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
         return false === $position ? $className : substr($className, $position + 1);
     }
 
+    private function studly(string $value): string
+    {
+        $value = preg_replace('/[^A-Za-z0-9]+/', ' ', $value) ?? $value;
+        $value = ucwords(strtolower(trim($value)));
+
+        return str_replace(' ', '', $value);
+    }
+
     private function slug(string $value): string
     {
         $value = preg_replace('/(?<!^)[A-Z]/', '_$0', $value) ?? $value;
@@ -435,33 +711,8 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
             'source_directories' => $this->sourceDirectories(),
             'psr4_roots' => $this->psr4Roots(),
             'excluded_namespaces' => $this->excludedNamespaces,
-            'resources' => count($this->resources ??= $this->discoverResources()),
+            'resources' => count($this->discoverResources()),
         ];
-    }
-
-    private function resourcesCacheKey(): string
-    {
-        return 'managing.host_app.crud_resources.'.$this->metadataSignature();
-    }
-
-    private function psr4RootsCacheKey(): string
-    {
-        return 'managing.host_app.psr4_roots.'.$this->metadataSignature();
-    }
-
-    private function metadataSignature(): string
-    {
-        $files = [
-            $this->projectDir.'/composer.json',
-            $this->projectDir.'/vendor/composer/autoload_psr4.php',
-        ];
-
-        $parts = [];
-        foreach ($files as $file) {
-            $parts[] = is_file($file) ? $file.':'.((string) filemtime($file)).':'.((string) filesize($file)) : $file.':missing';
-        }
-
-        return substr(hash('sha256', implode('|', $parts)), 0, 16);
     }
 
     private function humanize(string $value): string

@@ -28,7 +28,7 @@ final class Configuration implements ConfigurationInterface
                     ->scalarPrototype()->end()
                     ->defaultValue([])
                 ->end()
-                ->arrayNode('menu_components')
+                ->arrayNode('left_menu')
                     ->scalarPrototype()->end()
                     ->defaultValue([
                         'analysing',

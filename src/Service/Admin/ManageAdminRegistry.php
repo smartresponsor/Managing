@@ -14,6 +14,12 @@ final class ManageAdminRegistry implements ManageAdminRegistryInterface
     /** @var array<string, ManageAdminProviderInterface> */
     private array $providers = [];
 
+    /** @var list<ManageAdminProviderInterface>|null */
+    private ?array $cachedProviders = null;
+
+    /** @var list<ManageCrudResourceDefinition>|null */
+    private ?array $cachedCrudResources = null;
+
     public function __construct(private readonly ManageContributionFilterInterface $contributionFilter)
     {
     }
@@ -21,11 +27,17 @@ final class ManageAdminRegistry implements ManageAdminRegistryInterface
     public function addProvider(ManageAdminProviderInterface $provider): void
     {
         $this->providers[$provider->getComponent()->key] = $provider;
+        $this->cachedProviders = null;
+        $this->cachedCrudResources = null;
     }
 
     public function getProviders(): array
     {
-        return $this->contributionFilter->filterAndSortProviders(array_values($this->providers));
+        if (null !== $this->cachedProviders) {
+            return $this->cachedProviders;
+        }
+
+        return $this->cachedProviders = $this->contributionFilter->filterAndSortProviders(array_values($this->providers));
     }
 
     /**
@@ -33,6 +45,10 @@ final class ManageAdminRegistry implements ManageAdminRegistryInterface
      */
     public function getCrudResources(): array
     {
+        if (null !== $this->cachedCrudResources) {
+            return $this->cachedCrudResources;
+        }
+
         $resources = [];
 
         foreach ($this->getProviders() as $provider) {
@@ -43,6 +59,6 @@ final class ManageAdminRegistry implements ManageAdminRegistryInterface
             }
         }
 
-        return $resources;
+        return $this->cachedCrudResources = $resources;
     }
 }

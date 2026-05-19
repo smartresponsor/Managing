@@ -9,8 +9,11 @@ use App\Managing\ServiceInterface\Admin\ManageContributionFilterInterface;
 use App\Managing\ServiceInterface\Crud\ManageCrudResourceRegistryInterface;
 use App\Managing\Value\ManageCrudResourceDefinition;
 
-final readonly class ManageCrudResourceRegistry implements ManageCrudResourceRegistryInterface
+final class ManageCrudResourceRegistry implements ManageCrudResourceRegistryInterface
 {
+    /** @var list<ManageCrudResourceDefinition>|null */
+    private ?array $cachedCrudResources = null;
+
     public function __construct(
         private ManageAdminRegistryInterface $adminRegistry,
         private ManageContributionFilterInterface $contributionFilter,
@@ -19,6 +22,10 @@ final readonly class ManageCrudResourceRegistry implements ManageCrudResourceReg
 
     public function getCrudResources(): array
     {
+        if (null !== $this->cachedCrudResources) {
+            return $this->cachedCrudResources;
+        }
+
         $resources = [];
 
         foreach ($this->adminRegistry->getProviders() as $provider) {
@@ -29,6 +36,6 @@ final readonly class ManageCrudResourceRegistry implements ManageCrudResourceReg
             }
         }
 
-        return $resources;
+        return $this->cachedCrudResources = $resources;
     }
 }
