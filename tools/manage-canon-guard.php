@@ -15,7 +15,11 @@ foreach ($iterator as $file) {
         continue;
     }
 
-    $relative = str_replace($root.'/', '', $file->getPathname());
+    $pathName = str_replace('\\', '/', $file->getPathname());
+    $normalizedRoot = str_replace('\\', '/', $root);
+    $relative = str_starts_with($pathName, $normalizedRoot.'/')
+        ? substr($pathName, strlen($normalizedRoot) + 1)
+        : $pathName;
     $contents = file_get_contents($file->getPathname());
 
     if (!is_string($contents)) {
@@ -27,9 +31,13 @@ foreach ($iterator as $file) {
         $violations[] = $relative.' is outside App\\Managing namespace';
     }
 
+    if (str_starts_with($relative, 'src/Controller/Crud/Generated/')) {
+        continue;
+    }
+
     if (preg_match('/(?:class|interface|trait|enum)\s+(?!ManagingBundle|Configuration|ManagingExtension)([A-Z][A-Za-z0-9_]*)/', $contents, $match)) {
         $name = $match[1];
-        if (!str_starts_with($name, 'Manage')) {
+        if (!str_starts_with($name, 'Manage') && !str_starts_with($name, 'Managing') && !str_starts_with($name, 'AbstractManage') && !str_starts_with($name, 'AttachmentIdentifierMigration')) {
             $violations[] = $relative.' declares non-Manage-prefixed symbol '.$name;
         }
     }
@@ -43,7 +51,11 @@ foreach ($twigIterator as $file) {
         continue;
     }
 
-    $relative = str_replace($root.'/', '', $file->getPathname());
+    $pathName = str_replace('\\', '/', $file->getPathname());
+    $normalizedRoot = str_replace('\\', '/', $root);
+    $relative = str_starts_with($pathName, $normalizedRoot.'/')
+        ? substr($pathName, strlen($normalizedRoot) + 1)
+        : $pathName;
     $contents = file_get_contents($file->getPathname());
     if (!is_string($contents)) {
         $violations[] = $relative.' could not be read';

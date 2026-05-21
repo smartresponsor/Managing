@@ -1,0 +1,30 @@
+{
+    "component": "Managing",
+    "phase": "rc-runtime-proof-prep",
+    "generated_at_utc": "2026-05-21T02:11:47+00:00",
+    "overall_status": "runtime_green",
+    "logs": {
+        "syntax": "delivery/rc/runtime-proof-results/syntax.log",
+        "canon_guard": "delivery/rc/runtime-proof-results/canon-guard.log",
+        "composer_validate": "delivery/rc/runtime-proof-results/composer-validate.log",
+        "powershell_compatibility": "delivery/rc/runtime-proof-results/powershell-compatibility.log",
+        "phpunit": "delivery/rc/runtime-proof-results/phpunit.log",
+        "phpstan": "delivery/rc/runtime-proof-results/phpstan.log",
+        "host_container": "delivery/rc/runtime-proof-results/host-container.log",
+        "host_easyadmin_routes": "delivery/rc/runtime-proof-results/host-easyadmin-routes.log"
+    },
+    "status": {
+        "syntax": "pass",
+        "canon_guard": "pass",
+        "composer_validate": "pass",
+        "powershell_compatibility": "pass",
+        "phpunit": "pass",
+        "phpstan": "pass",
+        "host_container": "skipped",
+        "host_easyadmin_routes": "skipped"
+    },
+    "core_runtime_green": true,
+    "host_integration_green": false,
+    "runtime_green": true,
+    "rc_claim": "Core runtime proof logs indicate syntax, canon guard, Composer validation, PowerShell compatibility, PHPUnit, and PHPStan passed. Host-application container/EasyAdmin proof is reported separately."
+}

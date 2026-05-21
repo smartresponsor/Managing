@@ -40,3 +40,20 @@ managing:
     - 'App\'
   host_scan_excluded_namespaces:
     - 'App\Managing\'
+
+  component_root_aliases:
+    category: cataloging
+
+  crud_behavior_search_fields: ['firstTitle', 'title', 'name', 'label', 'code', 'slug', 'sku', 'status', 'state']
+  crud_behavior_status_fields: ['status', 'state']
+  crud_behavior_publication_flag_fields: ['published', 'isPublished', 'enabled', 'active']
+  crud_behavior_publication_date_fields: ['publishedAt', 'publishAt']
+  crud_behavior_audit_date_fields: ['createdAt', 'updatedAt']
+  crud_behavior_default_sort_fields: ['updatedAt', 'createdAt', 'publishedAt', 'id']
+
+  crud_field_title_candidates: ['firstTitle', 'title', 'name', 'label']
+  crud_field_identity_candidates: ['code', 'slug', 'sku']
+  crud_field_email_keywords: ['email']
+  crud_field_url_keywords: ['url', 'link']
+  crud_field_long_text_keywords: ['description', 'summary', 'message', 'content', 'body', 'note', 'payload', 'details']
+  crud_field_type_overrides: []

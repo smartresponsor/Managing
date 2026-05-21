@@ -6,6 +6,7 @@ namespace App\Managing\DependencyInjection;
 
 use App\Managing\Service\Admin\ManageContributionFilter;
 use App\Managing\Service\Admin\ManageCrudControllerGenerator;
+use App\Managing\Service\Admin\ManageCrudResourcePolicy;
 use App\Managing\Service\Admin\ManageHostApplicationAdminProvider;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -23,23 +24,19 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $container->setParameter('managing.enabled_components', $config['enabled_components']);
-        $container->setParameter('managing.disabled_resources', $config['disabled_resources']);
-        $container->setParameter('managing.menu_order', $config['menu_order']);
-        $container->setParameter('managing.left_menu', $config['left_menu']);
-        $container->setParameter('managing.menu_excluded_components', $config['menu_excluded_components']);
-        $container->setParameter('managing.host_scan_enabled', $config['host_scan_enabled']);
-        $container->setParameter('managing.host_scan_source_roots', $config['host_scan_source_roots']);
-        $container->setParameter('managing.host_scan_namespace_prefixes', $config['host_scan_namespace_prefixes']);
-        $container->setParameter('managing.host_scan_excluded_namespaces', $config['host_scan_excluded_namespaces']);
-        $container->setParameter('managing.admin_enabled', $config['admin_enabled']);
-        $container->setParameter('managing.admin_route_prefix', $config['admin_route_prefix']);
-        $container->setParameter('managing.admin_allowed_environments', $config['admin_allowed_environments']);
-        $container->setParameter('managing.admin_required_role', $config['admin_required_role']);
-        $container->setParameter('managing.admin_show_security_notes', $config['admin_show_security_notes']);
-        $container->setParameter('managing.admin_logout_path', $config['admin_logout_path']);
-        $container->setParameter('managing.admin_logout_label', $config['admin_logout_label']);
+        $bundleDir = dirname(__DIR__, 2);
+        (new ManagingParameterLoader())->load($container, $config, $bundleDir);
 
+        $resourcePolicy = new ManageCrudResourcePolicy(
+            componentRootNames: $config['component_root_names'],
+            componentRootAliases: $config['component_root_aliases'],
+            includedEntitySuffixesByComponent: $config['host_scan_included_entity_suffixes_by_component'],
+            primaryEntityBonusSuffixesByComponent: $config['crud_primary_entity_bonus_suffixes_by_component'],
+            primaryEntityPenaltySuffixesByComponent: $config['crud_primary_entity_penalty_suffixes_by_component'],
+            technicalKeywords: $config['crud_primary_technical_keywords'],
+            businessKeywords: $config['crud_primary_business_keywords'],
+            componentsRequiringAttachmentIdentifierMigration: $config['crud_generated_attachment_migration_components'],
+        );
         $hostProvider = new ManageHostApplicationAdminProvider(
             projectDir: (string) $container->getParameter('kernel.project_dir'),
             cacheDir: (string) $container->getParameter('kernel.cache_dir'),
@@ -47,6 +44,7 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
             sourceRoots: $config['host_scan_source_roots'],
             namespacePrefixes: $config['host_scan_namespace_prefixes'],
             excludedNamespaces: $config['host_scan_excluded_namespaces'],
+            resourcePolicy: $resourcePolicy,
         );
         $contributionFilter = new ManageContributionFilter(
             enabledComponents: $config['enabled_components'],
@@ -54,7 +52,7 @@ final class ManagingExtension extends Extension implements PrependExtensionInter
             menuOrder: $config['menu_order'],
         );
         $leftMenu = array_flip($config['left_menu']);
-        $generator = new ManageCrudControllerGenerator(dirname(__DIR__, 2));
+        $generator = new ManageCrudControllerGenerator($bundleDir, $resourcePolicy);
         $generator->synchronize(array_values(array_filter(
             iterator_to_array($hostProvider->getCrudResources(), false),
             static fn ($resource): bool => $contributionFilter->isCrudResourceEnabled($resource)

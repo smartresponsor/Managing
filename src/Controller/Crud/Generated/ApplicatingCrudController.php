@@ -16,4 +16,17 @@ final class ApplicatingCrudController extends AbstractManageContentCrudControlle
     {
         return \App\Applicating\Entity\ApplicationUser::class;
     }
+
+    /** @return array<string, array<string, string>> */
+    protected static function manageArrayChoiceFields(): array
+    {
+        return [
+            'roles' => [
+                'Application admin' => 'ROLE_APPLICATION_ADMIN',
+                'Application manager' => 'ROLE_APPLICATION_MANAGER',
+                'Application viewer' => 'ROLE_APPLICATION_VIEWER',
+                'Application user' => 'ROLE_APPLICATION_USER',
+            ],
+        ];
+    }
 }

@@ -23,6 +23,109 @@ services:
       $menuExcludedComponents: '%managing.menu_excluded_components%'
       $crudResourceRegistry: '@App\Managing\ServiceInterface\Crud\ManageCrudResourceRegistryInterface'
 
+
+
+  App\Managing\Service\Crud\ManageCrudBehaviorPolicy:
+    arguments:
+      $searchFields: '%managing.crud_behavior_search_fields%'
+      $statusFields: '%managing.crud_behavior_status_fields%'
+      $publicationFlagFields: '%managing.crud_behavior_publication_flag_fields%'
+      $publicationDateFields: '%managing.crud_behavior_publication_date_fields%'
+      $auditDateFields: '%managing.crud_behavior_audit_date_fields%'
+      $defaultSortFields: '%managing.crud_behavior_default_sort_fields%'
+
+  App\Managing\Service\Crud\ManageCrudFieldTypeOverridePolicy:
+    arguments:
+      $fieldTypeOverrides: '%managing.crud_field_type_overrides%'
+
+  App\Managing\Service\Crud\ManageCrudFieldPolicy:
+    arguments:
+      $titleFields: '%managing.crud_field_title_candidates%'
+      $identityFields: '%managing.crud_field_identity_candidates%'
+      $emailKeywords: '%managing.crud_field_email_keywords%'
+      $urlKeywords: '%managing.crud_field_url_keywords%'
+      $longTextKeywords: '%managing.crud_field_long_text_keywords%'
+      $fieldTypeOverrides: '%managing.crud_field_type_overrides%'
+      $fieldTypeOverridePolicy: '@App\Managing\Service\Crud\ManageCrudFieldTypeOverridePolicy'
+
+  App\Managing\Service\Crud\ManageCrudFieldFactory:
+    arguments:
+      $fieldPolicy: '@App\Managing\Service\Crud\ManageCrudFieldPolicy'
+
+  App\Managing\Service\Admin\ManageCrudResourceScorer:
+    arguments:
+      $primaryEntityBonusSuffixesByComponent: '%managing.crud_primary_entity_bonus_suffixes_by_component%'
+      $primaryEntityPenaltySuffixesByComponent: '%managing.crud_primary_entity_penalty_suffixes_by_component%'
+      $technicalKeywords: '%managing.crud_primary_technical_keywords%'
+      $businessKeywords: '%managing.crud_primary_business_keywords%'
+
+  App\Managing\Service\Admin\ManageCrudResourcePolicy:
+    arguments:
+      $componentRootNames: '%managing.component_root_names%'
+      $componentRootAliases: '%managing.component_root_aliases%'
+      $includedEntitySuffixesByComponent: '%managing.host_scan_included_entity_suffixes_by_component%'
+      $primaryEntityBonusSuffixesByComponent: '%managing.crud_primary_entity_bonus_suffixes_by_component%'
+      $primaryEntityPenaltySuffixesByComponent: '%managing.crud_primary_entity_penalty_suffixes_by_component%'
+      $technicalKeywords: '%managing.crud_primary_technical_keywords%'
+      $businessKeywords: '%managing.crud_primary_business_keywords%'
+      $componentsRequiringAttachmentIdentifierMigration: '%managing.crud_generated_attachment_migration_components%'
+      $resourceScorer: '@App\Managing\Service\Admin\ManageCrudResourceScorer'
+
+  App\Managing\Service\Admin\ManageGeneratedCrudControllerSourceRenderer:
+    arguments:
+      $resourcePolicy: '@App\Managing\Service\Admin\ManageCrudResourcePolicy'
+
+  App\Managing\Service\Admin\ManageGeneratedCrudControllerCustomizationExtractor: ~
+
+  App\Managing\Service\Admin\ManageGeneratedCrudControllerWriter:
+    arguments:
+      $bundleDir: '%managing.bundle_dir%'
+      $resourcePolicy: '@App\Managing\Service\Admin\ManageCrudResourcePolicy'
+      $sourceRenderer: '@App\Managing\Service\Admin\ManageGeneratedCrudControllerSourceRenderer'
+      $customizationExtractor: '@App\Managing\Service\Admin\ManageGeneratedCrudControllerCustomizationExtractor'
+
+  App\Managing\Service\Admin\ManageCrudControllerGenerator:
+    arguments:
+      $bundleDir: '%managing.bundle_dir%'
+      $resourcePolicy: '@App\Managing\Service\Admin\ManageCrudResourcePolicy'
+      $writer: '@App\Managing\Service\Admin\ManageGeneratedCrudControllerWriter'
+      $nameFormatter: '@App\Managing\Service\Admin\Host\ManageClassNameFormatter'
+
+  App\Managing\Service\Admin\Host\ManageHostComposerAutoloadRootReader:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+
+  App\Managing\Service\Admin\Host\ManageHostPsr4RootResolver:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $namespacePrefixes: '%managing.host_scan_namespace_prefixes%'
+      $excludedNamespaces: '%managing.host_scan_excluded_namespaces%'
+      $autoloadRootReader: '@App\Managing\Service\Admin\Host\ManageHostComposerAutoloadRootReader'
+
+  App\Managing\Service\Admin\Host\ManageHostPathResolver:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $sourceRoots: '%managing.host_scan_source_roots%'
+      $namespacePrefixes: '%managing.host_scan_namespace_prefixes%'
+      $excludedNamespaces: '%managing.host_scan_excluded_namespaces%'
+      $psr4RootResolver: '@App\Managing\Service\Admin\Host\ManageHostPsr4RootResolver'
+
+  App\Managing\Service\Admin\Host\ManageHostClassNameResolver:
+    arguments:
+      $resourcePolicy: '@App\Managing\Service\Admin\ManageCrudResourcePolicy'
+      $formatter: '@App\Managing\Service\Admin\Host\ManageClassNameFormatter'
+      $classNameExtractor: '@App\Managing\Service\Admin\Host\ManagePhpClassNameExtractor'
+
+  App\Managing\Service\Admin\Host\ManageHostCrudResourceCache:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $cacheDir: '%kernel.cache_dir%'
+
+  App\Managing\Service\Admin\Host\ManageHostDoctrineEntityInspector:
+    arguments:
+      $projectDir: '%kernel.project_dir%'
+      $pathResolver: '@App\Managing\Service\Admin\Host\ManageHostPathResolver'
+
   App\Managing\Service\Admin\ManageHostApplicationAdminProvider:
     arguments:
       $projectDir: '%kernel.project_dir%'
@@ -31,6 +134,7 @@ services:
       $sourceRoots: '%managing.host_scan_source_roots%'
       $namespacePrefixes: '%managing.host_scan_namespace_prefixes%'
       $excludedNamespaces: '%managing.host_scan_excluded_namespaces%'
+      $resourcePolicy: '@App\Managing\Service\Admin\ManageCrudResourcePolicy'
     tags: ['manage.admin_provider']
 
   App\Managing\Service\Admin\ManageAdminRegistry:

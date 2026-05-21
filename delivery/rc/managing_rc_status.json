@@ -1,0 +1,53 @@
+{
+  "component": "Managing",
+  "phase": "post-rc-runtime-fix",
+  "status": "ready_for_owner_runtime_proof_after_wave46_fixes",
+  "active_base_before_wave": "Managing_rc_clean_wave45_cumulative.zip",
+  "current_cumulative": "Managing_rc_clean_wave46_cumulative.zip",
+  "runtime_green_claim": false,
+  "runtime_green_claim_reason": "The artifact environment does not include the local vendor directory or host application runtime context.",
+  "owner_runtime_proof_command": "powershell -ExecutionPolicy Bypass -File \"tools/runtime/capture-rc-runtime-proof.ps1\" -ProjectRoot \"D:\\PhpstormProjects\\www\\Managing\"",
+  "owner_host_integration_proof_command": "powershell -ExecutionPolicy Bypass -File \"tools/runtime/capture-rc-runtime-proof.ps1\" -ProjectRoot \"D:\\PhpstormProjects\\www\\Managing\" -HostRoot \"D:\\PhpstormProjects\\www\\app\"",
+  "required_runtime_logs": [
+    "delivery/rc/runtime-proof-results/syntax.log",
+    "delivery/rc/runtime-proof-results/canon-guard.log",
+    "delivery/rc/runtime-proof-results/composer-validate.log",
+    "delivery/rc/runtime-proof-results/powershell-compatibility.log",
+    "delivery/rc/runtime-proof-results/phpunit.log",
+    "delivery/rc/runtime-proof-results/phpstan.log",
+    "delivery/rc/runtime-proof-results/runtime-proof-intake.md",
+    "delivery/rc/runtime-proof-results/runtime-proof-intake.json"
+  ],
+  "optional_host_integration_logs": [
+    "delivery/rc/runtime-proof-results/host-container.log",
+    "delivery/rc/runtime-proof-results/host-easyadmin-routes.log"
+  ],
+  "acceptance_criteria": [
+    "PHP syntax proof passes",
+    "architecture guard passes",
+    "Composer validation passes",
+    "PowerShell compatibility baseline passes on owner Windows runtime",
+    "PHPUnit result is reviewed",
+    "PHPStan result is reviewed",
+    "Symfony container boots in the host application",
+    "EasyAdmin /manage surface loads or route surface is visible",
+    "generated CRUD routes resolve",
+    "host application menu is built around the host runtime",
+    "generic Managing layer does not hardcode neighbor component FQCNs"
+  ],
+  "runtime_proof_intake_contract": "core_runtime_green=true only when syntax, canon guard, Composer validation, PowerShell compatibility, PHPUnit, and PHPStan all classify as pass; host_integration_green is reported separately from host-container and host-route logs.",
+  "owner_runtime_proof_assert_command": "php tools/runtime/assert-rc-runtime-proof.php",
+  "owner_host_integration_assert_command": "php tools/runtime/assert-rc-runtime-proof.php --require-host",
+  "runtime_proof_assertion_contract": "assert-rc-runtime-proof.php exits 0 only when core_runtime_green is true; with --require-host it also requires host_integration_green.",
+  "latest_runtime_fix_wave": "46",
+  "latest_runtime_fix_focus": [
+    "PHPUnit runtime constructor error in ManageCrudControllerRuntime",
+    "Windows generated-controller exclusion in RC architecture guard",
+    "AbstractManage canon guard exception",
+    "PowerShell compatibility log self-write conflict",
+    "UTF-16/NUL runtime log classification",
+    "snake_case label spacing",
+    "nested component Entity discovery",
+    "EasyAdmin version-specific DTO test accessor"
+  ]
+}
