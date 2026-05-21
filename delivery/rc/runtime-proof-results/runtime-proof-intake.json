@@ -1,7 +1,7 @@
 {
     "component": "Managing",
     "phase": "rc-runtime-proof-prep",
-    "generated_at_utc": "2026-05-21T02:11:47+00:00",
+    "generated_at_utc": "2026-05-21T02:16:58+00:00",
     "overall_status": "runtime_green",
     "logs": {
         "syntax": "delivery/rc/runtime-proof-results/syntax.log",
@@ -20,11 +20,11 @@
         "powershell_compatibility": "pass",
         "phpunit": "pass",
         "phpstan": "pass",
-        "host_container": "skipped",
-        "host_easyadmin_routes": "skipped"
+        "host_container": "pass",
+        "host_easyadmin_routes": "pass"
     },
     "core_runtime_green": true,
-    "host_integration_green": false,
+    "host_integration_green": true,
     "runtime_green": true,
     "rc_claim": "Core runtime proof logs indicate syntax, canon guard, Composer validation, PowerShell compatibility, PHPUnit, and PHPStan passed. Host-application container/EasyAdmin proof is reported separately."
 }
