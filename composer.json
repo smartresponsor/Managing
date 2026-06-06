@@ -1,6 +1,6 @@
 {
-  "name": "smart-responsor/managing",
-  "description": "Smart Responsor Managing component: EasyAdmin-based management console and ecosystem workbench.",
+  "name": "managing/manage",
+  "description": "Managing process app",
   "type": "symfony-bundle",
   "license": "proprietary",
   "require": {
