@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Policy;
 
-use App\Managing\Service\Policy\ManagePolicyValueNormalizer;
+use App\Managing\Normalizer\Policy\ManagePolicyValueNormalizer;
 use PHPUnit\Framework\TestCase;
 
 final class ManagePolicyValueNormalizerTest extends TestCase

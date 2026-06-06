@@ -1,0 +1,112 @@
+= Managing Field View Profile Storage Enablement
+:toc:
+
+== Purpose
+
+Managing field view profiles are presentation-only preferences for EasyAdmin CRUD fields.
+They can hide or show fields that are already allowed by backend configuration and by the external access decision layer.
+They must never grant field access or override a deny decision from Rolling/Administering policy.
+
+== Default runtime
+
+The default profile backend is intentionally safe:
+
+[source,yaml]
+----
+managing:
+  crud_field_user_profile_runtime_backend: config
+  crud_field_user_profile_reader_backend: none
+  crud_field_user_profile_writer_backend: none
+  crud_field_user_profile_entity_manager_service: 'doctrine.orm.system_entity_manager'
+----
+
+This means the component can read static `crud_field_user_profiles` configuration, but it will not read or write Doctrine storage until the host explicitly enables it.
+
+== System SQLite storage backend
+
+When the host application is ready to persist profiles, it should map `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule` to the system/internal EntityManager, typically SQLite.
+Do not map this entity to the PostgreSQL user/business EntityManager.
+
+A host with a system EntityManager can enable runtime storage explicitly:
+
+[source,yaml]
+----
+managing:
+  crud_field_user_profile_runtime_backend: reader
+  crud_field_user_profile_reader_backend: doctrine
+  crud_field_user_profile_writer_backend: doctrine
+  crud_field_user_profile_entity_manager_service: 'doctrine.orm.system_entity_manager'
+----
+
+If the host uses a different service id, set `crud_field_user_profile_entity_manager_service` to that exact service id.
+
+== Doctrine mapping intent
+
+The storage table is:
+
+[source,text]
+----
+manage_crud_field_view_profile_rule
+----
+
+The table stores one page rule per subject/resource/page scope.
+The unique scope is:
+
+[source,text]
+----
+subject_identifier + resource_key + page_name
+----
+
+`resource_key` is `*` for default page-level rules and the resource class name for resource-specific rules.
+
+== Safety chain
+
+Runtime field emission keeps this order:
+
+[source,text]
+----
+field unavailable on page
+  -> deny
+backend configured denied
+  -> deny
+external access deny
+  -> deny
+backend visible/hidden/default decision
+  -> base presentation
+user profile decision
+  -> presentation-only visible/hidden override
+EasyAdmin field emission
+----
+
+User profile storage is deliberately below access/security decisions.
+A stored profile cannot make a denied field visible.
+
+== Host migration responsibility
+
+Managing ships the entity and repository seam, but the host application owns the actual migration for its system database.
+Generate and review the migration in the host application after mapping the entity to the system EntityManager.
+Do not generate this table in the user/business PostgreSQL database.
+
+== Host activation checklist
+
+For the full host-side mapping and migration checklist, see `docs/manage-field-view-profile-host-activation.adoc`.
+The example file `docs/examples/manage-field-view-profile-system-doctrine.yaml.example` is intentionally host-facing and must be adapted to the host application's component installation path.
+
+== Host activation check
+
+Managing provides an optional host-facing validator command:
+
+[source,bash]
+----
+php bin/console managing:field-view-profile-storage:check
+----
+
+Use it after setting `crud_field_user_profile_reader_backend: doctrine` or `crud_field_user_profile_writer_backend: doctrine`.
+
+The check fails when the storage service points to the default/user-data EntityManager service. The canonical service should be system-scoped, for example:
+
+[source,yaml]
+----
+managing:
+  crud_field_user_profile_entity_manager_service: 'doctrine.orm.system_entity_manager'
+----

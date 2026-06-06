@@ -50,4 +50,15 @@ final class ManagingConfigurationDefaultsTest extends TestCase
             ManagingConfigurationDefaults::crudBehaviorSearchFields(),
         );
     }
+
+    public function testCrudFieldUserProfileBackendDefaultsAreExplicitlySafe(): void
+    {
+        self::assertSame('config', ManagingConfigurationDefaults::crudFieldUserProfileRuntimeBackend());
+        self::assertSame('none', ManagingConfigurationDefaults::crudFieldUserProfileReaderBackend());
+        self::assertSame('none', ManagingConfigurationDefaults::crudFieldUserProfileWriterBackend());
+        self::assertSame(
+            'doctrine.orm.system_entity_manager',
+            ManagingConfigurationDefaults::crudFieldUserProfileEntityManagerService(),
+        );
+    }
 }

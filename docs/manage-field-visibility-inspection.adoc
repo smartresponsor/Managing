@@ -1,0 +1,40 @@
+= Managing Field Visibility Inspection
+
+Managing exposes a read-only CLI diagnostic surface for explaining one concrete CRUD field.
+
+== Command
+
+[source,bash]
+----
+php bin/console managing:field-visibility:explain <resource> <field> <page>
+----
+
+Example:
+
+[source,bash]
+----
+php bin/console managing:field-visibility:explain 'App\Cataloging\Entity\Catalog\CatalogCategoryEntity' title index --subject=user:42
+----
+
+Machine-readable output:
+
+[source,bash]
+----
+php bin/console managing:field-visibility:explain 'App\Cataloging\Entity\Catalog\CatalogCategoryEntity' title index --subject=user:42 --json
+----
+
+== Output
+
+The report includes:
+
+* request payload;
+* `status`: `visible`, `hidden`, `denied`, or `not_found`;
+* `decisionAxis`: `access`, `presentation`, `availability`, or `not_found`;
+* final decision source and reason;
+* an ordered diagnostic trace.
+
+`access` denial means the field value must not be emitted. `presentation` hidden means the field is allowed but hidden by configuration/profile. `availability` denial means the field is not part of the requested CRUD page.
+
+== Safety
+
+The command is read-only. It does not read field values, mutate profile storage, grant access, cannot override deny decisions, and does not change EasyAdmin runtime rendering.

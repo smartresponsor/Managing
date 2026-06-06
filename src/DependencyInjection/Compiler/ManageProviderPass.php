@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\DependencyInjection\Compiler;
 
-use App\Managing\Service\Admin\ManageAdminRegistry;
+use App\Managing\Registry\Admin\ManageAdminRegistry;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

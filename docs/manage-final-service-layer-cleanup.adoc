@@ -1,0 +1,38 @@
+= Managing Final Service-Layer Cleanup
+:toc:
+
+== Purpose
+
+This note records the final cleanup pass for the Managing field access and field visibility workstream.
+
+Managing now keeps concrete implementation classes in type-identifiable folders instead of using `src/Service` as a mixed implementation bucket.
+
+== Canonical folders
+
+The cleanup pass keeps the following responsibilities explicit:
+
+* `src/Accessor/Crud` for reflection-backed entity field access.
+* `src/Filter/Admin` for contribution filtering.
+* `src/Instantiator/Crud` for entity instantiation helpers.
+* `src/Labeler/Crud` for field label formatting.
+* `src/Migration/Admin/AttachmentIdentifier` for the temporary Attaching identifier migration helpers.
+* `src/Normalizer/Filesystem` and `src/Normalizer/Policy` for value/path normalization.
+* `src/Provider/Admin/Host` for host admin-resource providers.
+* `src/Registry/Admin` and `src/Registry/Crud` for admin and CRUD registries.
+* `src/Stringifier/Crud` for entity/string conversion helpers.
+* `src/Workflow/Crud` for EasyAdmin publication workflow orchestration.
+
+== Guardrail
+
+`src/Service` must not contain PHP implementation classes.
+
+New implementation code should be placed in a type-identifiable folder, and its interface should be placed in the mirrored `*Interface` folder when a public service contract is needed.
+
+== Field visibility boundary
+
+This cleanup does not change the field visibility security model:
+
+* Rolling field-value deny remains an access-axis deny.
+* Managing backend visibility config remains presentation/availability enforcement.
+* user view profiles remain presentation-only.
+* Administering remains the control-plane/review/apply surface.

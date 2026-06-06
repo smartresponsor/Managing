@@ -1,0 +1,27 @@
+# Host-application example only.
+# Map Managing field view profile storage to the system/internal EntityManager.
+# Do not map this entity to the user/business PostgreSQL EntityManager.
+
+doctrine:
+  dbal:
+    connections:
+      system:
+        url: '%env(resolve:SYSTEM_DATABASE_URL)%'
+
+  orm:
+    entity_managers:
+      system:
+        connection: system
+        mappings:
+          ManagingFieldViewProfiles:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/vendor/smart-responsor/manag/src/Entity/Crud'
+            prefix: 'App\Managing\Entity\Crud'
+            alias: ManagingFieldViewProfiles
+
+managing:
+  crud_field_user_profile_runtime_backend: reader
+  crud_field_user_profile_reader_backend: doctrine
+  crud_field_user_profile_writer_backend: doctrine
+  crud_field_user_profile_entity_manager_service: 'doctrine.orm.system_entity_manager'

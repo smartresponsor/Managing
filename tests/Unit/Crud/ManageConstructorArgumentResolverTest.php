@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageConstructorArgumentResolver;
+use App\Managing\Resolver\Crud\ManageConstructorArgumentResolver;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

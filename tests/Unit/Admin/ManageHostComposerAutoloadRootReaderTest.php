@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\Host\ManageHostComposerAutoloadRootReader;
+use App\Managing\Reader\Admin\Host\ManageHostComposerAutoloadRootReader;
 use PHPUnit\Framework\TestCase;
 
 final class ManageHostComposerAutoloadRootReaderTest extends TestCase

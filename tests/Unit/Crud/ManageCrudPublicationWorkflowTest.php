@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageCrudPublicationWorkflow;
+use App\Managing\Workflow\Crud\ManageCrudPublicationWorkflow;
 use PHPUnit\Framework\TestCase;
 
 final class ManageCrudPublicationWorkflowTest extends TestCase

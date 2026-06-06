@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\Host\ManageHostPsr4RootResolver;
+use App\Managing\Resolver\Admin\Host\ManageHostPsr4RootResolver;
 use PHPUnit\Framework\TestCase;
 
 final class ManageHostPsr4RootResolverTest extends TestCase

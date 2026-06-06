@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationMarker;
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationSql;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationMarker;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationSql;
 use PHPUnit\Framework\TestCase;
 
 final class AttachmentIdentifierMigrationSupportTest extends TestCase

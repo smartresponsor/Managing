@@ -1,0 +1,57 @@
+= Managing Field Visibility: Optional Rolling Access Adapter
+
+Managing can enforce field-level access with an optional Rolling-backed external access resolver.
+The adapter is disabled by default so Managing continues to run without Rolling.
+
+== Responsibility boundary
+
+* Managing owns EasyAdmin field definition, presentation, and final field emission.
+* Rolling owns effective authorization decisions for roles, subjects, ACL rules, and inherited grants.
+* Administering owns review/apply and audit surfaces for changing those policies.
+
+The adapter does not pass EasyAdmin classes to Rolling. It sends a neutral field access request containing the permission key, component key, resource class, page, field, operation, subject identifier, and attributes.
+
+== Default safe mode
+
+[source,yaml]
+----
+managing:
+  crud_field_external_access_backend: none
+  crud_field_external_access_failure_effect: deny
+  crud_field_external_access_rolling_decision_service: 'App\Rolling\ServiceInterface\Administration\RollingFieldAccessDecisionServiceInterface'
+  crud_field_external_access_permission_key: 'managing.field.view'
+----
+
+With `none`, Managing uses `ManageCrudNullFieldExternalAccessResolver`; the resolver abstains, and local Managing visibility configuration remains the runtime source.
+
+== Rolling-backed mode
+
+[source,yaml]
+----
+managing:
+  crud_field_external_access_backend: rolling
+  crud_field_external_access_failure_effect: deny
+  crud_field_external_access_rolling_decision_service: 'App\Rolling\ServiceInterface\Administration\RollingFieldAccessDecisionServiceInterface'
+  crud_field_external_access_permission_key: 'managing.field.view'
+----
+
+When enabled, Managing uses `ManageCrudRollingFieldExternalAccessResolver`.
+The resolver calls Rolling's field access decision service when it is present.
+It does not require Rolling classes at compile time and uses an optional service reference.
+
+== Failure behavior
+
+`crud_field_external_access_failure_effect` controls adapter failures only:
+
+* `deny` means fail closed when the Rolling service is missing, the request class is missing, or a decision call fails.
+* `abstain` means fail open to Managing local visibility configuration.
+
+Use `deny` for production security-sensitive field protection.
+Use `abstain` only during staged integration where local Managing configuration remains the intended authority.
+
+== Decision priority
+
+The Rolling adapter is evaluated after Managing hard deny/backend-denied checks and before user personal view profiles.
+A Rolling deny is terminal and prevents EasyAdmin field emission.
+A Rolling allow only confirms access; it does not force presentation visibility.
+User profiles can still hide an allowed field, but they cannot reveal a denied field.

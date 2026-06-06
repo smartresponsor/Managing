@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageBackedEnumChoiceBuilder;
+use App\Managing\Builder\Crud\ManageBackedEnumChoiceBuilder;
 use PHPUnit\Framework\TestCase;
 
 enum ManageWave7StatusFixture: string

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Controller\Crud\ManageCrudControllerRuntimeInjectionTrait;
-use App\Managing\Service\Crud\ManageCrudActionConfigurator;
-use App\Managing\Service\Crud\ManageEntityInstantiator;
+use App\Managing\Configurator\Crud\ManageCrudActionConfigurator;
+use App\Managing\Instantiator\Crud\ManageEntityInstantiator;
+use App\Managing\Trait\Crud\ManageCrudControllerRuntimeInjectionTrait;
 use PHPUnit\Framework\TestCase;
 
 final class ManageCrudControllerRuntimeInjectionTraitTest extends TestCase

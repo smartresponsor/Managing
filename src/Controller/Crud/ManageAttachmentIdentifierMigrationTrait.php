@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Controller\Crud;
 
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationService;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationService;
 
 /**
  * Small generated-controller bridge for the legacy Attaching identifier repair.

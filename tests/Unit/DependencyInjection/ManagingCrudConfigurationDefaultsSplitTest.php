@@ -23,6 +23,14 @@ final class ManagingCrudConfigurationDefaultsSplitTest extends TestCase
             ManagingCrudConfigurationDefaults::behaviorSearchFields()
         );
         self::assertSame(
+            ManagingCrudFieldConfigurationDefaults::primaryIdentifierCandidates(),
+            ManagingCrudConfigurationDefaults::fieldPrimaryIdentifierCandidates()
+        );
+        self::assertSame(
+            ManagingCrudFieldConfigurationDefaults::descriptionCandidates(),
+            ManagingCrudConfigurationDefaults::fieldDescriptionCandidates()
+        );
+        self::assertSame(
             ManagingCrudFieldConfigurationDefaults::longTextKeywords(),
             ManagingCrudConfigurationDefaults::fieldLongTextKeywords()
         );

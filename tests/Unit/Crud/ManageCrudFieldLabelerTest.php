@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageCrudFieldLabeler;
+use App\Managing\Labeler\Crud\ManageCrudFieldLabeler;
 use PHPUnit\Framework\TestCase;
 
 final class ManageCrudFieldLabelerTest extends TestCase

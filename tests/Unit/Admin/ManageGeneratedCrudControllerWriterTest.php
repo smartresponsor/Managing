@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\ManageCrudResourcePolicy;
-use App\Managing\Service\Admin\ManageGeneratedCrudControllerWriter;
+use App\Managing\Policy\Admin\ManageCrudResourcePolicy;
+use App\Managing\Writer\Admin\ManageGeneratedCrudControllerWriter;
 use PHPUnit\Framework\TestCase;
 
 final class ManageGeneratedCrudControllerWriterTest extends TestCase
@@ -39,7 +39,7 @@ final class ManageGeneratedCrudControllerWriterTest extends TestCase
             'attaching',
         );
 
-        self::assertStringContainsString('use App\\Managing\\Controller\\Crud\\ManageAttachmentIdentifierMigrationTrait;', $source);
+        self::assertStringContainsString('use App\\Managing\\Trait\\Crud\\ManageAttachmentIdentifierMigrationTrait;', $source);
         self::assertStringContainsString('use ManageAttachmentIdentifierMigrationTrait;', $source);
         self::assertStringContainsString('$this->migrateAttachmentIdentifierIfNeeded();', $source);
         self::assertStringNotContainsString('new \\App\\Managing\\Service\\Admin\\AttachmentIdentifierMigrationService', $source);

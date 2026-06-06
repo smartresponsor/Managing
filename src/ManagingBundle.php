@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Managing;
 
 use App\Managing\DependencyInjection\Compiler\ManageProviderPass;
-use App\Managing\ServiceInterface\Admin\ManageAdminProviderInterface;
+use App\Managing\ProviderInterface\Admin\ManageAdminProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

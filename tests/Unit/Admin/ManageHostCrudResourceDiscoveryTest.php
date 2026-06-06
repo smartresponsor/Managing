@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\Host\ManageHostClassNameResolver;
-use App\Managing\Service\Admin\Host\ManageHostCrudControllerResolver;
-use App\Managing\Service\Admin\Host\ManageHostCrudResourceCache;
-use App\Managing\Service\Admin\Host\ManageHostCrudResourceDiscovery;
-use App\Managing\Service\Admin\Host\ManageHostCrudResourceFactory;
-use App\Managing\Service\Admin\Host\ManageHostDoctrineEntityInspector;
-use App\Managing\Service\Admin\Host\ManageHostPathResolver;
+use App\Managing\Cache\Admin\Host\ManageHostCrudResourceCache;
+use App\Managing\Discovery\Admin\Host\ManageHostCrudResourceDiscovery;
+use App\Managing\Factory\Admin\Host\ManageHostCrudResourceFactory;
+use App\Managing\Inspector\Admin\Host\ManageHostDoctrineEntityInspector;
+use App\Managing\Resolver\Admin\Host\ManageHostClassNameResolver;
+use App\Managing\Resolver\Admin\Host\ManageHostCrudControllerResolver;
+use App\Managing\Resolver\Admin\Host\ManageHostPathResolver;
 use PHPUnit\Framework\TestCase;
 
 final class ManageHostCrudResourceDiscoveryTest extends TestCase

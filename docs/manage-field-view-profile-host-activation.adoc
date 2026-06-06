@@ -1,0 +1,140 @@
+= Managing Field View Profile Host Activation Checklist
+:toc:
+
+== Purpose
+
+This document is the host-application checklist for enabling Doctrine-backed Managing field view profile storage.
+The storage is optional and must be activated explicitly by the host application.
+
+Field view profile rules are presentation preferences only. They can hide or show fields that have already passed Managing backend configuration and Rolling/Administering access decisions. They must never grant access to a field.
+
+== Required boundary
+
+The entity `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule` must be mapped only to the host application's system/internal EntityManager.
+In the canonical host setup this EntityManager is backed by SQLite.
+
+Do not map this entity to the user/business PostgreSQL EntityManager.
+Do not rely on the default Doctrine EntityManager alias unless the host intentionally aliases it to the system EntityManager for this bounded storage area.
+
+== Activation checklist
+
+Before enabling Doctrine-backed profile storage, verify all items below:
+
+. The host application has a dedicated system/internal EntityManager.
+. The system EntityManager service id is known, for example `doctrine.orm.system_entity_manager`.
+. The system EntityManager maps `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule`.
+. The generated migration targets the system/internal SQLite connection.
+. The migration creates `manage_crud_field_view_profile_rule` only in the system database.
+. Managing config explicitly selects the Doctrine profile reader and writer backends.
+. Administering review/apply surfaces remain the operator control plane.
+. Rolling remains the owner of field access allow/deny decisions.
+
+== Host Doctrine mapping example
+
+A host can map the Managing profile entity to the system EntityManager like this:
+
+[source,yaml]
+----
+doctrine:
+  orm:
+    entity_managers:
+      system:
+        connection: system
+        mappings:
+          ManagingFieldViewProfiles:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/vendor/smart-responsor/manag/src/Entity/Crud'
+            prefix: 'App\Managing\Entity\Crud'
+            alias: ManagingFieldViewProfiles
+----
+
+If Managing is installed as a path repository or copied component rather than a vendor package, adjust `dir` to the actual component path.
+The important invariant is the EntityManager: it must be the system EntityManager.
+
+== Managing backend config
+
+After mapping and migrating the system database, enable runtime storage explicitly:
+
+[source,yaml]
+----
+managing:
+  crud_field_user_profile_runtime_backend: reader
+  crud_field_user_profile_reader_backend: doctrine
+  crud_field_user_profile_writer_backend: doctrine
+  crud_field_user_profile_entity_manager_service: 'doctrine.orm.system_entity_manager'
+----
+
+If the host uses another service id, replace `doctrine.orm.system_entity_manager` with that exact service id.
+
+== Migration generation pattern
+
+Generate migrations from the host application, not from the component package in isolation.
+Use the system EntityManager explicitly:
+
+[source,bash]
+----
+php bin/console doctrine:migrations:diff --em=system
+php bin/console doctrine:migrations:migrate --em=system
+----
+
+Review the generated migration before running it.
+It should create or modify only system-storage tables, including `manage_crud_field_view_profile_rule`.
+
+== Expected table shape
+
+The table name is:
+
+[source,text]
+----
+manage_crud_field_view_profile_rule
+----
+
+The rule scope is unique by:
+
+[source,text]
+----
+subject_identifier + resource_key + page_name
+----
+
+`resource_key` uses `*` for default page-level rules and the resource class name for resource-specific rules.
+
+== Rollback principle
+
+Rollback must disable the backends before removing the table:
+
+[source,yaml]
+----
+managing:
+  crud_field_user_profile_runtime_backend: config
+  crud_field_user_profile_reader_backend: none
+  crud_field_user_profile_writer_backend: none
+----
+
+Only then should a host migration remove or change the system table.
+
+== Safety invariants
+
+The storage backend is safe only if these invariants remain true:
+
+[source,text]
+----
+Managing field profile storage is presentation-only.
+Rolling decides field access.
+Administering reviews and prepares administrative changes.
+Managing emits EasyAdmin fields only after backend/access denial checks.
+User profile rules cannot override denied fields.
+----
+
+== Activation validator
+
+After enabling the Doctrine reader/writer backend in the host application, run the optional check command:
+
+[source,bash]
+----
+php bin/console managing:field-view-profile-storage:check
+----
+
+The command is intentionally conservative. It checks that Doctrine-backed profile storage is not pointed at the default/user-data EntityManager, that the configured EntityManager service is system-scoped, and that `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule` is mapped by Doctrine.
+
+A passing check does not grant field access. It only validates the presentation-profile storage wiring. Rolling/Administering deny decisions remain stronger than any stored user profile.

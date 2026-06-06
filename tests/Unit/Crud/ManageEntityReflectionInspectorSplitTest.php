@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageEntityFieldAccessor;
-use App\Managing\Service\Crud\ManageEntityMetadataInspector;
-use App\Managing\Service\Crud\ManageEntityReflectionInspector;
+use App\Managing\Accessor\Crud\ManageEntityFieldAccessor;
+use App\Managing\Inspector\Crud\ManageEntityMetadataInspector;
+use App\Managing\Inspector\Crud\ManageEntityReflectionInspector;
 use Doctrine\ORM\Mapping as ORM;
 use PHPUnit\Framework\TestCase;
 

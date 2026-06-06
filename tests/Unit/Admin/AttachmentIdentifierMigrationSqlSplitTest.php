@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationCopySql;
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationDataSql;
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationMapSql;
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationMetadataSql;
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationSchemaSql;
-use App\Managing\Service\Admin\AttachmentIdentifierMigrationSql;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationCopySql;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationDataSql;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationMapSql;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationMetadataSql;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationSchemaSql;
+use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationSql;
 use PHPUnit\Framework\TestCase;
 
 final class AttachmentIdentifierMigrationSqlSplitTest extends TestCase

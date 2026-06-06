@@ -51,9 +51,26 @@ managing:
   crud_behavior_audit_date_fields: ['createdAt', 'updatedAt']
   crud_behavior_default_sort_fields: ['updatedAt', 'createdAt', 'publishedAt', 'id']
 
+  crud_field_primary_identifier_candidates: ['id']
   crud_field_title_candidates: ['firstTitle', 'title', 'name', 'label']
   crud_field_identity_candidates: ['code', 'slug', 'sku']
+  crud_field_description_candidates: ['description']
+  crud_field_technical_excluded_fields: []
   crud_field_email_keywords: ['email']
   crud_field_url_keywords: ['url', 'link']
   crud_field_long_text_keywords: ['description', 'summary', 'message', 'content', 'body', 'note', 'payload', 'details']
   crud_field_type_overrides: []
+
+  # Field view profile storage is opt-in. Keep Doctrine disabled until the host
+  # explicitly maps ManageCrudFieldViewProfileRule to the system SQLite EntityManager.
+  crud_field_user_profile_runtime_backend: config
+  crud_field_user_profile_reader_backend: none
+  crud_field_user_profile_writer_backend: none
+  crud_field_user_profile_entity_manager_service: 'doctrine.orm.system_entity_manager'
+
+  # External field access is opt-in. Keep none unless the host wires Rolling's
+  # field decision service and wants Managing to fail closed on missing/failed decisions.
+  crud_field_external_access_backend: none
+  crud_field_external_access_failure_effect: deny
+  crud_field_external_access_rolling_decision_service: 'App\Rolling\ServiceInterface\Administration\RollingFieldAccessDecisionServiceInterface'
+  crud_field_external_access_permission_key: 'managing.field.view'

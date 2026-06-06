@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageCrudBehaviorPolicy;
-use App\Managing\Service\Crud\ManageCrudEntitySurfaceResolver;
+use App\Managing\Policy\Crud\ManageCrudBehaviorPolicy;
+use App\Managing\Resolver\Crud\ManageCrudEntitySurfaceResolver;
 use PHPUnit\Framework\TestCase;
 
 final class ManageCrudEntitySurfaceResolverTest extends TestCase

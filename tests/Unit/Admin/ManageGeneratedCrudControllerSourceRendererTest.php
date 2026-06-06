@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\ManageCrudResourcePolicy;
-use App\Managing\Service\Admin\ManageGeneratedCrudControllerSourceRenderer;
+use App\Managing\Policy\Admin\ManageCrudResourcePolicy;
+use App\Managing\Renderer\Admin\ManageGeneratedCrudControllerSourceRenderer;
 use PHPUnit\Framework\TestCase;
 
 final class ManageGeneratedCrudControllerSourceRendererTest extends TestCase
@@ -38,7 +38,7 @@ final class ManageGeneratedCrudControllerSourceRendererTest extends TestCase
             'attaching',
         );
 
-        self::assertStringContainsString('use App\\Managing\\Controller\\Crud\\ManageAttachmentIdentifierMigrationTrait;', $source);
+        self::assertStringContainsString('use App\\Managing\\Trait\\Crud\\ManageAttachmentIdentifierMigrationTrait;', $source);
         self::assertStringContainsString('use ManageAttachmentIdentifierMigrationTrait;', $source);
         self::assertStringContainsString('$this->migrateAttachmentIdentifierIfNeeded();', $source);
     }

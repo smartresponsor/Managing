@@ -76,6 +76,12 @@ final class ManagingCrudConfigurationDefaults
     }
 
     /** @return list<string> */
+    public static function fieldPrimaryIdentifierCandidates(): array
+    {
+        return ManagingCrudFieldConfigurationDefaults::primaryIdentifierCandidates();
+    }
+
+    /** @return list<string> */
     public static function fieldTitleCandidates(): array
     {
         return ManagingCrudFieldConfigurationDefaults::titleCandidates();
@@ -85,6 +91,70 @@ final class ManagingCrudConfigurationDefaults
     public static function fieldIdentityCandidates(): array
     {
         return ManagingCrudFieldConfigurationDefaults::identityCandidates();
+    }
+
+    /** @return list<string> */
+    public static function fieldDescriptionCandidates(): array
+    {
+        return ManagingCrudFieldConfigurationDefaults::descriptionCandidates();
+    }
+
+    /** @return list<string> */
+    public static function fieldTechnicalExcludedFields(): array
+    {
+        return ManagingCrudFieldConfigurationDefaults::technicalExcludedFields();
+    }
+
+    /** @return array{defaults: array<string, array<string, list<string>>>, resources: array<string, array<string, array<string, list<string>>>>} */
+    public static function fieldVisibility(): array
+    {
+        return ManagingCrudFieldConfigurationDefaults::visibility();
+    }
+
+    /** @return array{subjects: array<string, array{defaults?: array<string, array<string, list<string>>>, resources?: array<string, array<string, array<string, list<string>>>>}>} */
+    public static function fieldUserProfiles(): array
+    {
+        return ManagingCrudFieldConfigurationDefaults::userProfiles();
+    }
+
+    public static function fieldUserProfileRuntimeBackend(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::userProfileRuntimeBackend();
+    }
+
+    public static function fieldUserProfileReaderBackend(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::userProfileReaderBackend();
+    }
+
+    public static function fieldUserProfileWriterBackend(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::userProfileWriterBackend();
+    }
+
+    public static function fieldUserProfileEntityManagerService(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::userProfileEntityManagerService();
+    }
+
+    public static function fieldExternalAccessBackend(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::externalAccessBackend();
+    }
+
+    public static function fieldExternalAccessFailureEffect(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::externalAccessFailureEffect();
+    }
+
+    public static function fieldExternalAccessRollingDecisionService(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::externalAccessRollingDecisionService();
+    }
+
+    public static function fieldExternalAccessPermissionKey(): string
+    {
+        return ManagingCrudFieldConfigurationDefaults::externalAccessPermissionKey();
     }
 
     /** @return list<string> */

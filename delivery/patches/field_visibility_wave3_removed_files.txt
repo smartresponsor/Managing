@@ -1,0 +1,17 @@
+Managing/src/Service/Admin/Host/ManageHostCrudResourceFactory.php
+Managing/src/Service/Admin/ManageAdminUserMenuBuilder.php
+Managing/src/Service/Admin/ManageCrudResourcePolicy.php
+Managing/src/Service/Admin/ManageMenuBuilder.php
+Managing/src/Service/Crud/ManageBackedEnumChoiceBuilder.php
+Managing/src/Service/Crud/ManageCrudActionUrlBuilder.php
+Managing/src/Service/Crud/ManageCrudBehaviorPolicy.php
+Managing/src/Service/Crud/ManageCrudFieldFactory.php
+Managing/src/Service/Crud/ManageCrudFieldPolicy.php
+Managing/src/Service/Crud/ManageCrudFieldTypeOverridePolicy.php
+Managing/src/Service/Crud/ManageEasyAdminArrayChoiceFieldFactory.php
+Managing/src/Service/Crud/ManageEasyAdminAssociationFieldFactory.php
+Managing/src/Service/Crud/ManageEasyAdminFieldBuilder.php
+Managing/src/Service/Crud/ManageEasyAdminScalarFieldFactory.php
+Managing/src/ServiceInterface/Admin/ManageAdminUserMenuBuilderInterface.php
+Managing/src/ServiceInterface/Admin/ManageMenuBuilderInterface.php
+Managing/src/ServiceInterface/Crud/ManageCrudActionUrlBuilderInterface.php

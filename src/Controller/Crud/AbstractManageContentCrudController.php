@@ -90,6 +90,7 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
             $this->publicationDateCandidates(),
             static::manageArrayChoiceFields(),
             static::manageFieldTypeOverrides(),
+            $this->currentSubjectIdentifier(),
         );
     }
 
@@ -150,6 +151,24 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
     public function createEntity(string $entityFqcn): object
     {
         return $this->entityInstantiator()->instantiate($entityFqcn);
+    }
+
+    private function currentSubjectIdentifier(): ?string
+    {
+        $user = $this->getUser();
+        if (!is_object($user)) {
+            return null;
+        }
+
+        if (method_exists($user, 'getUserIdentifier')) {
+            return (string) $user->getUserIdentifier();
+        }
+
+        if (method_exists($user, 'getId')) {
+            return (string) $user->getId();
+        }
+
+        return $user::class;
     }
 
     private function redirectBack(?string $referer): RedirectResponse

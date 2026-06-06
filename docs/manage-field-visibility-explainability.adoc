@@ -1,0 +1,105 @@
+= Managing Field Visibility Explainability
+
+Managing resolves field rendering before EasyAdmin receives field objects. The explainability seam documents that decision without changing runtime rendering.
+
+== Purpose
+
+The diagnostic resolver answers why a field is visible, hidden, or denied for a specific resource, page, and subject.
+
+It is intended for admin/debug surfaces and support workflows:
+
+* field not available on the requested CRUD page;
+* backend component or host configuration denies/hides/shows a field;
+* external field-value access, for example Rolling, denies, allows, or abstains;
+* the field falls back to its default presentation visibility;
+* a user personal profile hides or shows the field;
+* a user profile hide request is ignored because the field is required on `new`/`edit` or is not hideable.
+
+== Contract
+
+The diagnostic entry point is:
+
+[source,php]
+----
+App\Managing\ResolverInterface\Crud\ManageCrudFieldVisibilityExplanationResolverInterface
+----
+
+It returns:
+
+[source,php]
+----
+App\Managing\Value\Crud\ManageCrudFieldVisibilityExplanation
+----
+
+The explanation contains:
+
+* the neutral field definition;
+* the requested page;
+* the subject identifier, when available;
+* the final visibility decision;
+* the final decision axis;
+* an ordered list of diagnostic steps.
+
+== Decision axes
+
+The diagnostic trace separates field-value access from presentation preferences.
+
+`access`:: A security/access decision. A terminal deny on this axis means the field value must not be emitted to EasyAdmin.
+`presentation`:: A visibility preference/configuration decision. A hidden step on this axis means the user or configuration chose not to display an otherwise allowed field.
+`availability`:: A structural page-availability decision. A terminal deny on this axis means the field is not available on the requested CRUD page.
+
+Rolling-backed denials are normalized as `rolling_field_value_access_denied`. Provider-specific reasons are preserved in the step context as `providerReason`.
+
+== Priority chain
+
+The explanation mirrors the runtime order:
+
+. Field page availability.
+. Backend visibility configuration.
+. External field-value access decision, such as Rolling.
+. Field default presentation visibility.
+. User personal view profile.
+. EasyAdmin field emission only when the final decision is renderable.
+
+A terminal deny stops the chain. A user personal profile can only affect presentation. It cannot grant field access and cannot override backend or Rolling deny.
+
+== Examples
+
+Rolling access denial:
+
+[source,json]
+----
+{
+  "status": "denied",
+  "decisionAxis": "access",
+  "reason": "rolling_field_value_access_denied"
+}
+----
+
+User presentation hide:
+
+[source,json]
+----
+{
+  "status": "hidden",
+  "decisionAxis": "presentation",
+  "reason": "user_profile_hidden"
+}
+----
+
+Field unavailable on page:
+
+[source,json]
+----
+{
+  "status": "denied",
+  "decisionAxis": "availability",
+  "reason": "field_not_available_on_page"
+}
+----
+
+== Safety
+
+This feature is diagnostic-only. It must not be used to make a second, conflicting runtime decision.
+
+`ManageCrudFieldVisibilityResolverInterface` remains the runtime authority for EasyAdmin field emission. The explanation resolver exists so admin surfaces can display why the runtime resolver would hide or deny a field.

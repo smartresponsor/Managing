@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\ManageCrudResourcePolicy;
+use App\Managing\Policy\Admin\ManageCrudResourcePolicy;
 use App\Managing\Value\ManageCrudResourceDefinition;
 use PHPUnit\Framework\TestCase;
 

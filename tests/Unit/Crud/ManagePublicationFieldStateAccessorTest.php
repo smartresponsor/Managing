@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManagePublicationFieldStateAccessor;
+use App\Managing\Accessor\Crud\ManagePublicationFieldStateAccessor;
 use PHPUnit\Framework\TestCase;
 
 final class ManagePublicationFieldStateAccessorTest extends TestCase

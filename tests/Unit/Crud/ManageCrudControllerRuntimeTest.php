@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
+use App\Managing\Configurator\Crud\ManageCrudActionConfigurator;
+use App\Managing\Configurator\Crud\ManageCrudFilterConfigurator;
+use App\Managing\Configurator\Crud\ManageCrudPageConfigurator;
 use App\Managing\Controller\Crud\ManageCrudControllerRuntime;
-use App\Managing\Service\Crud\ManageCrudActionConfigurator;
-use App\Managing\Service\Crud\ManageCrudEntitySurfaceResolver;
-use App\Managing\Service\Crud\ManageCrudFieldFactory;
-use App\Managing\Service\Crud\ManageCrudFilterConfigurator;
-use App\Managing\Service\Crud\ManageCrudPageConfigurator;
-use App\Managing\Service\Crud\ManageCrudPublicationWorkflow;
-use App\Managing\Service\Crud\ManageEntityInstantiator;
+use App\Managing\Factory\Crud\ManageCrudFieldFactory;
+use App\Managing\Instantiator\Crud\ManageEntityInstantiator;
+use App\Managing\Resolver\Crud\ManageCrudEntitySurfaceResolver;
+use App\Managing\Workflow\Crud\ManageCrudPublicationWorkflow;
 use PHPUnit\Framework\TestCase;
 
 final class ManageCrudControllerRuntimeTest extends TestCase

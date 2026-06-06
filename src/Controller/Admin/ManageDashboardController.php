@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Controller\Admin;
 
-use App\Managing\ServiceInterface\Admin\ManageMenuBuilderInterface;
+use App\Managing\BuilderInterface\Admin\ManageMenuBuilderInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;

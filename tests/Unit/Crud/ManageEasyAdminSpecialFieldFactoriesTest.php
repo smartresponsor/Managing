@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageEasyAdminArrayChoiceFieldFactory;
-use App\Managing\Service\Crud\ManageEasyAdminAssociationFieldFactory;
+use App\Managing\Factory\Crud\ManageEasyAdminArrayChoiceFieldFactory;
+use App\Managing\Factory\Crud\ManageEasyAdminAssociationFieldFactory;
 use Doctrine\ORM\Mapping as ORM;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;

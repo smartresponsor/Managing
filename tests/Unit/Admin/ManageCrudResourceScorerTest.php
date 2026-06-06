@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\ManageCrudResourceScorer;
+use App\Managing\Scorer\Admin\ManageCrudResourceScorer;
 use App\Managing\Value\ManageCrudResourceDefinition;
 use PHPUnit\Framework\TestCase;
 

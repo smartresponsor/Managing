@@ -1,0 +1,118 @@
+= Managing Field Access and Visibility Readiness
+:toc:
+
+== Purpose
+
+This document is the Managing-side readiness checkpoint for the three-component field access and field visibility contour.
+The contour is intentionally split across Managing, Rolling, and Administering.
+
+Managing owns the runtime EasyAdmin execution boundary:
+
+* field definition metadata;
+* backend visibility configuration;
+* optional Rolling-backed external field access decision;
+* user personal view profile execution;
+* system-storage-ready profile reader/writer seams;
+* field visibility explainability and inspection.
+
+Managing does not own role hierarchy, global grants, ACL mutation review, or ecosystem control-plane UI.
+
+== Runtime responsibility
+
+The canonical runtime chain is:
+
+[source,text]
+----
+FieldDefinition
+  -> backend Managing visibility config
+  -> optional Rolling external access decision
+  -> field default visibility
+  -> user personal view profile
+  -> EasyAdmin field emission
+----
+
+A field is emitted to EasyAdmin only after the Managing visibility resolver has decided that the field is renderable.
+Frontend-only hiding is not a security control.
+
+== Security invariants
+
+Managing must preserve these invariants:
+
+* `denied` is stronger than `hidden`.
+* Rolling-backed field-value access deny must stop field emission.
+* User personal profiles can change presentation only.
+* User personal profiles cannot grant field-value access.
+* User personal profiles cannot override Rolling deny.
+* Required fields on `new` and `edit` must not be hidden by user presentation preferences.
+* Non-hideable fields must not be hidden by user presentation preferences.
+* Profile storage belongs to system/internal storage, not PostgreSQL user/business data.
+
+== External access activation
+
+Rolling-backed access is optional and disabled unless the host enables it explicitly:
+
+[source,yaml]
+----
+managing:
+  crud_field_external_access_backend: rolling
+  crud_field_external_access_failure_effect: deny
+  crud_field_external_access_permission_key: managing.field.view
+----
+
+The default remains safe local behavior:
+
+[source,yaml]
+----
+managing:
+  crud_field_external_access_backend: none
+----
+
+`crud_field_external_access_failure_effect: deny` is the production-safe mode. `abstain` is only for staged integration where local Managing rules must continue to operate while Rolling wiring is being validated.
+
+== Profile storage activation
+
+Doctrine-backed profile storage must be activated explicitly. The canonical host configuration points at the system EntityManager:
+
+[source,yaml]
+----
+managing:
+  crud_field_user_profile_runtime_backend: reader
+  crud_field_user_profile_reader_backend: doctrine
+  crud_field_user_profile_writer_backend: doctrine
+  crud_field_user_profile_entity_manager_service: doctrine.orm.system_entity_manager
+----
+
+Before enabling persistence-backed profile apply, run:
+
+[source,bash]
+----
+php bin/console managing:field-view-profile-storage:check
+----
+
+The `ManageCrudFieldViewProfileRule` entity must be mapped by the system EntityManager only.
+
+== Diagnostics
+
+Managing exposes field visibility inspection through:
+
+[source,bash]
+----
+php bin/console managing:field-visibility:explain <resource> <field> <page> --subject=user:42 --json
+----
+
+The diagnostic output must distinguish these decision axes:
+
+* `access` — field-value access, including `rolling_field_value_access_denied`;
+* `presentation` — visibility preference/config, including `user_profile_hidden`;
+* `availability` — page/resource availability, including `field_not_available_on_page`.
+
+== Cross-component readiness checklist
+
+A host is ready for production-style use when all of the following are true:
+
+* Managing config exposes field definitions and backend visibility rules.
+* Rolling catalog contains `managing.field.view` as the only permission for field-value access.
+* Administering mutation review validates field access descriptors before Rolling apply.
+* Administering profile review/apply treats profiles as presentation-only.
+* Managing storage check passes for the system EntityManager before Doctrine profile storage is enabled.
+* Managing explainability reports use `access`, `presentation`, and `availability` axes.

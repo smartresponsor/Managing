@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Filesystem;
 
-use App\Managing\Service\Filesystem\ManageFilesystemPathNormalizer;
+use App\Managing\Normalizer\Filesystem\ManageFilesystemPathNormalizer;
 use PHPUnit\Framework\TestCase;
 
 final class ManageFilesystemPathNormalizerTest extends TestCase

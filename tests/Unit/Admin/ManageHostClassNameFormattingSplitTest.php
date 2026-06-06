@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\Host\ManageClassNameFormatter;
-use App\Managing\Service\Admin\Host\ManagePhpClassNameExtractor;
+use App\Managing\Extractor\Admin\Host\ManagePhpClassNameExtractor;
+use App\Managing\Formatter\Admin\Host\ManageClassNameFormatter;
 use PHPUnit\Framework\TestCase;
 
 final class ManageHostClassNameFormattingSplitTest extends TestCase

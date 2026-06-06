@@ -14,6 +14,6 @@ final class CatalogingCrudController extends AbstractManageContentCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return \App\Cataloging\Entity\Catalog\CatalogCategoryEntity::class;
+        return \App\Entity\Category\CategoryEntity::class;
     }
 }

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\ManageGeneratedCrudControllerCustomizationExtractor;
+use App\Managing\Extractor\Admin\ManageGeneratedCrudControllerCustomizationExtractor;
 use PHPUnit\Framework\TestCase;
 
 final class ManageGeneratedCrudControllerCustomizationExtractorTest extends TestCase

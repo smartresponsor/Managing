@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageCrudFieldTypeOverridePolicy;
+use App\Managing\Policy\Crud\ManageCrudFieldTypeOverridePolicy;
 use PHPUnit\Framework\TestCase;
 
 final class ManageCrudFieldTypeOverridePolicyTest extends TestCase

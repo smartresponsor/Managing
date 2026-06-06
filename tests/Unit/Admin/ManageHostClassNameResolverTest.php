@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Service\Admin\Host\ManageHostClassNameResolver;
-use App\Managing\Service\Admin\ManageCrudResourcePolicy;
+use App\Managing\Policy\Admin\ManageCrudResourcePolicy;
+use App\Managing\Resolver\Admin\Host\ManageHostClassNameResolver;
 use PHPUnit\Framework\TestCase;
 
 final class ManageHostClassNameResolverTest extends TestCase

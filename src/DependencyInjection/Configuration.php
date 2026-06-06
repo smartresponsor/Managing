@@ -34,6 +34,9 @@ final class Configuration implements ConfigurationInterface
             ManagingConfigurationNodeBuilder::scalarMapMap($children, $name, $outerKeyName, $innerKeyName, $default);
         }
 
+        self::crudFieldVisibilityNode($children);
+        self::crudFieldUserProfilesNode($children);
+
         foreach (self::booleanNodes() as $name => $default) {
             ManagingConfigurationNodeBuilder::boolean($children, $name, $default);
         }
@@ -68,8 +71,11 @@ final class Configuration implements ConfigurationInterface
             'crud_behavior_publication_date_fields' => ManagingConfigurationDefaults::crudBehaviorPublicationDateFields(),
             'crud_behavior_audit_date_fields' => ManagingConfigurationDefaults::crudBehaviorAuditDateFields(),
             'crud_behavior_default_sort_fields' => ManagingConfigurationDefaults::crudBehaviorDefaultSortFields(),
+            'crud_field_primary_identifier_candidates' => ManagingConfigurationDefaults::crudFieldPrimaryIdentifierCandidates(),
             'crud_field_title_candidates' => ManagingConfigurationDefaults::crudFieldTitleCandidates(),
             'crud_field_identity_candidates' => ManagingConfigurationDefaults::crudFieldIdentityCandidates(),
+            'crud_field_description_candidates' => ManagingConfigurationDefaults::crudFieldDescriptionCandidates(),
+            'crud_field_technical_excluded_fields' => ManagingConfigurationDefaults::crudFieldTechnicalExcludedFields(),
             'crud_field_email_keywords' => ManagingConfigurationDefaults::crudFieldEmailKeywords(),
             'crud_field_url_keywords' => ManagingConfigurationDefaults::crudFieldUrlKeywords(),
             'crud_field_long_text_keywords' => ManagingConfigurationDefaults::crudFieldLongTextKeywords(),
@@ -111,6 +117,22 @@ final class Configuration implements ConfigurationInterface
         ];
     }
 
+    private static function crudFieldVisibilityNode(\Symfony\Component\Config\Definition\Builder\NodeBuilder $children): void
+    {
+        $children
+            ->variableNode('crud_field_visibility')
+                ->defaultValue(ManagingConfigurationDefaults::crudFieldVisibility())
+            ->end();
+    }
+
+    private static function crudFieldUserProfilesNode(\Symfony\Component\Config\Definition\Builder\NodeBuilder $children): void
+    {
+        $children
+            ->variableNode('crud_field_user_profiles')
+                ->defaultValue(ManagingConfigurationDefaults::crudFieldUserProfiles())
+            ->end();
+    }
+
     /** @return array<string, bool> */
     private static function booleanNodes(): array
     {
@@ -125,6 +147,14 @@ final class Configuration implements ConfigurationInterface
     private static function scalarNodes(): array
     {
         return [
+            'crud_field_user_profile_runtime_backend' => ManagingConfigurationDefaults::crudFieldUserProfileRuntimeBackend(),
+            'crud_field_user_profile_reader_backend' => ManagingConfigurationDefaults::crudFieldUserProfileReaderBackend(),
+            'crud_field_user_profile_writer_backend' => ManagingConfigurationDefaults::crudFieldUserProfileWriterBackend(),
+            'crud_field_user_profile_entity_manager_service' => ManagingConfigurationDefaults::crudFieldUserProfileEntityManagerService(),
+            'crud_field_external_access_backend' => ManagingConfigurationDefaults::crudFieldExternalAccessBackend(),
+            'crud_field_external_access_failure_effect' => ManagingConfigurationDefaults::crudFieldExternalAccessFailureEffect(),
+            'crud_field_external_access_rolling_decision_service' => ManagingConfigurationDefaults::crudFieldExternalAccessRollingDecisionService(),
+            'crud_field_external_access_permission_key' => ManagingConfigurationDefaults::crudFieldExternalAccessPermissionKey(),
             'admin_route_prefix' => '/manage',
             'admin_required_role' => 'ROLE_ADMIN',
             'admin_logout_path' => '/logout',

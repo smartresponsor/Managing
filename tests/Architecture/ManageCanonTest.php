@@ -74,4 +74,43 @@ final class ManageCanonTest extends TestCase
         self::assertStringNotContainsString('function component(', $dashboard);
         self::assertStringNotContainsString('routeName: \'component\'', $dashboard);
     }
+
+    public function testServiceLayerDoesNotContainPhpImplementations(): void
+    {
+        $violations = [];
+        $root = dirname(__DIR__, 2);
+        $serviceRoot = $root.'/src/Service';
+
+        if (is_dir($serviceRoot)) {
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($serviceRoot));
+
+            foreach ($iterator as $file) {
+                if ($file->isFile() && 'php' === $file->getExtension()) {
+                    $violations[] = str_replace($root.'/', '', $file->getPathname());
+                }
+            }
+        }
+
+        self::assertSame([], $violations);
+    }
+
+    public function testManagingDoesNotReferenceDeprecatedServiceNamespaces(): void
+    {
+        $violations = [];
+        $root = dirname(__DIR__, 2);
+        $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root));
+
+        foreach ($iterator as $file) {
+            if (!$file->isFile() || !in_array($file->getExtension(), ['php', 'yaml', 'yml'], true)) {
+                continue;
+            }
+
+            $contents = file_get_contents($file->getPathname());
+            if (is_string($contents) && str_contains($contents, 'App\\Managing\\Service')) {
+                $violations[] = str_replace($root.'/', '', $file->getPathname());
+            }
+        }
+
+        self::assertSame([], $violations);
+    }
 }

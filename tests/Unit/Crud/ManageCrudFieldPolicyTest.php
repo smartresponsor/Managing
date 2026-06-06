@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Service\Crud\ManageCrudFieldPolicy;
+use App\Managing\Policy\Crud\ManageCrudFieldPolicy;
 use PHPUnit\Framework\TestCase;
 
 final class ManageCrudFieldPolicyTest extends TestCase
@@ -12,14 +12,24 @@ final class ManageCrudFieldPolicyTest extends TestCase
     public function testFieldDiscoveryVocabularyIsPolicyDriven(): void
     {
         $policy = new ManageCrudFieldPolicy(
+            primaryIdentifierFields: ['uuid'],
             titleFields: ['firstTitle', 'headline'],
             identityFields: ['sku'],
+            descriptionFields: ['summary'],
+            technicalExcludedFields: ['checksum'],
+            auditDateFields: ['recordedAt'],
             longTextKeywords: ['memo'],
         );
 
+        self::assertSame(['uuid'], $policy->primaryIdentifierFields());
         self::assertSame(['firstTitle', 'headline'], $policy->titleFields());
         self::assertSame(['sku'], $policy->identityFields());
+        self::assertSame(['summary'], $policy->descriptionFields());
+        self::assertSame(['recordedAt'], $policy->auditDateFields());
+        self::assertSame(['checksum'], $policy->technicalExcludedFields());
         self::assertTrue($policy->isDiscoveryExcludedField('headline', []));
+        self::assertTrue($policy->isDiscoveryExcludedField('summary', []));
+        self::assertTrue($policy->isDiscoveryExcludedField('checksum', []));
         self::assertTrue($policy->isDiscoveryExcludedField('publishedAt', ['publishedAt']));
         self::assertFalse($policy->isDiscoveryExcludedField('bodyText', []));
         self::assertTrue($policy->looksLikeLongTextField('privateMemo'));
