@@ -14,6 +14,8 @@ services:
 
   App\Managing\Controller\Crud\Generated\:
     resource: '../src/Controller/Crud/Generated/'
+    exclude:
+      - '../src/Controller/Crud/Generated/VendoringCrudController.php'
     autowire: true
     autoconfigure: true
 
@@ -25,6 +27,7 @@ services:
 
   App\Managing\Builder\Admin\ManageMenuBuilder:
     arguments:
+      $adminRoutePrefix: '%managing.admin_route_prefix%'
       $leftMenu: '%managing.left_menu%'
       $menuExcludedComponents: '%managing.menu_excluded_components%'
       $crudResourceRegistry: '@App\Managing\RegistryInterface\Crud\ManageCrudResourceRegistryInterface'
