@@ -14,6 +14,7 @@ final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
         private readonly ManageCrudResourceRegistryInterface $crudResourceRegistry,
         private array $leftMenu = [],
         private array $menuExcludedComponents = [],
+        private readonly string $adminRoutePrefix = '/ea',
     ) {
     }
 
@@ -34,7 +35,7 @@ final readonly class ManageMenuBuilder implements ManageMenuBuilderInterface
             yield MenuItem::linkToUrl(
                 $this->resolveComponentLabel($componentKey),
                 'fa fa-database',
-                sprintf('/manage/%s', $componentKey),
+                sprintf('%s/manage/%s', rtrim($this->adminRoutePrefix, '/'), $componentKey),
             );
         }
     }
