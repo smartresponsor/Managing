@@ -43,7 +43,7 @@ final class ManageCrudBehaviorPolicy
      * @param list<string> $defaultSortFields
      */
     public function __construct(
-        array $searchFields = ['firstTitle', 'title', 'name', 'label', 'code', 'slug', 'sku', 'status', 'state'],
+        array $searchFields = ['firstTitle', 'title', 'nameEntity', 'label', 'code', 'slug', 'sku', 'status', 'state'],
         array $statusFields = ['status', 'state'],
         array $publicationFlagFields = ['published', 'isPublished', 'enabled', 'active'],
         array $publicationDateFields = ['publishedAt', 'publishAt'],

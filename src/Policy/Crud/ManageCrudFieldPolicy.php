@@ -11,7 +11,7 @@ use App\Managing\Normalizer\Policy\ManagePolicyValueNormalizer;
 /**
  * Central policy for EasyAdmin field discovery.
  *
- * The generic CRUD layer still supports pragmatic name-based fallback because
+ * The generic CRUD layer still supports pragmatic nameEntity-based fallback because
  * Managing has to expose heterogeneous host application entities. The fallback
  * vocabulary is now explicit, configurable and testable instead of being hidden
  * inside controllers or EasyAdmin field factories.
@@ -57,7 +57,7 @@ final class ManageCrudFieldPolicy
      * @param list<string>|null                    $emailKeywords
      * @param list<string>|null                    $urlKeywords
      * @param list<string>|null                    $longTextKeywords
-     * @param array<string, array<string, string>> $fieldTypeOverrides      keyed by entity FQCN, then field name
+     * @param array<string, array<string, string>> $fieldTypeOverrides      keyed by entity FQCN, then field nameEntity
      */
     public function __construct(
         ?array $primaryIdentifierFields = null,

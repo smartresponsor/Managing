@@ -36,9 +36,9 @@ foreach ($iterator as $file) {
     }
 
     if (preg_match('/(?:class|interface|trait|enum)\s+(?!ManagingBundle|Configuration|ManagingExtension)([A-Z][A-Za-z0-9_]*)/', $contents, $match)) {
-        $name = $match[1];
-        if (!str_starts_with($name, 'Manage') && !str_starts_with($name, 'Managing') && !str_starts_with($name, 'AbstractManage') && !str_starts_with($name, 'AttachmentIdentifierMigration')) {
-            $violations[] = $relative.' declares non-Manage-prefixed symbol '.$name;
+        $nameEntity = $match[1];
+        if (!str_starts_with($nameEntity, 'Manage') && !str_starts_with($nameEntity, 'Managing') && !str_starts_with($nameEntity, 'AbstractManage') && !str_starts_with($nameEntity, 'AttachmentIdentifierMigration')) {
+            $violations[] = $relative.' declares non-Manage-prefixed symbol '.$nameEntity;
         }
     }
 }

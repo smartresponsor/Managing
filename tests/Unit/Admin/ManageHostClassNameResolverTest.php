@@ -18,7 +18,7 @@ final class ManageHostClassNameResolverTest extends TestCase
         ));
 
         self::assertSame('messaging', $resolver->componentKeyFromClass('App\Entity\Message\Message'));
-        self::assertSame('cataloging', $resolver->componentKeyFromClass('App\Entity\Category\Category'));
+        self::assertSame('cataloging', $resolver->componentKeyFromClass('App\Entity\CategoryEntity\CategoryEntity'));
         self::assertSame('unknown', $resolver->componentKeyFromClass('App\Entity\Unknown\Unknown'));
     }
 }

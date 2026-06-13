@@ -13,8 +13,8 @@ final class ManagingCrudResourceConfigurationDefaults
     public static function primaryEntityBonusSuffixesByComponent(): array
     {
         return [
-            'tagging' => ['\\TagAdminView' => 200],
-            'messaging' => ['\\MessageAdminView' => 200],
+            'tagging' => ['\\TagAdminViewEntity' => 200],
+            'messaging' => ['\\MessageAdminViewEntity' => 200],
         ];
     }
 

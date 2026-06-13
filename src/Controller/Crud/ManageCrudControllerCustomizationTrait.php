@@ -66,7 +66,7 @@ trait ManageCrudControllerCustomizationTrait
      * rendered as a choice field. This keeps component-specific vocabularies out
      * of the generic Manage controller layer.
      *
-     * @return array<string, array<string, string>> keyed by entity field name
+     * @return array<string, array<string, string>> keyed by entity field nameEntity
      */
     protected static function manageArrayChoiceFields(): array
     {
@@ -75,10 +75,10 @@ trait ManageCrudControllerCustomizationTrait
 
     /**
      * Override when a field must use a deterministic EasyAdmin field type rather
-     * than the generic Doctrine/name fallback. Supported values: text, textarea,
+     * than the generic Doctrine/nameEntity fallback. Supported values: text, textarea,
      * email, url, boolean, integer, number, date, datetime and time.
      *
-     * @return array<string, array<string, string>|string> keyed by field name or by entity FQCN then field name
+     * @return array<string, array<string, string>|string> keyed by field nameEntity or by entity FQCN then field nameEntity
      */
     protected static function manageFieldTypeOverrides(): array
     {

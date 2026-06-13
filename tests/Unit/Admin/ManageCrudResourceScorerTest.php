@@ -13,7 +13,7 @@ final class ManageCrudResourceScorerTest extends TestCase
     public function testScoresBusinessFacingResourceAboveTechnicalEntity(): void
     {
         $scorer = new ManageCrudResourceScorer(
-            primaryEntityBonusSuffixesByComponent: ['messaging' => ['\\MessageAdminView' => 200]],
+            primaryEntityBonusSuffixesByComponent: ['messaging' => ['\\MessageAdminViewEntity' => 200]],
             primaryEntityPenaltySuffixesByComponent: ['messaging' => ['\\MessageEntity' => 100]],
             technicalKeywords: ['outbox'],
             businessKeywords: ['message'],
@@ -23,7 +23,7 @@ final class ManageCrudResourceScorerTest extends TestCase
             componentKey: 'messaging',
             resourceKey: 'message_admin_view',
             label: 'Message Admin View',
-            entityClass: 'App\\Messaging\\Entity\\Message\\MessageAdminView',
+            entityClass: 'App\\Messaging\\Entity\\Message\\MessageAdminViewEntity',
         );
         $technicalResource = new ManageCrudResourceDefinition(
             componentKey: 'messaging',
@@ -34,7 +34,7 @@ final class ManageCrudResourceScorerTest extends TestCase
 
         self::assertGreaterThan(
             $scorer->score($technicalResource, 'MessageEntity', 'messageoutboxentity', 'message'),
-            $scorer->score($businessResource, 'MessageAdminView', 'messageadminview', 'message'),
+            $scorer->score($businessResource, 'MessageAdminViewEntity', 'messageadminview', 'message'),
         );
     }
 }

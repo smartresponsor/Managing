@@ -31,7 +31,7 @@ final class ManageCrudFieldVisibilityExplainCommand extends Command
     {
         $this
             ->addArgument('resource', InputArgument::REQUIRED, 'Resource/entity FQCN to inspect.')
-            ->addArgument('field', InputArgument::REQUIRED, 'Field name to inspect.')
+            ->addArgument('field', InputArgument::REQUIRED, 'Field nameEntity to inspect.')
             ->addArgument('page', InputArgument::REQUIRED, 'EasyAdmin page: index, detail, new, or edit.')
             ->addOption('subject', null, InputOption::VALUE_REQUIRED, 'Optional subject identifier, for example user:42.')
             ->addOption('status-field', null, InputOption::VALUE_IS_ARRAY | InputOption::VALUE_REQUIRED, 'Status field candidate. Repeatable.')

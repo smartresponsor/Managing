@@ -18,7 +18,7 @@ final class ManagingCrudFieldConfigurationDefaults
     /** @return list<string> */
     public static function titleCandidates(): array
     {
-        return ['firstTitle', 'title', 'name', 'label'];
+        return ['firstTitle', 'title', 'nameEntity', 'label'];
     }
 
     /** @return list<string> */

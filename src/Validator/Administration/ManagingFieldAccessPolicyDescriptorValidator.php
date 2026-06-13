@@ -32,9 +32,9 @@ final readonly class ManagingFieldAccessPolicyDescriptorValidator implements Man
             throw new \InvalidArgumentException('Managing field access target must use the Managing component.');
         }
 
-        foreach (['resourceClass' => $target->resourceClass, 'fieldName' => $target->fieldName, 'pageName' => $target->pageName] as $name => $value) {
+        foreach (['resourceClass' => $target->resourceClass, 'fieldName' => $target->fieldName, 'pageName' => $target->pageName] as $nameEntity => $value) {
             if ('' === trim($value)) {
-                throw new \InvalidArgumentException(sprintf('Managing field access target %s is required.', $name));
+                throw new \InvalidArgumentException(sprintf('Managing field access target %s is required.', $nameEntity));
             }
         }
 

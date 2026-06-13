@@ -48,7 +48,7 @@ final class ManagingParameterLoaderTest extends TestCase
 
         self::assertSame('/tmp/managing', $container->getParameter('managing.bundle_dir'));
         self::assertSame(['cataloging'], $container->getParameter('managing.left_menu'));
-        self::assertSame(['Category' => 'cataloging'], $container->getParameter('managing.component_root_aliases'));
+        self::assertSame(['CategoryEntity' => 'cataloging'], $container->getParameter('managing.component_root_aliases'));
         self::assertSame(['id'], $container->getParameter('managing.crud_field_primary_identifier_candidates'));
         self::assertSame(['description'], $container->getParameter('managing.crud_field_description_candidates'));
         self::assertSame(['email'], $container->getParameter('managing.crud_field_email_keywords'));
@@ -87,21 +87,21 @@ final class ManagingParameterLoaderTest extends TestCase
             'host_scan_namespace_prefixes' => ['App\\'],
             'host_scan_excluded_namespaces' => [],
             'component_root_names' => ['cataloging' => 'catalog'],
-            'component_root_aliases' => ['Category' => 'cataloging'],
+            'component_root_aliases' => ['CategoryEntity' => 'cataloging'],
             'host_scan_included_entity_suffixes_by_component' => [],
             'crud_primary_entity_bonus_suffixes_by_component' => [],
             'crud_primary_entity_penalty_suffixes_by_component' => [],
             'crud_primary_technical_keywords' => [],
             'crud_primary_business_keywords' => [],
             'crud_generated_attachment_migration_components' => [],
-            'crud_behavior_search_fields' => ['name'],
+            'crud_behavior_search_fields' => ['nameEntity'],
             'crud_behavior_status_fields' => ['status'],
             'crud_behavior_publication_flag_fields' => ['published'],
             'crud_behavior_publication_date_fields' => ['publishedAt'],
             'crud_behavior_audit_date_fields' => ['createdAt'],
             'crud_behavior_default_sort_fields' => ['updatedAt'],
             'crud_field_primary_identifier_candidates' => ['id'],
-            'crud_field_title_candidates' => ['name'],
+            'crud_field_title_candidates' => ['nameEntity'],
             'crud_field_identity_candidates' => ['code'],
             'crud_field_description_candidates' => ['description'],
             'crud_field_technical_excluded_fields' => [],
@@ -120,7 +120,7 @@ final class ManagingParameterLoaderTest extends TestCase
             'crud_field_long_text_keywords' => ['description'],
             'crud_field_type_overrides' => [],
             'admin_enabled' => true,
-            'admin_route_prefix' => '/manage',
+            'admin_route_prefix' => '/ea',
             'admin_allowed_environments' => ['dev'],
             'admin_required_role' => 'ROLE_ADMIN',
             'admin_show_security_notes' => true,

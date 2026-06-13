@@ -13,7 +13,7 @@ final class ManageAssociationLabelResolver
     public function __construct(
         private readonly ManageEntityReflectionInspector $inspector = new ManageEntityReflectionInspector(),
         private readonly ManageEntityStringifier $stringifier = new ManageEntityStringifier(),
-        private readonly array $labelFields = ['firstTitle', 'title', 'name', 'label', 'code', 'slug', 'number', 'reference', 'identifier', 'email', 'username'],
+        private readonly array $labelFields = ['firstTitle', 'title', 'nameEntity', 'label', 'code', 'slug', 'number', 'reference', 'identifier', 'email', 'username'],
     ) {
     }
 

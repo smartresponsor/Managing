@@ -4,24 +4,19 @@ declare(strict_types=1);
 
 namespace App\Managing\Trait\Crud;
 
-use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationService;
-
 /**
- * Small generated-controller bridge for the legacy Attaching identifier repair.
+ * Compatibility bridge for controllers generated before Managing stopped owning
+ * the Attaching identifier migration.
  *
- * Keeping this code in a trait prevents the CRUD generator from embedding the
- * full migration bootstrap into generated controllers while preserving the
- * existing no-constructor controller contract.
+ * Managing is an administration/generation component. It must not execute
+ * schema/data migrations for another component at request time. The actual
+ * attachment identifier model is owned by Attaching/Objecting entity-first
+ * contracts; this method remains as a harmless generated-controller BC hook.
  */
 trait ManageAttachmentIdentifierMigrationTrait
 {
     protected function migrateAttachmentIdentifierIfNeeded(): void
     {
-        $doctrine = $this->container->get('doctrine');
-        $cacheDir = (string) $this->container->get('parameter_bag')->get('kernel.cache_dir');
-        $connection = $doctrine->getConnection();
-        $markerFile = $cacheDir.'/attaching_migration_complete.flag';
-
-        (new AttachmentIdentifierMigrationService($connection, $markerFile))->migrateIfNeeded();
+        // Intentionally no-op: schema-first Attaching repair was retired from Managing.
     }
 }

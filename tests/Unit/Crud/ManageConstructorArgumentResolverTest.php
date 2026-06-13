@@ -16,7 +16,7 @@ final class ManageConstructorArgumentResolverTest extends TestCase
         $resolver = new ManageConstructorArgumentResolver();
         $parameters = $this->parameters(ConstructorArgumentResolverProbe::class);
 
-        self::assertSame('', $resolver->resolve($parameters['name'], [], self::objectResolver(...)));
+        self::assertSame('', $resolver->resolve($parameters['nameEntity'], [], self::objectResolver(...)));
         self::assertSame(0, $resolver->resolve($parameters['count'], [], self::objectResolver(...)));
         self::assertFalse($resolver->resolve($parameters['enabled'], [], self::objectResolver(...)));
         self::assertSame([], $resolver->resolve($parameters['items'], [], self::objectResolver(...)));
@@ -60,7 +60,7 @@ final class ConstructorArgumentResolverProbe
 {
     /** @param list<string> $items */
     public function __construct(
-        public string $name,
+        public string $nameEntity,
         public int $count,
         public bool $enabled,
         public array $items,

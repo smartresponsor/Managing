@@ -59,6 +59,6 @@ final class ManagingHostConfigurationDefaults
     /** @return array<string, list<string>> */
     public static function includedEntitySuffixesByComponent(): array
     {
-        return ['tagging' => ['\\TagAdminView']];
+        return ['tagging' => ['\\TagAdminViewEntity']];
     }
 }

@@ -13,7 +13,7 @@ use App\Managing\Resolver\Admin\Host\ManageHostCrudControllerResolver;
 use App\Managing\Resolver\Admin\Host\ManageHostPathResolver;
 use PHPUnit\Framework\TestCase;
 
-final class ManageHostCrudResourceDiscoveryTest extends TestCase
+final class ManageHostCrudResourceDiscoveryTestEntity extends TestCase
 {
     public function testDiscoversDoctrineEntityResourcesThroughDedicatedDiscoveryService(): void
     {

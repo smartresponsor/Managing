@@ -36,6 +36,6 @@ final class ManageMenuBuilderTest extends TestCase
             static fn ($item): string => (string) $item->getAsDto()->getLabel(),
             $items
         ));
-        self::assertSame('/manage/cataloging', $items[1]->getAsDto()->getLinkUrl());
+        self::assertSame('/ea/manage/cataloging', $items[1]->getAsDto()->getLinkUrl());
     }
 }

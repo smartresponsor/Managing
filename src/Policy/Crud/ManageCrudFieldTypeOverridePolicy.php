@@ -31,7 +31,7 @@ final class ManageCrudFieldTypeOverridePolicy
     private readonly array $fieldTypeOverrides;
 
     /**
-     * @param array<string, mixed> $fieldTypeOverrides keyed by entity FQCN, then field name
+     * @param array<string, mixed> $fieldTypeOverrides keyed by entity FQCN, then field nameEntity
      */
     public function __construct(
         array $fieldTypeOverrides = [],

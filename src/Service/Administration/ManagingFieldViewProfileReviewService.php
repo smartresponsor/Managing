@@ -136,7 +136,7 @@ final readonly class ManagingFieldViewProfileReviewService implements ManagingFi
             }
 
             if (1 !== preg_match('/^[A-Za-z_][A-Za-z0-9_]*$/', $field)) {
-                throw new \InvalidArgumentException(sprintf('Invalid field name "%s".', $field));
+                throw new \InvalidArgumentException(sprintf('Invalid field nameEntity "%s".', $field));
             }
 
             $normalized[$field] = $field;

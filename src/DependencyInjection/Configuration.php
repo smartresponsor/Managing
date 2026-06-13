@@ -14,35 +14,35 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('managing');
         $children = $treeBuilder->getRootNode()->children();
 
-        foreach (self::scalarListNodes() as $name => $default) {
-            ManagingConfigurationNodeBuilder::scalarList($children, $name, $default);
+        foreach (self::scalarListNodes() as $nameEntity => $default) {
+            ManagingConfigurationNodeBuilder::scalarList($children, $nameEntity, $default);
         }
 
-        foreach (self::scalarMapNodes() as $name => [$keyName, $default]) {
-            ManagingConfigurationNodeBuilder::scalarMap($children, $name, $keyName, $default);
+        foreach (self::scalarMapNodes() as $nameEntity => [$keyName, $default]) {
+            ManagingConfigurationNodeBuilder::scalarMap($children, $nameEntity, $keyName, $default);
         }
 
-        foreach (self::scalarListMapNodes() as $name => [$keyName, $default]) {
-            ManagingConfigurationNodeBuilder::scalarListMap($children, $name, $keyName, $default);
+        foreach (self::scalarListMapNodes() as $nameEntity => [$keyName, $default]) {
+            ManagingConfigurationNodeBuilder::scalarListMap($children, $nameEntity, $keyName, $default);
         }
 
-        foreach (self::intMapMapNodes() as $name => [$outerKeyName, $innerKeyName, $default]) {
-            ManagingConfigurationNodeBuilder::intMapMap($children, $name, $outerKeyName, $innerKeyName, $default);
+        foreach (self::intMapMapNodes() as $nameEntity => [$outerKeyName, $innerKeyName, $default]) {
+            ManagingConfigurationNodeBuilder::intMapMap($children, $nameEntity, $outerKeyName, $innerKeyName, $default);
         }
 
-        foreach (self::scalarMapMapNodes() as $name => [$outerKeyName, $innerKeyName, $default]) {
-            ManagingConfigurationNodeBuilder::scalarMapMap($children, $name, $outerKeyName, $innerKeyName, $default);
+        foreach (self::scalarMapMapNodes() as $nameEntity => [$outerKeyName, $innerKeyName, $default]) {
+            ManagingConfigurationNodeBuilder::scalarMapMap($children, $nameEntity, $outerKeyName, $innerKeyName, $default);
         }
 
         self::crudFieldVisibilityNode($children);
         self::crudFieldUserProfilesNode($children);
 
-        foreach (self::booleanNodes() as $name => $default) {
-            ManagingConfigurationNodeBuilder::boolean($children, $name, $default);
+        foreach (self::booleanNodes() as $nameEntity => $default) {
+            ManagingConfigurationNodeBuilder::boolean($children, $nameEntity, $default);
         }
 
-        foreach (self::scalarNodes() as $name => $default) {
-            ManagingConfigurationNodeBuilder::scalar($children, $name, $default);
+        foreach (self::scalarNodes() as $nameEntity => $default) {
+            ManagingConfigurationNodeBuilder::scalar($children, $nameEntity, $default);
         }
 
         $children->end();
@@ -155,7 +155,7 @@ final class Configuration implements ConfigurationInterface
             'crud_field_external_access_failure_effect' => ManagingConfigurationDefaults::crudFieldExternalAccessFailureEffect(),
             'crud_field_external_access_rolling_decision_service' => ManagingConfigurationDefaults::crudFieldExternalAccessRollingDecisionService(),
             'crud_field_external_access_permission_key' => ManagingConfigurationDefaults::crudFieldExternalAccessPermissionKey(),
-            'admin_route_prefix' => '/manage',
+            'admin_route_prefix' => '/ea',
             'admin_required_role' => 'ROLE_ADMIN',
             'admin_logout_path' => '/logout',
             'admin_logout_label' => 'Logout',

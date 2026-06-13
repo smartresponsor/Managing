@@ -12,7 +12,7 @@ final class ManagingCrudBehaviorConfigurationDefaults
     /** @return list<string> */
     public static function searchFields(): array
     {
-        return ['firstTitle', 'title', 'name', 'label', 'code', 'slug', 'sku', 'status', 'state'];
+        return ['firstTitle', 'title', 'nameEntity', 'label', 'code', 'slug', 'sku', 'status', 'state'];
     }
 
     /** @return list<string> */

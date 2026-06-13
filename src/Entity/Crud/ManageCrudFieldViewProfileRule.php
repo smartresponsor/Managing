@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Entity\Crud;
 
+use App\Managing\Repository\Crud\ManageDoctrineCrudFieldViewProfileRuleRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * This entity stores presentation preferences only. It must not be used to grant
  * field access or to override Rolling/Administering deny decisions.
  */
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: ManageDoctrineCrudFieldViewProfileRuleRepository::class)]
 #[ORM\Table(name: 'manage_crud_field_view_profile_rule')]
 #[ORM\UniqueConstraint(name: 'uniq_manage_crud_field_view_profile_rule_scope', columns: ['subject_identifier', 'resource_key', 'page_name'])]
 #[ORM\Index(name: 'idx_manage_crud_field_view_profile_subject', columns: ['subject_identifier'])]

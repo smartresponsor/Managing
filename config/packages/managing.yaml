@@ -1,6 +1,6 @@
 managing:
   admin_enabled: true
-  admin_route_prefix: '/manage'
+  admin_route_prefix: '/ea'
   admin_allowed_environments: []
   admin_required_role: 'ROLE_ADMIN'
   admin_show_security_notes: true

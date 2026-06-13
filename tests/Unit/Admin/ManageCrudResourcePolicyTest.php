@@ -14,11 +14,11 @@ final class ManageCrudResourcePolicyTest extends TestCase
     {
         $policy = new ManageCrudResourcePolicy(
             includedEntitySuffixesByComponent: [
-                'tagging' => ['\\TagAdminView'],
+                'tagging' => ['\\TagAdminViewEntity'],
             ],
         );
 
-        self::assertTrue($policy->shouldIncludeDiscoveredEntity('tagging', 'App\\Tagging\\Entity\\Core\\Tag\\TagAdminView'));
+        self::assertTrue($policy->shouldIncludeDiscoveredEntity('tagging', 'App\\Tagging\\Entity\\Core\\Tag\\TagAdminViewEntity'));
         self::assertFalse($policy->shouldIncludeDiscoveredEntity('tagging', 'App\\Tagging\\Entity\\Core\\Tag\\Tag'));
         self::assertTrue($policy->shouldIncludeDiscoveredEntity('cataloging', 'App\\Cataloging\\Entity\\Catalog\\Catalog'));
     }
@@ -28,7 +28,7 @@ final class ManageCrudResourcePolicyTest extends TestCase
         $policy = new ManageCrudResourcePolicy(
             componentRootNames: ['messaging' => 'message'],
             primaryEntityBonusSuffixesByComponent: [
-                'messaging' => ['\\MessageAdminView' => 200],
+                'messaging' => ['\\MessageAdminViewEntity' => 200],
             ],
             primaryEntityPenaltySuffixesByComponent: [
                 'messaging' => ['\\MessageEntity' => 100],
@@ -41,7 +41,7 @@ final class ManageCrudResourcePolicyTest extends TestCase
             componentKey: 'messaging',
             resourceKey: 'message_admin_view',
             label: 'Message Admin View',
-            entityClass: 'App\\Entity\\Message\\MessageAdminView',
+            entityClass: 'App\\Entity\\Message\\MessageAdminViewEntity',
         );
         $entity = new ManageCrudResourceDefinition(
             componentKey: 'messaging',
@@ -52,7 +52,7 @@ final class ManageCrudResourcePolicyTest extends TestCase
 
         self::assertGreaterThan(
             $policy->scoreResource($entity, 'MessageEntity', 'message'),
-            $policy->scoreResource($adminView, 'MessageAdminView', 'messageadmin')
+            $policy->scoreResource($adminView, 'MessageAdminViewEntity', 'messageadmin')
         );
         self::assertTrue(false === $policy->requiresAttachmentIdentifierMigration('attaching'));
     }
@@ -65,7 +65,7 @@ final class ManageCrudResourcePolicyTest extends TestCase
         );
 
         self::assertSame('messaging', $policy->componentKeyFromRootName('Message'));
-        self::assertSame('cataloging', $policy->componentKeyFromRootName('Category'));
+        self::assertSame('cataloging', $policy->componentKeyFromRootName('CategoryEntity'));
         self::assertNull($policy->componentKeyFromRootName('Unknown'));
     }
 

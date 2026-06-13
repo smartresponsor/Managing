@@ -13,7 +13,7 @@ final class ManagePolicyValueNormalizerTest extends TestCase
     {
         $normalizer = new ManagePolicyValueNormalizer();
 
-        self::assertSame(['Title', 'name'], $normalizer->stringList([' Title ', '', 123, 'name', 'Title']));
+        self::assertSame(['Title', 'nameEntity'], $normalizer->stringList([' Title ', '', 123, 'nameEntity', 'Title']));
     }
 
     public function testLowercaseStringListNormalizesKeywords(): void
@@ -27,7 +27,7 @@ final class ManagePolicyValueNormalizerTest extends TestCase
     {
         $normalizer = new ManagePolicyValueNormalizer();
 
-        self::assertSame(['category' => 'cataloging'], $normalizer->normalizedStringMap([' Category ' => ' Cataloging ', 1 => 'ignored']));
-        self::assertSame(['\\MessageAdminView' => 200], $normalizer->intMap(['\\MessageAdminView' => '200', '' => 10]));
+        self::assertSame(['category' => 'cataloging'], $normalizer->normalizedStringMap([' CategoryEntity ' => ' Cataloging ', 1 => 'ignored']));
+        self::assertSame(['\\MessageAdminViewEntity' => 200], $normalizer->intMap(['\\MessageAdminViewEntity' => '200', '' => 10]));
     }
 }

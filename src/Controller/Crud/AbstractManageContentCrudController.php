@@ -173,6 +173,6 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
 
     private function redirectBack(?string $referer): RedirectResponse
     {
-        return $this->redirect($referer ?: '/manage');
+        return $this->redirect($referer ?: '/ea/manage');
     }
 }

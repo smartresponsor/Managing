@@ -15,20 +15,20 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 final class ManagingConfigurationNodeBuilder
 {
     /** @param list<string> $default */
-    public static function scalarList(NodeBuilder $children, string $name, array $default = []): void
+    public static function scalarList(NodeBuilder $children, string $nameEntity, array $default = []): void
     {
         $children
-            ->arrayNode($name)
+            ->arrayNode($nameEntity)
                 ->scalarPrototype()->end()
                 ->defaultValue($default)
             ->end();
     }
 
     /** @param array<string, string> $default */
-    public static function scalarMap(NodeBuilder $children, string $name, string $keyName, array $default = []): void
+    public static function scalarMap(NodeBuilder $children, string $nameEntity, string $keyName, array $default = []): void
     {
         $children
-            ->arrayNode($name)
+            ->arrayNode($nameEntity)
                 ->useAttributeAsKey($keyName)
                 ->scalarPrototype()->end()
                 ->defaultValue($default)
@@ -36,10 +36,10 @@ final class ManagingConfigurationNodeBuilder
     }
 
     /** @param array<string, list<string>> $default */
-    public static function scalarListMap(NodeBuilder $children, string $name, string $keyName, array $default = []): void
+    public static function scalarListMap(NodeBuilder $children, string $nameEntity, string $keyName, array $default = []): void
     {
         $children
-            ->arrayNode($name)
+            ->arrayNode($nameEntity)
                 ->useAttributeAsKey($keyName)
                 ->arrayPrototype()
                     ->scalarPrototype()->end()
@@ -49,10 +49,10 @@ final class ManagingConfigurationNodeBuilder
     }
 
     /** @param array<string, array<string, int>> $default */
-    public static function intMapMap(NodeBuilder $children, string $name, string $outerKeyName, string $innerKeyName, array $default = []): void
+    public static function intMapMap(NodeBuilder $children, string $nameEntity, string $outerKeyName, string $innerKeyName, array $default = []): void
     {
         $children
-            ->arrayNode($name)
+            ->arrayNode($nameEntity)
                 ->useAttributeAsKey($outerKeyName)
                 ->arrayPrototype()
                     ->useAttributeAsKey($innerKeyName)
@@ -63,10 +63,10 @@ final class ManagingConfigurationNodeBuilder
     }
 
     /** @param array<string, array<string, string>> $default */
-    public static function scalarMapMap(NodeBuilder $children, string $name, string $outerKeyName, string $innerKeyName, array $default = []): void
+    public static function scalarMapMap(NodeBuilder $children, string $nameEntity, string $outerKeyName, string $innerKeyName, array $default = []): void
     {
         $children
-            ->arrayNode($name)
+            ->arrayNode($nameEntity)
                 ->useAttributeAsKey($outerKeyName)
                 ->arrayPrototype()
                     ->useAttributeAsKey($innerKeyName)
@@ -76,9 +76,9 @@ final class ManagingConfigurationNodeBuilder
             ->end();
     }
 
-    public static function boolean(NodeBuilder $children, string $name, bool $default): void
+    public static function boolean(NodeBuilder $children, string $nameEntity, bool $default): void
     {
-        $node = $children->booleanNode($name);
+        $node = $children->booleanNode($nameEntity);
 
         if ($default) {
             $node->defaultTrue()->end();
@@ -89,10 +89,10 @@ final class ManagingConfigurationNodeBuilder
         $node->defaultFalse()->end();
     }
 
-    public static function scalar(NodeBuilder $children, string $name, string $default): void
+    public static function scalar(NodeBuilder $children, string $nameEntity, string $default): void
     {
         $children
-            ->scalarNode($name)
+            ->scalarNode($nameEntity)
                 ->defaultValue($default)
             ->end();
     }

@@ -15,7 +15,7 @@ final class ManagingConfigurationNodeBuilderTest extends TestCase
         $processor = new Processor();
         $processed = $processor->processConfiguration(new Configuration(), []);
 
-        self::assertSame('/manage', $processed['admin_route_prefix']);
+        self::assertSame('/ea', $processed['admin_route_prefix']);
         self::assertTrue($processed['host_scan_enabled']);
         self::assertContains('firstTitle', $processed['crud_behavior_search_fields']);
         self::assertSame('cataloging', $processed['component_root_aliases']['category']);
