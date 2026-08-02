@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace App\Managing\Controller\Crud;
 
+use App\Managing\Configurator\Crud\ManageCrudActionConfigurator;
+use App\Managing\Configurator\Crud\ManageCrudFilterConfigurator;
+use App\Managing\Configurator\Crud\ManageCrudPageConfigurator;
+use App\Managing\Factory\Crud\ManageCrudFieldFactory;
+use App\Managing\Instantiator\Crud\ManageEntityInstantiator;
+use App\Managing\Resolver\Crud\ManageCrudEntitySurfaceResolver;
+use App\Managing\Workflow\Crud\ManageCrudPublicationWorkflow;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -14,28 +21,65 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Service\Attribute\Required;
 
 /**
- * Base CRUD controller for Manage content screens.
+ * Base CRUD controller for generated Manage content screens.
  *
- * Component CRUD controllers extend this class when they want the common
- * CMS-like EasyAdmin defaults: business-first index fields, content actions,
- * publication actions, search, filters, pagination and batch operations.
- *
- * The controller is intentionally thin. Reflection, field creation,
- * publication-state mutation and constructor-heavy entity instantiation are
- * delegated to Symfony-oriented CRUD services so generated controllers remain
- * small without turning this base class into the full implementation surface.
+ * Generated controllers extend this class to reuse EasyAdmin defaults while
+ * keeping component-owned controllers constructor-free and deterministic.
  */
 abstract class AbstractManageContentCrudController extends AbstractCrudController
 {
     use ManageCrudControllerCustomizationTrait;
-    use ManageCrudControllerRuntimeInjectionTrait;
-    use ManageCrudControllerSurfaceTrait;
     private const ACTION_PUBLISH = 'managePublish';
     private const ACTION_UNPUBLISH = 'manageUnpublish';
     private const ACTION_BATCH_PUBLISH = 'manageBatchPublish';
     private const ACTION_BATCH_UNPUBLISH = 'manageBatchUnpublish';
+
+    private ?ManageCrudControllerRuntime $manageCrudRuntime = null;
+
+    #[Required]
+    public function setManageCrudActionConfigurator(ManageCrudActionConfigurator $manageCrudActionConfigurator): void
+    {
+        $this->crudRuntime()->setActionConfigurator($manageCrudActionConfigurator);
+    }
+
+    #[Required]
+    public function setManageCrudEntitySurfaceResolver(ManageCrudEntitySurfaceResolver $manageCrudEntitySurfaceResolver): void
+    {
+        $this->crudRuntime()->setEntitySurfaceResolver($manageCrudEntitySurfaceResolver);
+    }
+
+    #[Required]
+    public function setManageCrudFieldFactory(ManageCrudFieldFactory $manageCrudFieldFactory): void
+    {
+        $this->crudRuntime()->setFieldFactory($manageCrudFieldFactory);
+    }
+
+    #[Required]
+    public function setManageCrudFilterConfigurator(ManageCrudFilterConfigurator $manageCrudFilterConfigurator): void
+    {
+        $this->crudRuntime()->setFilterConfigurator($manageCrudFilterConfigurator);
+    }
+
+    #[Required]
+    public function setManageCrudPageConfigurator(ManageCrudPageConfigurator $manageCrudPageConfigurator): void
+    {
+        $this->crudRuntime()->setPageConfigurator($manageCrudPageConfigurator);
+    }
+
+    #[Required]
+    public function setManageCrudPublicationWorkflow(ManageCrudPublicationWorkflow $manageCrudPublicationWorkflow): void
+    {
+        $this->crudRuntime()->setPublicationWorkflow($manageCrudPublicationWorkflow);
+    }
+
+    #[Required]
+    public function setManageEntityInstantiator(ManageEntityInstantiator $manageEntityInstantiator): void
+    {
+        $this->crudRuntime()->setEntityInstantiator($manageEntityInstantiator);
+    }
 
     public function configureCrud(Crud $crud): Crud
     {
@@ -90,7 +134,6 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
             $this->publicationDateCandidates(),
             static::manageArrayChoiceFields(),
             static::manageFieldTypeOverrides(),
-            $this->currentSubjectIdentifier(),
         );
     }
 
@@ -153,26 +196,105 @@ abstract class AbstractManageContentCrudController extends AbstractCrudControlle
         return $this->entityInstantiator()->instantiate($entityFqcn);
     }
 
-    private function currentSubjectIdentifier(): ?string
+    /** @return list<string> */
+    private function searchFields(): array
     {
-        $user = $this->getUser();
-        if (!is_object($user)) {
-            return null;
-        }
+        return $this->entitySurfaceResolver()->searchFields(static::getEntityFqcn(), static::manageSearchFieldCandidates());
+    }
 
-        if (method_exists($user, 'getUserIdentifier')) {
-            return (string) $user->getUserIdentifier();
-        }
+    /** @return list<string> */
+    private function statusFields(): array
+    {
+        return $this->entitySurfaceResolver()->statusFields(static::getEntityFqcn(), static::manageStatusFieldCandidates());
+    }
 
-        if (method_exists($user, 'getId')) {
-            return (string) $user->getId();
-        }
+    /** @return list<string> */
+    private function publicationFlagFields(): array
+    {
+        return $this->entitySurfaceResolver()->publicationFlagFields(static::getEntityFqcn(), static::managePublicationFlagCandidates());
+    }
 
-        return $user::class;
+    /** @return list<string> */
+    private function filterDateFields(): array
+    {
+        return $this->entitySurfaceResolver()->filterDateFields(static::getEntityFqcn(), static::managePublicationDateCandidates());
+    }
+
+    /** @return list<string> */
+    private function statusFieldCandidates(): array
+    {
+        return $this->entitySurfaceResolver()->statusFieldCandidates(static::manageStatusFieldCandidates());
+    }
+
+    /** @return list<string> */
+    private function publicationFlagCandidates(): array
+    {
+        return $this->entitySurfaceResolver()->publicationFlagFieldCandidates(static::managePublicationFlagCandidates());
+    }
+
+    /** @return list<string> */
+    private function publicationDateCandidates(): array
+    {
+        return $this->entitySurfaceResolver()->publicationDateFieldCandidates(static::managePublicationDateCandidates());
+    }
+
+    private function supportsPublication(): bool
+    {
+        return $this->publicationWorkflow()->supports(static::getEntityFqcn(), $this->publicationFlagCandidates(), $this->publicationDateCandidates());
+    }
+
+    private function canPublishEntity(object $entity): bool
+    {
+        return $this->publicationWorkflow()->canPublish(static::getEntityFqcn(), $entity, $this->publicationFlagCandidates(), $this->publicationDateCandidates());
+    }
+
+    private function canUnpublishEntity(object $entity): bool
+    {
+        return $this->publicationWorkflow()->canUnpublish(static::getEntityFqcn(), $entity, $this->publicationFlagCandidates(), $this->publicationDateCandidates());
     }
 
     private function redirectBack(?string $referer): RedirectResponse
     {
-        return $this->redirect($referer ?: '/ea/manage');
+        return $this->redirect($referer ?: '/manage');
+    }
+
+    private function actionConfigurator(): ManageCrudActionConfigurator
+    {
+        return $this->crudRuntime()->actionConfigurator();
+    }
+
+    private function entitySurfaceResolver(): ManageCrudEntitySurfaceResolver
+    {
+        return $this->crudRuntime()->entitySurfaceResolver();
+    }
+
+    private function fieldFactory(): ManageCrudFieldFactory
+    {
+        return $this->crudRuntime()->fieldFactory();
+    }
+
+    private function filterConfigurator(): ManageCrudFilterConfigurator
+    {
+        return $this->crudRuntime()->filterConfigurator();
+    }
+
+    private function pageConfigurator(): ManageCrudPageConfigurator
+    {
+        return $this->crudRuntime()->pageConfigurator();
+    }
+
+    private function publicationWorkflow(): ManageCrudPublicationWorkflow
+    {
+        return $this->crudRuntime()->publicationWorkflow();
+    }
+
+    private function entityInstantiator(): ManageEntityInstantiator
+    {
+        return $this->crudRuntime()->entityInstantiator();
+    }
+
+    private function crudRuntime(): ManageCrudControllerRuntime
+    {
+        return $this->manageCrudRuntime ??= new ManageCrudControllerRuntime();
     }
 }

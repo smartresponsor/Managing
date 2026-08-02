@@ -1,4 +1,0 @@
-manage:
-  resource: '../../src/Controller/Admin/ManageDashboardController.php'
-  type: easyadmin.routes
-  prefix: /ea

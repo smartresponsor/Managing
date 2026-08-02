@@ -9,30 +9,13 @@ services:
       - '../src/DependencyInjection/'
       - '../src/Entity/'
       - '../src/Value/'
-      - '../src/Controller/Crud/Generated/'
       - '../src/ManagingBundle.php'
-
-  App\Managing\Controller\Crud\Generated\:
-    resource: '../src/Controller/Crud/Generated/'
-    exclude:
-      - '../src/Controller/Crud/Generated/VendoringCrudController.php'
-    autowire: true
-    autoconfigure: true
 
   App\Managing\Filter\Admin\ManageContributionFilter:
     arguments:
       $enabledComponents: '%managing.enabled_components%'
       $disabledResources: '%managing.disabled_resources%'
       $menuOrder: '%managing.menu_order%'
-
-  App\Managing\Builder\Admin\ManageMenuBuilder:
-    arguments:
-      $adminRoutePrefix: '%managing.admin_route_prefix%'
-      $leftMenu: '%managing.left_menu%'
-      $menuExcludedComponents: '%managing.menu_excluded_components%'
-      $crudResourceRegistry: '@App\Managing\RegistryInterface\Crud\ManageCrudResourceRegistryInterface'
-
-
 
   App\Managing\Policy\Crud\ManageCrudBehaviorPolicy:
     arguments:
@@ -226,9 +209,6 @@ services:
   App\Managing\FilterInterface\Admin\ManageContributionFilterInterface:
     alias: App\Managing\Filter\Admin\ManageContributionFilter
 
-  App\Managing\BuilderInterface\Admin\ManageMenuBuilderInterface:
-    alias: App\Managing\Builder\Admin\ManageMenuBuilder
-
   App\Managing\BuilderInterface\Admin\ManageAdminUserMenuBuilderInterface:
     alias: App\Managing\Builder\Admin\ManageAdminUserMenuBuilder
 
@@ -248,9 +228,6 @@ services:
     alias: App\Managing\Service\Administration\ManagingFieldVisibilityInspectionPrepareService
   App\Managing\ValidatorInterface\Administration\ManagingFieldAccessPolicyDescriptorValidatorInterface:
     alias: App\Managing\Validator\Administration\ManagingFieldAccessPolicyDescriptorValidator
-
-  App\Managing\BuilderInterface\Crud\ManageCrudActionUrlBuilderInterface:
-    alias: App\Managing\Builder\Crud\ManageCrudActionUrlBuilder
 
   App\Managing\FactoryInterface\Crud\ManageCrudFieldDefinitionFactoryInterface:
     alias: App\Managing\Factory\Crud\ManageCrudFieldDefinitionFactory
