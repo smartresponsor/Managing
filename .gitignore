@@ -2,6 +2,7 @@
 /.env.*.local
 /var/
 /vendor/
+/.codebase-memory/
 .phpunit.result.cache
 *.zip
 
