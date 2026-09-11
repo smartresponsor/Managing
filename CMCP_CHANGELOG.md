@@ -23,3 +23,34 @@ Authoritative repository and sibling/canon sources are reachable; the concrete C
 
 ### Что осталось?
 Patch the manifest, verify no ownership drift, inspect resulting diff/checks, integrate only if the bounded RC change is green.
+
+### Iteration 2 — material implementation
+
+- Updated `composer.json` runtime `require` with `cruding/crud`, `viewing/view`, `interfacing/interface`, and `objecting/object` using the workspace development constraint `*@dev`.
+- No PHP namespaces, source trees, controllers, routes, Doctrine mappings, templates, or unrelated repositories were mutated.
+
+### Iteration 3 — verification and fix
+
+- Verified the branch diff contains only the orchestration journal plus the four runtime dependency declarations.
+- Verified each declared package identity against the current sibling Composer manifests.
+- Attempted local Composer/install verification in the execution runtime; external GitHub DNS/network resolution is unavailable there, so dependency solving and lock regeneration cannot be executed safely.
+- `composer.lock` therefore remains unchanged. This is a hard acceptance blocker for merging the dependency declaration change; no manual lock fabrication was attempted.
+
+### Iteration 4 — debt closure and integration
+
+- Created branch `cmcp/engine-20260911152412-managing-fed750` from the authoritative baseline.
+- Opened PR #2 (`RC: declare Managing platform dependency contour`).
+- PR is mergeable at the Git level and has no reported commit status checks, but remains intentionally unmerged because the Composer lock/install gate is not green.
+- No speculative growth work or cross-repository mutation was introduced.
+
+### Iteration 5 — final acceptance and handoff
+
+- Post-integration state inspected: `master` remains unchanged; all task mutations are isolated to the RC branch/PR.
+- Accepted as materially implemented but not release-accepted: dependency ownership is corrected in the proposed manifest, while solver-generated `composer.lock` and install/test evidence are still required before merge.
+- Required next gate in an environment with package/network access: run Composer update for the four sibling packages, then `composer validate`, PHP syntax/static analysis/tests/Gating and review the resulting lock diff. Merge PR #2 only after those gates are green.
+
+### Что достигнуто?
+The concrete dependency-boundary defect is patched and reviewable on an isolated branch with a mergeable PR; no unrelated code was changed.
+
+### Что осталось до RC?
+Regenerate and verify `composer.lock` with Composer in the real workspace/package-enabled environment, run the repository quality gates, and merge PR #2 only after those checks pass.
