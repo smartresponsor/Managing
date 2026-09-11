@@ -27,30 +27,34 @@ Patch the manifest, verify no ownership drift, inspect resulting diff/checks, in
 ### Iteration 2 — material implementation
 
 - Updated `composer.json` runtime `require` with `cruding/crud`, `viewing/view`, `interfacing/interface`, and `objecting/object` using the workspace development constraint `*@dev`.
+- Added local Composer path repositories for `../Cruding`, `../Interfacing`, `../Objecting`, and `../Viewing`, matching the established umbrella-workspace symlink pattern used by sibling SmartResponsor components.
 - No PHP namespaces, source trees, controllers, routes, Doctrine mappings, templates, or unrelated repositories were mutated.
 
 ### Iteration 3 — verification and fix
 
-- Verified the branch diff contains only the orchestration journal plus the four runtime dependency declarations.
 - Verified each declared package identity against the current sibling Composer manifests.
-- Attempted local Composer/install verification in the execution runtime; external GitHub DNS/network resolution is unavailable there, so dependency solving and lock regeneration cannot be executed safely.
-- `composer.lock` therefore remains unchanged. This is a hard acceptance blocker for merging the dependency declaration change; no manual lock fabrication was attempted.
+- Verified Canon022 requires the direct dependency contour for applicable standalone Symfony applications and Gating mirrors that rule.
+- Local execution runtime has PHP 8.4 but no Composer binary and cannot resolve `github.com` DNS, so it cannot safely run the Composer solver.
+- Added a temporary GitHub Actions RC workflow to obtain a networked Composer environment. Run `34631332110` failed before any step and without a runner (`runner_id: 0`, `steps: []`).
+- Reworked the workflow to remove all third-party Actions and use only shell, Git, Docker, official `composer:2`, and `php:8.4-cli`. Run `34631451039` failed identically before any step with no runner assigned (`runner_id: 0`, `steps: []`). This proves the blocker is hosted-runner availability/policy rather than Composer or workflow implementation.
+- `composer.lock` therefore remains solver-unsynchronized. No manual lock fabrication was attempted.
 
 ### Iteration 4 — debt closure and integration
 
 - Created branch `cmcp/engine-20260911152412-managing-fed750` from the authoritative baseline.
 - Opened PR #2 (`RC: declare Managing platform dependency contour`).
-- PR is mergeable at the Git level and has no reported commit status checks, but remains intentionally unmerged because the Composer lock/install gate is not green.
+- PR remains Git-mergeable but intentionally unmerged because the Composer lock/install gate is not green.
+- Removed the temporary failing RC workflow after runner unavailability was confirmed, leaving no permanent workflow debt.
 - No speculative growth work or cross-repository mutation was introduced.
 
 ### Iteration 5 — final acceptance and handoff
 
-- Post-integration state inspected: `master` remains unchanged; all task mutations are isolated to the RC branch/PR.
-- Accepted as materially implemented but not release-accepted: dependency ownership is corrected in the proposed manifest, while solver-generated `composer.lock` and install/test evidence are still required before merge.
-- Required next gate in an environment with package/network access: run Composer update for the four sibling packages, then `composer validate`, PHP syntax/static analysis/tests/Gating and review the resulting lock diff. Merge PR #2 only after those gates are green.
+- Post-integration state inspected: `master` remains unchanged; task mutations remain isolated to the RC branch/PR.
+- Accepted as materially implemented but not release-accepted: dependency ownership and local path wiring are corrected in the proposed manifest, while solver-generated `composer.lock` and executable quality-gate evidence are still required before merge.
+- Required next gate in the real workspace or another runner-enabled environment: run Composer update for the four sibling packages, then `composer validate --strict`, PHP syntax, PHPStan, PHPUnit, and Gating. Merge PR #2 only after those gates are green.
 
 ### Что достигнуто?
-The concrete dependency-boundary defect is patched and reviewable on an isolated branch with a mergeable PR; no unrelated code was changed.
+The concrete dependency-boundary defect and workspace path wiring are patched and reviewable on an isolated branch. Two independent attempts to execute the remaining solver/gates through GitHub Actions confirmed an infrastructure-level runner blocker rather than a repository-level failure.
 
 ### Что осталось до RC?
-Regenerate and verify `composer.lock` with Composer in the real workspace/package-enabled environment, run the repository quality gates, and merge PR #2 only after those checks pass.
+Obtain one Composer-capable execution environment with sibling path repositories available, regenerate and verify `composer.lock`, run the repository quality gates, and merge PR #2 only after those checks pass.
