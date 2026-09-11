@@ -12,66 +12,59 @@ jobs:
   rc:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout Managing
-        uses: actions/checkout@v4
-        with:
-          path: Managing
-
-      - name: Checkout Cruding
-        uses: actions/checkout@v4
-        with:
-          repository: smartresponsor/cruding
-          path: Cruding
-
-      - name: Checkout Interfacing
-        uses: actions/checkout@v4
-        with:
-          repository: smartresponsor/interfacing
-          path: Interfacing
-
-      - name: Checkout Objecting
-        uses: actions/checkout@v4
-        with:
-          repository: smartresponsor/objecting
-          path: Objecting
-
-      - name: Checkout Viewing
-        uses: actions/checkout@v4
-        with:
-          repository: smartresponsor/viewing
-          path: Viewing
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.4'
-          tools: composer:v2
-          coverage: none
+      - name: Checkout repositories with git
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch "$GITHUB_REF_NAME" "https://x-access-token:${GH_TOKEN}@github.com/smartresponsor/Managing.git" Managing
+          git clone --depth 1 https://github.com/smartresponsor/cruding.git Cruding
+          git clone --depth 1 https://github.com/smartresponsor/interfacing.git Interfacing
+          git clone --depth 1 https://github.com/smartresponsor/objecting.git Objecting
+          git clone --depth 1 https://github.com/smartresponsor/viewing.git Viewing
 
       - name: Resolve dependency contour
-        working-directory: Managing
-        run: composer update cruding/crud interfacing/interface objecting/object viewing/view --with-all-dependencies --no-interaction --prefer-dist
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm -v "$PWD:/work" -w /work/Managing composer:2 \
+            update cruding/crud interfacing/interface objecting/object viewing/view \
+            --with-all-dependencies --no-interaction --prefer-dist
 
       - name: Validate Composer
-        working-directory: Managing
-        run: composer validate --strict
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm -v "$PWD:/work" -w /work/Managing composer:2 validate --strict
 
-      - name: PHP syntax
-        working-directory: Managing
-        run: find src tests tools -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+      - name: PHP 8.4 syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm -v "$PWD:/work" -w /work/Managing php:8.4-cli sh -lc \
+            "find src tests tools -type f -name '*.php' -print0 | xargs -0 -n1 php -l"
 
       - name: PHPStan
-        working-directory: Managing
-        run: vendor/bin/phpstan analyse src tests tools --memory-limit=1G
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --entrypoint php -v "$PWD:/work" -w /work/Managing composer:2 \
+            vendor/bin/phpstan analyse src tests tools --memory-limit=1G
 
       - name: PHPUnit
-        working-directory: Managing
-        run: vendor/bin/phpunit -c phpunit.xml.dist
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm --entrypoint php -v "$PWD:/work" -w /work/Managing composer:2 \
+            vendor/bin/phpunit -c phpunit.xml.dist
 
       - name: Commit generated lock
+        shell: bash
         working-directory: Managing
         run: |
+          set -euo pipefail
           if git diff --quiet -- composer.lock; then
             echo "composer.lock already synchronized"
             exit 0
@@ -80,4 +73,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add composer.lock
           git commit -m "Synchronize platform dependency lock"
-          git push
+          git push "https://x-access-token:${GH_TOKEN}@github.com/smartresponsor/Managing.git" HEAD:"$GITHUB_REF_NAME"
