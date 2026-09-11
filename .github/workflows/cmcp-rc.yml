@@ -1,0 +1,83 @@
+name: CMCP RC
+
+on:
+  push:
+    branches:
+      - cmcp/engine-20260911152412-managing-fed750
+
+permissions:
+  contents: write
+
+jobs:
+  rc:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Managing
+        uses: actions/checkout@v4
+        with:
+          path: Managing
+
+      - name: Checkout Cruding
+        uses: actions/checkout@v4
+        with:
+          repository: smartresponsor/cruding
+          path: Cruding
+
+      - name: Checkout Interfacing
+        uses: actions/checkout@v4
+        with:
+          repository: smartresponsor/interfacing
+          path: Interfacing
+
+      - name: Checkout Objecting
+        uses: actions/checkout@v4
+        with:
+          repository: smartresponsor/objecting
+          path: Objecting
+
+      - name: Checkout Viewing
+        uses: actions/checkout@v4
+        with:
+          repository: smartresponsor/viewing
+          path: Viewing
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer:v2
+          coverage: none
+
+      - name: Resolve dependency contour
+        working-directory: Managing
+        run: composer update cruding/crud interfacing/interface objecting/object viewing/view --with-all-dependencies --no-interaction --prefer-dist
+
+      - name: Validate Composer
+        working-directory: Managing
+        run: composer validate --strict
+
+      - name: PHP syntax
+        working-directory: Managing
+        run: find src tests tools -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: PHPStan
+        working-directory: Managing
+        run: vendor/bin/phpstan analyse src tests tools --memory-limit=1G
+
+      - name: PHPUnit
+        working-directory: Managing
+        run: vendor/bin/phpunit -c phpunit.xml.dist
+
+      - name: Commit generated lock
+        working-directory: Managing
+        run: |
+          if git diff --quiet -- composer.lock; then
+            echo "composer.lock already synchronized"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add composer.lock
+          git commit -m "Synchronize platform dependency lock"
+          git push
