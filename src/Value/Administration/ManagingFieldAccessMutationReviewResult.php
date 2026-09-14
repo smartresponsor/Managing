@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\Managing\Value\Administration;
 
-use App\Rolling\Value\Administration\RollingAclMutationReview;
-
 /**
  * Review result returned to Managing field access control-plane screens.
  */
 final readonly class ManagingFieldAccessMutationReviewResult
 {
+    /** @param array<string, mixed> $review */
     public function __construct(
         public ManagingFieldAccessPolicyDescriptor $descriptor,
-        public RollingAclMutationReview $review,
+        public array $review,
         public ?string $requestKey = null,
     ) {
     }
@@ -30,7 +29,7 @@ final readonly class ManagingFieldAccessMutationReviewResult
                 'target' => $this->descriptor->target->toAuditContext(),
             ],
             'request_key' => $this->requestKey,
-            'review' => $this->review->toSafeArray(),
+            'review' => $this->review,
         ];
     }
 

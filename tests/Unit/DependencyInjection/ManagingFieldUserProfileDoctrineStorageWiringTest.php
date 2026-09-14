@@ -43,7 +43,7 @@ final class ManagingFieldUserProfileDoctrineStorageWiringTest extends TestCase
             'crud_field_user_profile_entity_manager_service' => 'doctrine.orm.system_entity_manager',
         ]);
 
-        self::assertFalse($container->getDefinition($repositoryId)->hasArgument('$entityManager'));
+        self::assertArrayNotHasKey('$entityManager', $container->getDefinition($repositoryId)->getArguments());
     }
 
     /** @param array<string, mixed> $config */

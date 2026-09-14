@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Managing\Policy\Crud;
 
-use App\Managing\Normalizer\Policy\ManagePolicyValueNormalizer;
-
 /**
  * Owns explicit EasyAdmin field type override resolution.
  *
@@ -33,10 +31,8 @@ final class ManageCrudFieldTypeOverridePolicy
     /**
      * @param array<string, mixed> $fieldTypeOverrides keyed by entity FQCN, then field nameEntity
      */
-    public function __construct(
-        array $fieldTypeOverrides = [],
-        private readonly ManagePolicyValueNormalizer $valueNormalizer = new ManagePolicyValueNormalizer(),
-    ) {
+    public function __construct(array $fieldTypeOverrides = [])
+    {
         $this->fieldTypeOverrides = $this->normalizeFieldTypeOverrides($fieldTypeOverrides);
     }
 
@@ -70,7 +66,7 @@ final class ManageCrudFieldTypeOverridePolicy
             $fieldType = $overrides[$entityFqcn][$fieldName];
         }
 
-        return is_string($fieldType) ? $this->normalizeFieldType($fieldType) : null;
+        return null !== $fieldType ? $this->normalizeFieldType($fieldType) : null;
     }
 
     /**
@@ -82,7 +78,7 @@ final class ManageCrudFieldTypeOverridePolicy
     {
         $normalized = [];
         foreach ($overrides as $entityFqcn => $fields) {
-            if (!is_string($entityFqcn) || !is_array($fields)) {
+            if (!is_array($fields)) {
                 continue;
             }
 

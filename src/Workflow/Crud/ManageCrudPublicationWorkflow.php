@@ -50,8 +50,11 @@ final class ManageCrudPublicationWorkflow
     }
 
     /**
-     * @param list<string> $flagCandidates
-     * @param list<string> $dateCandidates
+     * @template TEntity of object
+     *
+     * @param AdminContext<TEntity> $context
+     * @param list<string>          $flagCandidates
+     * @param list<string>          $dateCandidates
      */
     public function setCurrentEntityPublicationState(
         AdminContext $context,
@@ -71,8 +74,11 @@ final class ManageCrudPublicationWorkflow
     }
 
     /**
-     * @param list<string> $flagCandidates
-     * @param list<string> $dateCandidates
+     * @template TEntity of object
+     *
+     * @param BatchActionDto<TEntity> $batchActionDto
+     * @param list<string>            $flagCandidates
+     * @param list<string>            $dateCandidates
      */
     public function setBatchPublicationState(
         BatchActionDto $batchActionDto,

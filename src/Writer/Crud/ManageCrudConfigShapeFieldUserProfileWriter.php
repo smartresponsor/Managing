@@ -102,7 +102,11 @@ final class ManageCrudConfigShapeFieldUserProfileWriter implements ManageCrudFie
         return $pageRules;
     }
 
-    /** @param array<string, mixed> $config @return array<string, mixed> */
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, mixed>
+     */
     private function pruneEmptyResource(array $config, string $subjectIdentifier, string $resourceClass): array
     {
         if ([] === ($config['subjects'][$subjectIdentifier]['resources'][$resourceClass] ?? [])) {
@@ -112,7 +116,11 @@ final class ManageCrudConfigShapeFieldUserProfileWriter implements ManageCrudFie
         return $config;
     }
 
-    /** @param array<string, mixed> $config @return array<string, mixed> */
+    /**
+     * @param array<string, mixed> $config
+     *
+     * @return array<string, mixed>
+     */
     private function pruneEmptySubject(array $config, string $subjectIdentifier): array
     {
         $subject = $config['subjects'][$subjectIdentifier] ?? null;

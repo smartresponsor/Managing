@@ -79,7 +79,7 @@ final class ManageHostCrudResourceDiscovery
         }
 
         $filePath = $reflection->getFileName();
-        if (!is_string($filePath) || '' === $filePath || !is_file($filePath)) {
+        if (false === $filePath || !is_file($filePath)) {
             return false;
         }
 

@@ -32,10 +32,10 @@ final class ManageHostApplicationAdminProvider implements ManageAdminProviderInt
     public function __construct(
         private readonly string $projectDir,
         private readonly bool $enabled = true,
-        private readonly array $sourceRoots = ['src'],
-        private readonly array $namespacePrefixes = ['App\\'],
+        array $sourceRoots = ['src'],
+        array $namespacePrefixes = ['App\\'],
         private readonly array $excludedNamespaces = ['App\\Managing\\'],
-        private readonly ?string $cacheDir = null,
+        ?string $cacheDir = null,
         ?ManageHostPathResolver $pathResolver = null,
         ?ManageHostClassNameResolver $classNameResolver = null,
         ?ManageHostDoctrineEntityInspector $entityInspector = null,

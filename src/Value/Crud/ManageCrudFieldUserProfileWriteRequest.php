@@ -65,15 +65,15 @@ final readonly class ManageCrudFieldUserProfileWriteRequest
         return '' === $resourceClass ? null : $resourceClass;
     }
 
-    /** @return list<string> */
+    /**
+     * @param list<string> $values
+     *
+     * @return list<string>
+     */
     private static function stringList(array $values): array
     {
         $normalized = [];
         foreach ($values as $value) {
-            if (!is_string($value)) {
-                continue;
-            }
-
             $value = trim($value);
             if ('' !== $value && !in_array($value, $normalized, true)) {
                 $normalized[] = $value;

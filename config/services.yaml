@@ -215,6 +215,10 @@ services:
   App\Managing\RegistryInterface\Crud\ManageCrudResourceRegistryInterface:
     alias: App\Managing\Registry\Crud\ManageCrudResourceRegistry
 
+  App\Managing\Service\Administration\ManagingFieldAccessMutationReviewService:
+    arguments:
+      $reviewBuilder: '@?App\Rolling\ServiceInterface\Administration\RollingAclMutationReviewBuilderInterface'
+
   App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationReviewServiceInterface:
     alias: App\Managing\Service\Administration\ManagingFieldAccessMutationReviewService
 
