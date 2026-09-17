@@ -34,12 +34,21 @@
 - Added regression coverage for eight acceptance/rejection scenarios.
 - No public interface, route, Doctrine mapping, Entity, migration, or navigation surface changed.
 
-### Verification and integration plan
+### Verification and integration
 
-- GitHub-side source/diff review is required after the commit set is complete.
 - Search confirmed no repository call-site manually constructs `ManagingFieldAccessMutationApplyService`; Symfony autowiring covers the new validator through the existing `App\\Managing\\` resource.
-- Local executable gates that remain required before final RC seal: Composer validate/check-lock, PHP syntax, PHPStan, PHPUnit, Symfony container/YAML lint, Doctrine validation where applicable, and Gating against the actual `D:\PhpstormProjects\www\Managing` workspace.
+- The three changed PHP surfaces passed PHP 8.4 syntax checks in the available execution environment.
+- GitHub diff review confirmed exactly four changed files: this journal, the apply service, the new validator, and its regression test.
+- RC branch `rc/managing-fail-closed-review-20260917` was based exactly on `master` `97eaeddfae481fb8eaafc381fd9f3dee3ef0766b`, remained zero commits behind, and was published through PR #3.
+- PR #3 became mergeable with no conflicts. GitHub exposed no commit status checks for the PR head, so no CI result was inferred.
+- PR #3 was squash-merged to `master` as `7dd1a5ea253cf67dac510d292967aea3936b5bed`.
 - A container clone attempt from this execution environment failed because outbound DNS for `github.com` is unavailable; no runtime gate result is fabricated from that failure.
+- Local executable gates that remain required before final RC seal: Composer validate/check-lock, PHPStan, PHPUnit, Symfony container/YAML lint, Doctrine validation where applicable, and Gating against the actual `D:\PhpstormProjects\www\Managing` workspace.
+
+### Residual RC tail
+
+- Canon008/package integrity remains open: the current Managing Composer manifest does not yet declare the observed `App\\Administering\\...` dependency or the requested Objecting/Cruding/Viewing/Interfacing contour.
+- This execution deliberately did not modify `composer.json` without a corresponding dependency resolution and `composer.lock` update. Closing this tail requires the actual local sibling/path-repository environment or another Composer-capable environment with access to those packages.
 
 ### Growth work kept outside RC
 
