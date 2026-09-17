@@ -16,4 +16,5 @@ final class WalletingCrudController extends AbstractManageContentCrudController
     {
         return \App\Walleting\Entity\Account::class;
     }
+
 }

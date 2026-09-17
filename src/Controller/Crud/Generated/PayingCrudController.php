@@ -16,4 +16,5 @@ final class PayingCrudController extends AbstractManageContentCrudController
     {
         return \App\Paying\Entity\PaymentEntity::class;
     }
+
 }

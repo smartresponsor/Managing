@@ -16,4 +16,5 @@ final class OrderingCrudController extends AbstractManageContentCrudController
     {
         return \App\Ordering\Entity\Order\OrderEntity::class;
     }
+
 }

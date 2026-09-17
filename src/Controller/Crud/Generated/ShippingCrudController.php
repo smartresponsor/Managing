@@ -16,4 +16,5 @@ final class ShippingCrudController extends AbstractManageContentCrudController
     {
         return \App\Shipping\Entity\Shipping\ShipmentEntity::class;
     }
+
 }
