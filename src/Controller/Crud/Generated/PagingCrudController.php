@@ -16,4 +16,5 @@ final class PagingCrudController extends AbstractManageContentCrudController
     {
         return \App\Paging\Entity\Page::class;
     }
+
 }

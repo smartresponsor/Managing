@@ -16,4 +16,5 @@ final class CatalogingCrudController extends AbstractManageContentCrudController
     {
         return \App\Cataloging\Entity\Catalog\CatalogCategoryEntity::class;
     }
+
 }
