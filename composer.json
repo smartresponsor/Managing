@@ -41,6 +41,9 @@
       "App\\Managing\\Tests\\": "tests/"
     }
   },
+  "scripts": {
+    "verify:first-party-dependencies": "@php tools/qa/managing-first-party-dependency-contour.php"
+  },
   "config": {
     "allow-plugins": {
       "symfony/flex": true,
