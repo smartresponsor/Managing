@@ -61,6 +61,26 @@
     },
     {
       "type": "path",
+      "url": "../Collectioning",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "collectioning/collection": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Configuring",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "configuring/config": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
       "url": "../Cruding",
       "options": {
         "symlink": true
@@ -85,6 +105,16 @@
       "url": "../Rolling",
       "options": {
         "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Tabling",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "tabling/table": "dev-master"
+        }
       }
     },
     {
