@@ -3,6 +3,8 @@
   "description": "Managing process app",
   "type": "symfony-bundle",
   "license": "proprietary",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": "^8.4",
     "administering/administration": "dev-master",
