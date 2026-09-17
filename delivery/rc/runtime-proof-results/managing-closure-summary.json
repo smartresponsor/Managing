@@ -1,0 +1,14 @@
+﻿{
+    "siblings":  {
+                     "status":  "PASS"
+                 },
+    "composer-update":  {
+                            "status":  "FAIL",
+                            "exit_code":  1,
+                            "log":  "./delivery/rc/runtime-proof-results/managing-composer-update.log"
+                        },
+    "overall":  {
+                    "status":  "FAIL",
+                    "generated_at":  "2026-09-17T18:41:46.9271692-05:00"
+                }
+}

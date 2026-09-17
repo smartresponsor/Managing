@@ -1,0 +1,10 @@
+﻿composer.bat : Loading composer repositories with package information
+D:\PhpstormProjects\www\Managing\tools\qa\close-managing-composer-con
+tour.ps1:68 знак:5
++     & composer update --with-all-dependencies --no-interaction
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Loading compose...age i 
+   nformation:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
