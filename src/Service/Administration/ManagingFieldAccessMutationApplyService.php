@@ -7,8 +7,8 @@ namespace App\Managing\Service\Administration;
 use App\Administering\Entity\AdministrationAclMutationReviewRecord;
 use App\Administering\ServiceInterface\Rolling\AdministrationAclMutationApplyServiceInterface as HostApplyServiceInterface;
 use App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationApplyServiceInterface;
+use App\Managing\Validator\Administration\ManagingFieldAccessReviewValidator;
 use App\Managing\Value\Administration\ManagingFieldAccessMutationApplyResult;
-use App\Managing\Value\Administration\ManagingFieldPermissionVocabulary;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +19,7 @@ final readonly class ManagingFieldAccessMutationApplyService implements Managing
     public function __construct(
         private ManagerRegistry $managerRegistry,
         private HostApplyServiceInterface $aclMutationApplyService,
+        private ManagingFieldAccessReviewValidator $fieldAccessReviewValidator,
     ) {
     }
 
@@ -42,7 +43,12 @@ final readonly class ManagingFieldAccessMutationApplyService implements Managing
             ]);
         }
 
-        if (!$this->isManagingFieldAccessReview($record)) {
+        if (!$this->fieldAccessReviewValidator->isManagingFieldAccessReview(
+            $record->permissionOrRoleKey(),
+            $record->scopeKey(),
+            $record->mutationType(),
+            $record->safeReviewPayload(),
+        )) {
             return ManagingFieldAccessMutationApplyResult::rejected($requestKey, 'Review record is not a Managing field access mutation review.', [
                 'reason' => 'non_managing_field_access_review',
                 'surface' => 'managing_field_access_mutation_apply',
@@ -85,40 +91,5 @@ final readonly class ManagingFieldAccessMutationApplyService implements Managing
             ->findOneBy(['requestKey' => $requestKey]);
 
         return $record instanceof AdministrationAclMutationReviewRecord ? $record : null;
-    }
-
-    private function isManagingFieldAccessReview(AdministrationAclMutationReviewRecord $record): bool
-    {
-        if (!str_starts_with($record->permissionOrRoleKey(), 'managing.field.')) {
-            return false;
-        }
-
-        if (!str_starts_with($record->scopeKey(), 'component:managing')) {
-            return false;
-        }
-
-        if (!in_array($record->mutationType(), ['permission.grant', 'permission.revoke', 'acl.allow', 'acl.deny'], true)) {
-            return false;
-        }
-
-        $safeContext = $record->safeReviewPayload()['safe_context'] ?? [];
-
-        if (!is_array($safeContext)) {
-            return true;
-        }
-
-        $target = $safeContext['target'] ?? null;
-
-        if (is_array($target) && isset($target['component'])) {
-            return 'Managing' === $target['component'] || 'managing' === strtolower((string) $target['component']);
-        }
-
-        $surface = $safeContext['surface'] ?? null;
-
-        if (is_string($surface) && 'managing_field_access_mutation_review' === $surface) {
-            return true;
-        }
-
-        return in_array($record->permissionOrRoleKey(), ManagingFieldPermissionVocabulary::policyKeys(), true);
     }
 }
