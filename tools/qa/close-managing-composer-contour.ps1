@@ -6,10 +6,13 @@ Set-Location $root
 
 $requiredSiblings = @(
     '..\Administering',
+    '..\Collectioning',
+    '..\Configuring',
     '..\Cruding',
     '..\Interfacing',
     '..\Objecting',
     '..\Rolling',
+    '..\Tabling',
     '..\Viewing'
 )
 
@@ -19,17 +22,8 @@ foreach ($sibling in $requiredSiblings) {
     }
 }
 
-$packages = @(
-    'administering/administration',
-    'cruding/crud',
-    'interfacing/interface',
-    'objecting/object',
-    'rolling/role',
-    'viewing/view'
-)
-
-Write-Host 'Resolving Managing first-party dependency contour...'
-& composer update @packages --with-dependencies --no-interaction
+Write-Host 'Resolving complete Managing dependency graph...'
+& composer update --with-all-dependencies --no-interaction
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host 'Validating Composer manifest and lock...'
@@ -46,20 +40,36 @@ foreach ($file in $phpFiles) {
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 }
 
-if (-not (Test-Path -LiteralPath 'vendor\bin\phpstan' -PathType Leaf)) {
-    throw 'Required PHPStan executable is missing: vendor\bin\phpstan'
+$phpstan = if (Test-Path -LiteralPath 'vendor\bin\phpstan.bat' -PathType Leaf) {
+    'vendor\bin\phpstan.bat'
+} elseif (Test-Path -LiteralPath 'vendor\bin\phpstan' -PathType Leaf) {
+    'vendor\bin\phpstan'
+} else {
+    throw 'Required PHPStan executable is missing from vendor\bin.'
 }
 
 Write-Host 'Running PHPStan...'
-& php vendor\bin\phpstan analyse
+if ($phpstan.EndsWith('.bat')) {
+    & $phpstan analyse
+} else {
+    & php $phpstan analyse
+}
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-if (-not (Test-Path -LiteralPath 'vendor\bin\phpunit' -PathType Leaf)) {
-    throw 'Required PHPUnit executable is missing: vendor\bin\phpunit'
+$phpunit = if (Test-Path -LiteralPath 'vendor\bin\phpunit.bat' -PathType Leaf) {
+    'vendor\bin\phpunit.bat'
+} elseif (Test-Path -LiteralPath 'vendor\bin\phpunit' -PathType Leaf) {
+    'vendor\bin\phpunit'
+} else {
+    throw 'Required PHPUnit executable is missing from vendor\bin.'
 }
 
 Write-Host 'Running PHPUnit...'
-& php vendor\bin\phpunit
+if ($phpunit.EndsWith('.bat')) {
+    & $phpunit
+} else {
+    & php $phpunit
+}
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 if (Test-Path -LiteralPath 'bin\console' -PathType Leaf) {
