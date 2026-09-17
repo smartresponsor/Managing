@@ -55,3 +55,25 @@
 - Richer EasyAdmin management workflows and bulk operations.
 - Additional management observability/analytics.
 - Broader UX/provider refinements beyond the authorization review safety boundary.
+
+## repository-implementation-managing — packaging contour pass — 2026-09-17
+
+### Updated baseline
+
+- Started from current `master` `3eaa2450d19a06599e9edf22c49c9f1b04e86a8a`, which includes the merged fail-closed ACL review hardening and post-integration journal update.
+- Re-read current `composer.json`, current source references to foreign `App\\...` namespaces, and the package manifests for Administering and Rolling.
+- Confirmed direct/runtime-facing dependencies beyond the previously requested helper contour: `administering/administration` supplies the concrete review record and apply-service interface used by Managing; `rolling/role` supplies configured/runtime field-access contracts referenced by Managing.
+
+### Packaging implementation
+
+- Added the explicit first-party requirements `administering/administration`, `rolling/role`, `objecting/object`, `cruding/crud`, `viewing/view`, and `interfacing/interface`, all at `dev-master` for the development workspace.
+- Added sibling Composer `path` repositories for `../Administering`, `../Rolling`, `../Objecting`, `../Cruding`, `../Viewing`, and `../Interfacing`, each with `symlink: true`.
+- Added `tools/qa/managing-first-party-dependency-contour.php` and Composer script `verify:first-party-dependencies` so the six-package development contour cannot silently regress.
+- The guard itself passed PHP 8.4 syntax validation in the available execution environment.
+
+### Integration gate
+
+- `composer.lock` on the branch is intentionally still the pre-contour lock (`content-hash` from the old manifest). Therefore this branch is not merge-ready yet and must not be presented as Composer-green.
+- Required local closure step: from `D:\PhpstormProjects\www\Managing`, with sibling repositories present, run Composer dependency resolution so `composer.lock` is regenerated against these exact path repositories, then run `composer validate --strict --check-lock --no-interaction` and `composer verify:first-party-dependencies`.
+- After lock resolution, run PHPStan, PHPUnit, Symfony container/YAML lint, Doctrine validation where applicable, and Gating. Only then may the packaging PR be promoted from draft and merged.
+- No direct edit of generated `composer.lock` data was attempted because hand-authoring path-package lock entries and transitive dependency metadata would be non-reproducible and unsafe.
