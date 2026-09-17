@@ -5,9 +5,14 @@
   "license": "proprietary",
   "require": {
     "php": "^8.4",
+    "administering/administration": "dev-master",
+    "cruding/crud": "dev-master",
     "doctrine/doctrine-bundle": "^3.0",
     "doctrine/orm": "^3.3",
     "easycorp/easyadmin-bundle": "^5.0",
+    "interfacing/interface": "dev-master",
+    "objecting/object": "dev-master",
+    "rolling/role": "dev-master",
     "symfony/config": "^8.1",
     "symfony/dependency-injection": "^8.1",
     "symfony/form": "^8.1",
@@ -16,7 +21,8 @@
     "symfony/ux-live-component": "^3.0",
     "symfony/ux-turbo": "^3.0",
     "symfony/yaml": "^8.1",
-    "twig/html-extra": "^3.24"
+    "twig/html-extra": "^3.24",
+    "viewing/view": "dev-master"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.65",
@@ -41,5 +47,49 @@
       "symfony/runtime": true
     },
     "sort-packages": true
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../Administering",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Cruding",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Interfacing",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Objecting",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Rolling",
+      "options": {
+        "symlink": true
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Viewing",
+      "options": {
+        "symlink": true
+      }
+    }
+  ]
 }
