@@ -49,10 +49,11 @@ $phpstan = if (Test-Path -LiteralPath 'vendor\bin\phpstan.bat' -PathType Leaf) {
 }
 
 Write-Host 'Running PHPStan...'
+$phpstanArgs = @('analyse', 'src', 'tests', 'tools', '--level=8', '--memory-limit=1G')
 if ($phpstan.EndsWith('.bat')) {
-    & $phpstan analyse
+    & $phpstan @phpstanArgs
 } else {
-    & php $phpstan analyse
+    & php $phpstan @phpstanArgs
 }
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
