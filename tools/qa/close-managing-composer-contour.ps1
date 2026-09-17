@@ -21,10 +21,14 @@ function Invoke-LoggedGate {
     Write-Host ("[{0}] running..." -f $Name)
 
     try {
+        $previousErrorActionPreference = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
         & $Command *> $logPath
         $exitCode = $LASTEXITCODE
+        $ErrorActionPreference = $previousErrorActionPreference
         if ($null -eq $exitCode) { $exitCode = 0 }
     } catch {
+        $ErrorActionPreference = $previousErrorActionPreference
         $_ | Out-String | Set-Content -Path $logPath -Encoding UTF8
         $exitCode = 1
     }
