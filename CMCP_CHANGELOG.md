@@ -70,10 +70,12 @@
 - Added sibling Composer `path` repositories for `../Administering`, `../Rolling`, `../Objecting`, `../Cruding`, `../Viewing`, and `../Interfacing`, each with `symlink: true`.
 - Added `tools/qa/managing-first-party-dependency-contour.php` and Composer script `verify:first-party-dependencies` so the six-package development contour cannot silently regress.
 - The guard itself passed PHP 8.4 syntax validation in the available execution environment.
+- Added `tools/qa/close-managing-composer-contour.ps1` as the reproducible local closure runner. It requires all six sibling repositories, resolves only the six first-party packages with dependencies, validates Composer/lock consistency, runs the contour guard, PHP lint, PHPStan, PHPUnit, optional bundle-local Symfony/Doctrine console gates, and mandatory sibling Gating. Missing PHPStan/PHPUnit/Gating is a hard failure rather than a silent skip.
 
 ### Integration gate
 
 - `composer.lock` on the branch is intentionally still the pre-contour lock (`content-hash` from the old manifest). Therefore this branch is not merge-ready yet and must not be presented as Composer-green.
-- Required local closure step: from `D:\PhpstormProjects\www\Managing`, with sibling repositories present, run Composer dependency resolution so `composer.lock` is regenerated against these exact path repositories, then run `composer validate --strict --check-lock --no-interaction` and `composer verify:first-party-dependencies`.
-- After lock resolution, run PHPStan, PHPUnit, Symfony container/YAML lint, Doctrine validation where applicable, and Gating. Only then may the packaging PR be promoted from draft and merged.
+- Required local closure step: from `D:\PhpstormProjects\www\Managing`, run `powershell -ExecutionPolicy Bypass -File .\tools\qa\close-managing-composer-contour.ps1` with sibling repositories present.
+- The runner performs the bounded dependency resolution and hard local gates. If the bundle has no local `bin\console`, host/container Symfony gates remain a separate acceptance step and are reported explicitly rather than silently treated as executed.
+- After the runner passes, inspect the resulting `composer.lock` diff, host/container Symfony composition, and Gating output before promoting the draft PR to merge-ready.
 - No direct edit of generated `composer.lock` data was attempted because hand-authoring path-package lock entries and transitive dependency metadata would be non-reproducible and unsafe.
