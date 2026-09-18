@@ -73,7 +73,7 @@ final class ManageCrudFieldPolicy
         ?ManageCrudFieldTypeOverridePolicy $fieldTypeOverridePolicy = null,
         private readonly ManagePolicyValueNormalizer $valueNormalizer = new ManagePolicyValueNormalizer(),
     ) {
-        $this->fieldTypeOverridePolicy = $fieldTypeOverridePolicy ?? new ManageCrudFieldTypeOverridePolicy($fieldTypeOverrides, $this->valueNormalizer);
+        $this->fieldTypeOverridePolicy = $fieldTypeOverridePolicy ?? new ManageCrudFieldTypeOverridePolicy($fieldTypeOverrides);
         $this->primaryIdentifierFields = $this->valueNormalizer->stringList($primaryIdentifierFields ?? ManagingCrudFieldConfigurationDefaults::primaryIdentifierCandidates());
         $this->titleFields = $this->valueNormalizer->stringList($titleFields ?? ManagingCrudFieldConfigurationDefaults::titleCandidates());
         $this->identityFields = $this->valueNormalizer->stringList($identityFields ?? ManagingCrudFieldConfigurationDefaults::identityCandidates());

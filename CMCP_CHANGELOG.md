@@ -55,3 +55,58 @@
 - Richer EasyAdmin management workflows and bulk operations.
 - Additional management observability/analytics.
 - Broader UX/provider refinements beyond the authorization review safety boundary.
+
+## repository-implementation-managing — packaging contour pass — 2026-09-17
+
+### Updated baseline
+
+- Started from current `master` `3eaa2450d19a06599e9edf22c49c9f1b04e86a8a`, which includes the merged fail-closed ACL review hardening and post-integration journal update.
+- Re-read current `composer.json`, current source references to foreign `App\\...` namespaces, and the package manifests for Administering and Rolling.
+- Confirmed direct/runtime-facing dependencies beyond the previously requested helper contour: `administering/administration` supplies the concrete review record and apply-service interface used by Managing; `rolling/role` supplies configured/runtime field-access contracts referenced by Managing.
+
+### Packaging implementation
+
+- Added the explicit first-party requirements `administering/administration`, `rolling/role`, `objecting/object`, `cruding/crud`, `viewing/view`, and `interfacing/interface`, all at `dev-master` for the development workspace.
+- Added sibling Composer `path` repositories for `../Administering`, `../Rolling`, `../Objecting`, `../Cruding`, `../Viewing`, and `../Interfacing`, each with `symlink: true`.
+- Added `tools/qa/managing-first-party-dependency-contour.php` and Composer script `verify:first-party-dependencies` so the six-package development contour cannot silently regress.
+- The guard itself passed PHP 8.4 syntax validation in the available execution environment.
+- Added `tools/qa/close-managing-composer-contour.ps1` as the reproducible local closure runner. It requires all six sibling repositories, resolves only the six first-party packages with dependencies, validates Composer/lock consistency, runs the contour guard, PHP lint, PHPStan, PHPUnit, optional bundle-local Symfony/Doctrine console gates, and mandatory sibling Gating. Missing PHPStan/PHPUnit/Gating is a hard failure rather than a silent skip.
+
+### Integration gate
+
+- `composer.lock` on the branch is intentionally still the pre-contour lock (`content-hash` from the old manifest). Therefore this branch is not merge-ready yet and must not be presented as Composer-green.
+- Required local closure step: from `D:\PhpstormProjects\www\Managing`, run `powershell -ExecutionPolicy Bypass -File .\tools\qa\close-managing-composer-contour.ps1` with sibling repositories present.
+- The runner performs the bounded dependency resolution and hard local gates. If the bundle has no local `bin\console`, host/container Symfony gates remain a separate acceptance step and are reported explicitly rather than silently treated as executed.
+- After the runner passes, inspect the resulting `composer.lock` diff, host/container Symfony composition, and Gating output before promoting the draft PR to merge-ready.
+- No direct edit of generated `composer.lock` data was attempted because hand-authoring path-package lock entries and transitive dependency metadata would be non-reproducible and unsafe.
+
+## 2026-09-18 — RC hardening integration pass
+
+### What was integrated
+
+- Selectively integrated the prior RC-hardening commit `703c3e0a68ff417ccb500e207d7fca004d3966d3` onto the current composer-contour branch.
+- Preserved the current fail-closed Managing field-access apply validator and the current first-party dependency contour.
+- Deliberately excluded the old hardening `composer.json`, `composer.lock`, and old journal snapshot to avoid regressing the resolved packaging work.
+- Integrated repository-owned QA configuration (`phpstan.neon`, `.php-cs-fixer.dist.php`, updated `phpunit.xml.dist`), RC class splits, policy/type corrections, host-conditional generated CRUD tests, and Symfony DI test compatibility.
+- Aligned `composer.prod.json` with the current direct runtime contour, including `rolling/role`, while keeping production configuration free of local path repositories.
+
+### Closure runner corrections
+
+- PHPStan now runs through tracked `phpstan.neon` against package-owned runtime instead of imposing an ad-hoc level-8 scan across tests/tools.
+- Gating now uses the canonical sibling `../Gating/.gating` policy root rather than requiring a repository-local Managing severity profile.
+- Added explicit `composer.prod.json` validation.
+- Corrected the PowerShell Gating block so no literal escape sequence remains in executable code.
+
+### Current verification state
+
+- Last pre-integration diagnostic run had Composer update/validate, dependency contour, and PHP syntax green.
+- That run's PHPStan/PHPUnit/Gating failures are superseded by this integration because the failing code/config surfaces were materially changed afterward.
+- PR #4 remains mergeable and draft pending a fresh full closure run on the integrated head plus host/container Symfony acceptance where available.
+- No GitHub commit-status checks are currently reported for the PR head.
+
+### Remaining RC gates
+
+1. Fresh closure runner execution against the integrated branch.
+2. Repair only findings that reproduce after the integrated hardening/configuration changes.
+3. Host/container Symfony composition acceptance if the bundle-local console remains unavailable.
+4. Final PR diff/worktree/head review, then promote and merge only if green.

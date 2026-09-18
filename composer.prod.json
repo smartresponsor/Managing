@@ -1,0 +1,46 @@
+{
+  "name": "managing/manage",
+  "description": "Managing process app",
+  "type": "symfony-bundle",
+  "license": "proprietary",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^8.4",
+    "administering/administration": "dev-master",
+    "cruding/crud": "dev-master",
+    "doctrine/doctrine-bundle": "^3.0",
+    "doctrine/orm": "^3.3",
+    "easycorp/easyadmin-bundle": "^5.0",
+    "interfacing/interface": "dev-master",
+    "objecting/object": "dev-master",
+    "rolling/role": "dev-master",
+    "symfony/config": "^8.1",
+    "symfony/dependency-injection": "^8.1",
+    "symfony/form": "^8.1",
+    "symfony/framework-bundle": "^8.1",
+    "symfony/routing": "^8.1",
+    "symfony/ux-live-component": "^3.0",
+    "symfony/ux-turbo": "^3.0",
+    "symfony/yaml": "^8.1",
+    "twig/html-extra": "^3.24",
+    "viewing/view": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\Managing\\": "src/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "symfony/flex": true,
+      "symfony/runtime": true
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "symfony": {
+      "require": "^8.1"
+    }
+  }
+}

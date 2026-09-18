@@ -13,7 +13,10 @@ namespace App\Managing\Value\Crud;
  */
 final readonly class ManageCrudFieldVisibilityRuleSet
 {
-    /** @param array<string, array<string, list<string>>> $defaults @param array<string, array<string, array<string, list<string>>>> $resources */
+    /**
+     * @param array<string, array<string, list<string>>>                $defaults
+     * @param array<string, array<string, array<string, list<string>>>> $resources
+     */
     public function __construct(
         private array $defaults = [],
         private array $resources = [],
@@ -49,7 +52,9 @@ final readonly class ManageCrudFieldVisibilityRuleSet
         ];
     }
 
-    /** @param mixed $rules @return array<string, array<string, list<string>>> */
+    /**
+     * @return array<string, array<string, list<string>>>
+     */
     private static function normalizePageRules(mixed $rules): array
     {
         if (!is_array($rules)) {
@@ -77,7 +82,9 @@ final readonly class ManageCrudFieldVisibilityRuleSet
         return $normalized;
     }
 
-    /** @param mixed $resources @return array<string, array<string, array<string, list<string>>>> */
+    /**
+     * @return array<string, array<string, array<string, list<string>>>>
+     */
     private static function normalizeResourceRules(mixed $resources): array
     {
         if (!is_array($resources)) {
@@ -101,7 +108,9 @@ final readonly class ManageCrudFieldVisibilityRuleSet
         return $normalized;
     }
 
-    /** @param mixed $values @return list<string> */
+    /**
+     * @return list<string>
+     */
     private static function stringList(mixed $values): array
     {
         if (!is_array($values)) {

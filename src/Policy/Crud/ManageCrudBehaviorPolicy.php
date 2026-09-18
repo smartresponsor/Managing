@@ -59,31 +59,51 @@ final class ManageCrudBehaviorPolicy
         $this->defaultSortFields = $this->valueNormalizer->stringList($defaultSortFields);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function searchFields(array $runtimeCandidates = []): array
     {
         return $this->runtimeOrDefault($runtimeCandidates, $this->searchFields);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function statusFields(array $runtimeCandidates = []): array
     {
         return $this->runtimeOrDefault($runtimeCandidates, $this->statusFields);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function publicationFlagFields(array $runtimeCandidates = []): array
     {
         return $this->runtimeOrDefault($runtimeCandidates, $this->publicationFlagFields);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function publicationDateFields(array $runtimeCandidates = []): array
     {
         return $this->runtimeOrDefault($runtimeCandidates, $this->publicationDateFields);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function filterDateFields(array $runtimeCandidates = []): array
     {
         return array_values(array_unique([

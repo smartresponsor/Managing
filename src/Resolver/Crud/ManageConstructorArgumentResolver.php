@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Managing\Resolver\Crud;
 
 /**
- * Resolves safe placeholder constructor arguments for admin create forms.
+ * Resolves safe fallback constructor arguments for admin create forms.
  *
  * This service is intentionally conservative: it prefers defaults/nulls and
- * simple scalar placeholders so EasyAdmin can render new forms for constructor-
+ * simple scalar fallback values so EasyAdmin can render new forms for constructor-
  * heavy host entities without coupling Managing to those host domains.
  */
 final class ManageConstructorArgumentResolver

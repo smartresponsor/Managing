@@ -67,7 +67,8 @@ final class ManagePolicyValueNormalizer
                 continue;
             }
 
-            $key = strtolower(trim($key));
+            $key = preg_replace('/entity$/i', '', trim($key)) ?? trim($key);
+            $key = strtolower($key);
             $value = strtolower(trim($value));
             if ('' !== $key && '' !== $value) {
                 $result[$key] = $value;

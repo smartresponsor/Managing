@@ -1,0 +1,10 @@
+parameters:
+  level: 6
+  paths:
+    - src
+  excludePaths:
+    analyse:
+      - src/Controller/Crud/Generated
+      - src/Controller/Crud/ManageAttachmentIdentifierMigrationTrait.php
+      - src/Controller/Crud/ManageCrudControllerRuntimeInjectionTrait.php
+      - src/Trait/Crud/ManageAttachmentIdentifierMigrationTrait.php
