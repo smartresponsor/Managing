@@ -19,7 +19,7 @@ if (!is_array($require) || !is_array($repositories)) {
     exit(1);
 }
 
-$expected = [
+$directPackages = [
     'administering/administration' => '../Administering',
     'cruding/crud' => '../Cruding',
     'interfacing/interface' => '../Interfacing',
@@ -28,13 +28,23 @@ $expected = [
     'viewing/view' => '../Viewing',
 ];
 
+$transitivePathPackages = [
+    'collectioning/collection' => '../Collectioning',
+    'configuring/config' => '../Configuring',
+    'tabling/table' => '../Tabling',
+];
+
 $errors = [];
 
-foreach ($expected as $package => $path) {
+foreach ($directPackages as $package => $path) {
     if (($require[$package] ?? null) !== 'dev-master') {
         $errors[] = sprintf('Expected %s: dev-master in require', $package);
     }
+}
 
+$expectedRepositories = $directPackages + $transitivePathPackages;
+
+foreach ($expectedRepositories as $package => $path) {
     $matched = false;
 
     foreach ($repositories as $repository) {
@@ -48,6 +58,13 @@ foreach ($expected as $package => $path) {
 
         if (($repository['options']['symlink'] ?? null) !== true) {
             $errors[] = sprintf('Expected symlink=true for path repository %s', $path);
+        }
+
+        if (isset($transitivePathPackages[$package])) {
+            $version = $repository['options']['versions'][$package] ?? null;
+            if ('dev-master' !== $version) {
+                $errors[] = sprintf('Expected explicit dev-master path version for %s', $package);
+            }
         }
 
         $matched = true;
