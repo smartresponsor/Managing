@@ -30,7 +30,7 @@ final class ManageCrudResourceRegistry implements ManageCrudResourceRegistryInte
 
         foreach ($this->adminRegistry->getProviders() as $provider) {
             foreach ($provider->getCrudResources() as $resource) {
-                if ($resource instanceof ManageCrudResourceDefinition && $this->contributionFilter->isCrudResourceEnabled($resource)) {
+                if ($this->contributionFilter->isCrudResourceEnabled($resource)) {
                     $resources[] = $resource;
                 }
             }

@@ -66,7 +66,8 @@ final class ManageCrudResourcePolicy
 
     public function componentKeyFromRootName(string $rootName): ?string
     {
-        $normalizedRootName = strtolower(trim($rootName));
+        $normalizedRootName = preg_replace('/entity$/i', '', trim($rootName)) ?? trim($rootName);
+        $normalizedRootName = strtolower($normalizedRootName);
         if ('' === $normalizedRootName) {
             return null;
         }
@@ -76,10 +77,6 @@ final class ManageCrudResourcePolicy
         }
 
         foreach ($this->componentRootNames as $componentKey => $configuredRootName) {
-            if (!is_string($componentKey) || !is_string($configuredRootName)) {
-                continue;
-            }
-
             if ($normalizedRootName === strtolower(trim($configuredRootName))) {
                 return strtolower(trim($componentKey));
             }
@@ -91,9 +88,6 @@ final class ManageCrudResourcePolicy
     public function preferredRootName(string $componentKey): string
     {
         $rootName = $this->componentRootNames[$componentKey] ?? $componentKey;
-        if (!is_string($rootName)) {
-            return strtolower($componentKey);
-        }
 
         return strtolower(trim($rootName));
     }

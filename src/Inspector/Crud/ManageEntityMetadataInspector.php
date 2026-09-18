@@ -59,7 +59,7 @@ final class ManageEntityMetadataInspector
             $attributes = $property->getAttributes(ORM\Column::class);
             foreach ($attributes as $attribute) {
                 $instance = $attribute->newInstance();
-                if (isset($instance->enumType) && is_string($instance->enumType) && '' !== $instance->enumType) {
+                if (isset($instance->enumType)) {
                     return $instance->enumType;
                 }
             }
