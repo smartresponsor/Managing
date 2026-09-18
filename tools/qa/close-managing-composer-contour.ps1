@@ -83,6 +83,10 @@ Invoke-LoggedGate -Name 'composer-validate' -Command {
     & composer validate --strict --check-lock --no-interaction
 } | Out-Null
 
+Invoke-LoggedGate -Name 'composer-prod-validate' -Command {
+    & composer validate --strict --no-check-all --no-interaction composer.prod.json
+} | Out-Null
+
 Invoke-LoggedGate -Name 'dependency-contour' -Command {
     & composer run verify:first-party-dependencies
 } | Out-Null
@@ -154,7 +158,8 @@ if (-not (Test-Path -LiteralPath $gating -PathType Leaf)) {
     $overallExit = 1
     Write-Host '[gating] FAIL'
 } else {
-    $gatingPolicyRoot = Join-Path $root '..\\Gating\\.gating'\n    Invoke-LoggedGate -Name 'gating' -Command { & php $gating check --target=$root --policy-root=$gatingPolicyRoot } | Out-Null
+    $gatingPolicyRoot = Join-Path $root '..\Gating\.gating'
+    Invoke-LoggedGate -Name 'gating' -Command { & php $gating check --target=$root --policy-root=$gatingPolicyRoot } | Out-Null
 }
 
 $results['overall'] = [ordered]@{
