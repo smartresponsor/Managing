@@ -109,7 +109,7 @@ if ($null -eq $phpstan) {
     Write-Host '[phpstan] FAIL'
 } else {
     Invoke-LoggedGate -Name 'phpstan' -Command {
-        $args = @('analyse', 'src', 'tests', 'tools', '--level=8', '--memory-limit=1G', '--no-progress')
+        $args = @('analyse', '-c', 'phpstan.neon', '--memory-limit=1G', '--no-progress')
         if ($phpstan.EndsWith('.bat')) { & $phpstan @args } else { & php $phpstan @args }
     } | Out-Null
 }
@@ -154,7 +154,7 @@ if (-not (Test-Path -LiteralPath $gating -PathType Leaf)) {
     $overallExit = 1
     Write-Host '[gating] FAIL'
 } else {
-    Invoke-LoggedGate -Name 'gating' -Command { & php $gating check --target=$root } | Out-Null
+    $gatingPolicyRoot = Join-Path $root '..\\Gating\\.gating'\n    Invoke-LoggedGate -Name 'gating' -Command { & php $gating check --target=$root --policy-root=$gatingPolicyRoot } | Out-Null
 }
 
 $results['overall'] = [ordered]@{
