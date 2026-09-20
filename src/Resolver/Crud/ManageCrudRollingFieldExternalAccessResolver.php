@@ -58,7 +58,6 @@ final class ManageCrudRollingFieldExternalAccessResolver implements ManageCrudFi
     {
         $requestClass = self::ROLLING_REQUEST_CLASS;
 
-        // @phpstan-ignore class.notFound
         return new $requestClass(
             permissionKey: $this->permissionKey,
             componentKey: $context->componentKey,

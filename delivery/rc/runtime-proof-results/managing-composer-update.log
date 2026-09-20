@@ -1,0 +1,36 @@
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 0 installs, 4 updates, 0 removals
+  - Upgrading friendsofphp/php-cs-fixer (v3.95.25 => v3.95.26)
+  - Upgrading symfony/ux-live-component (v3.4.0 => v3.5.0)
+  - Upgrading symfony/ux-turbo (v3.4.0 => v3.5.0)
+  - Upgrading symfony/ux-twig-component (v3.4.0 => v3.5.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 0 installs, 4 updates, 0 removals
+  - Downloading symfony/ux-twig-component (v3.5.0)
+  - Downloading symfony/ux-turbo (v3.5.0)
+  - Downloading friendsofphp/php-cs-fixer (v3.95.26)
+  - Downloading symfony/ux-live-component (v3.5.0)
+ 0/4 [>---------------------------]   0%
+ 2/4 [==============>-------------]  50%
+ 3/4 [=====================>------]  75%
+ 4/4 [============================] 100%
+  - Upgrading symfony/ux-twig-component (v3.4.0 => v3.5.0): Extracting archive
+  - Upgrading symfony/ux-turbo (v3.4.0 => v3.5.0): Extracting archive
+  - Upgrading friendsofphp/php-cs-fixer (v3.95.25 => v3.95.26): Extracting archive
+  - Upgrading symfony/ux-live-component (v3.4.0 => v3.5.0): Extracting archive
+ 0/4 [>---------------------------]   0%
+ 1/4 [=======>--------------------]  25%
+ 3/4 [=====================>------]  75%
+ 4/4 [============================] 100%
+Generating autoload files
+123 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+Deprecation Notice: Symfony\Thanks\GitHubClient::getRepositories(): Implicitly marking parameter $failures as nullable is deprecated, the explicit nullable type must be used instead in C:\Users\Admin\AppData\Roaming\Composer\vendor\symfony\thanks\src\GitHubClient.php:109
+
+What about running composer thanks now?
+This will spread some love by sending a star to 119 GitHub repositories of your fellow package maintainers.
+You can also run composer fund to discover how you can sponsor their work with some cash.
+
+No security vulnerability advisories found.

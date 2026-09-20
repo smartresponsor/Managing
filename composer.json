@@ -68,7 +68,10 @@
       "type": "path",
       "url": "../Administering",
       "options": {
-        "symlink": true
+        "symlink": true,
+        "versions": {
+          "administering/administration": "dev-master"
+        }
       }
     },
     {
@@ -95,28 +98,40 @@
       "type": "path",
       "url": "../Cruding",
       "options": {
-        "symlink": true
+        "symlink": true,
+        "versions": {
+          "cruding/crud": "dev-master"
+        }
       }
     },
     {
       "type": "path",
       "url": "../Interfacing",
       "options": {
-        "symlink": true
+        "symlink": true,
+        "versions": {
+          "interfacing/interface": "dev-master"
+        }
       }
     },
     {
       "type": "path",
       "url": "../Objecting",
       "options": {
-        "symlink": true
+        "symlink": true,
+        "versions": {
+          "objecting/object": "dev-master"
+        }
       }
     },
     {
       "type": "path",
       "url": "../Rolling",
       "options": {
-        "symlink": true
+        "symlink": true,
+        "versions": {
+          "rolling/role": "dev-master"
+        }
       }
     },
     {
@@ -133,7 +148,10 @@
       "type": "path",
       "url": "../Viewing",
       "options": {
-        "symlink": true
+        "symlink": true,
+        "versions": {
+          "viewing/view": "dev-master"
+        }
       }
     }
   ]

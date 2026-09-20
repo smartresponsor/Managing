@@ -1,0 +1,178 @@
+[SKIPPED/ERROR] canon.000.component_prefix - No subject_prefix is declared in profile.
+[FAILED/ERROR] canon.001.technical_role_first - Technical role must be first under src/.
+  - src/Accessor/Crud/ManageEntityFieldAccessor.php
+  - src/Accessor/Crud/ManagePublicationFieldStateAccessor.php
+  - src/Cache/Admin/Host/ManageHostCrudResourceCache.php
+  - src/Configurator/Crud/ManageCrudActionConfigurator.php
+  - src/Configurator/Crud/ManageCrudFilterConfigurator.php
+  - src/Configurator/Crud/ManageCrudPageConfigurator.php
+  - src/Discovery/Admin/Host/ManageHostCrudResourceDiscovery.php
+  - src/Extractor/Admin/Host/ManagePhpClassNameExtractor.php
+  - src/Extractor/Admin/ManageGeneratedCrudControllerCustomizationExtractor.php
+  - src/Filter/Admin/ManageContributionFilter.php
+  - src/FilterInterface/Admin/ManageContributionFilterInterface.php
+  - src/Formatter/Admin/Host/ManageClassNameFormatter.php
+  - src/Generator/Admin/ManageCrudControllerGenerator.php
+  - src/HandlerInterface/Crud/ManageCrudFieldUserProfileApplyHandlerInterface.php
+  - src/Inspector/Admin/Host/ManageHostDoctrineEntityInspector.php
+  - src/Inspector/Crud/ManageCrudFieldVisibilityInspector.php
+  - src/Inspector/Crud/ManageEntityMetadataInspector.php
+  - src/Inspector/Crud/ManageEntityReflectionInspector.php
+  - src/InspectorInterface/Crud/ManageCrudFieldVisibilityInspectorInterface.php
+  - src/Instantiator/Crud/ManageEntityInstantiator.php
+  ... 72 more
+[PASSED/ERROR] canon.002.interface_tree_mirror - Typed interface trees mirror implementations.
+[PASSED/ERROR] canon.003.dto_explicit - DTO placement/casing/suffix are canonical.
+[PASSED/ERROR] canon.004.subject_folder_placement - Subject folder placement is canonical.
+[PASSED/ERROR] canon.005.meaningful_namespace_tokens - No known ceremonial namespace patterns detected.
+[FAILED/ERROR] canon.006.dominant_technical_role - Dominant technical role violations found.
+  - src/DependencyInjection/ManagingConfigurationNodeBuilder.php ends with Builder but is under DependencyInjection/
+[PASSED/ERROR] canon.007.psr4_identity - PSR-4 path, namespace, filename and declaration identities match.
+[SKIPPED/ERROR] canon.008.composer_dependency_integrity - No namespace_packages map declared in profile.
+[SKIPPED/ERROR] canon.009.component_host_boundary - No host_namespaces declared in profile.
+[SKIPPED/ERROR] canon.010.migration_completeness - No forbidden_legacy_tokens declared for migration completeness.
+[WARNING/ERROR] canon.011.no_silent_failure - Potential silent fallback requires contract review.
+  - src/Accessor/Crud/ManageEntityFieldAccessor.php catches an exception and returns an empty success-like value.
+  - src/Discovery/Admin/Host/ManageHostCrudResourceDiscovery.php catches an exception and returns an empty success-like value.
+  - src/Factory/Crud/ManageCrudFieldDefinitionFactory.php catches an exception and returns an empty success-like value.
+  - src/Inspector/Crud/ManageEntityMetadataInspector.php catches an exception and returns an empty success-like value.
+  - src/Resolver/Crud/ManageCrudRollingFieldExternalAccessResolver.php catches an exception and returns an empty success-like value.
+[SKIPPED/ERROR] canon.012.typed_boundary_contract - No typed_boundary_internal_roots are declared in profile.
+[PASSED/ERROR] canon.013.no_placeholder_production_logic - No known production placeholder patterns were detected.
+[PASSED/ERROR] canon.014.executable_responsibility - No executable object exceeded the responsibility review threshold.
+[PASSED/ERROR] canon.015.no_tooling_architecture_leak - No shadow runtime type tree was detected under tooling roots.
+[PASSED/ERROR] canon.016.explicit_compatibility_lifecycle - Discovered compatibility surfaces declare lifecycle intent.
+[SKIPPED/ERROR] canon.017.documentation_matches_runtime - No stale_documentation_tokens are declared in profile.
+[FAILED/ERROR] canon.018.composer_identity_mapping - Composer identity mapping violations found.
+  - src/Controller/Crud/AbstractManageContentCrudController.php declares AbstractManageContentCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/AttachingCrudController.php declares AttachingCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/CatalogingCrudController.php declares CatalogingCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/CurrencingCrudController.php declares CurrencingCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/OrderingCrudController.php declares OrderingCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/PagingCrudController.php declares PagingCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/PayingCrudController.php declares PayingCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/ShippingCrudController.php declares ShippingCrudController; expected subject prefix Manage.
+  - src/Controller/Crud/Generated/WalletingCrudController.php declares WalletingCrudController; expected subject prefix Manage.
+  - src/Provider/Administration/RollingBackedManagingAccessReadinessProvider.php declares RollingBackedManagingAccessReadinessProvider; expected subject prefix Manage.
+  - src/Service/Administration/ManagingFieldAccessMutationApplyService.php declares ManagingFieldAccessMutationApplyService; expected subject prefix Manage.
+  - src/Service/Administration/ManagingFieldAccessMutationReviewService.php declares ManagingFieldAccessMutationReviewService; expected subject prefix Manage.
+  - src/Service/Administration/ManagingFieldViewProfileApplyService.php declares ManagingFieldViewProfileApplyService; expected subject prefix Manage.
+  - src/Service/Administration/ManagingFieldViewProfileReviewService.php declares ManagingFieldViewProfileReviewService; expected subject prefix Manage.
+  - src/Service/Administration/ManagingFieldVisibilityInspectionPrepareService.php declares ManagingFieldVisibilityInspectionPrepareService; expected subject prefix Manage.
+  - src/ServiceInterface/Administration/ManagingFieldAccessMutationApplyServiceInterface.php declares ManagingFieldAccessMutationApplyServiceInterface; expected subject prefix Manage.
+  - src/ServiceInterface/Administration/ManagingFieldAccessMutationReviewServiceInterface.php declares ManagingFieldAccessMutationReviewServiceInterface; expected subject prefix Manage.
+  - src/ServiceInterface/Administration/ManagingFieldViewProfileApplyServiceInterface.php declares ManagingFieldViewProfileApplyServiceInterface; expected subject prefix Manage.
+  - src/ServiceInterface/Administration/ManagingFieldViewProfileReviewServiceInterface.php declares ManagingFieldViewProfileReviewServiceInterface; expected subject prefix Manage.
+  - src/ServiceInterface/Administration/ManagingFieldVisibilityInspectionPrepareServiceInterface.php declares ManagingFieldVisibilityInspectionPrepareServiceInterface; expected subject prefix Manage.
+  ... 27 more
+[PASSED/ERROR] canon.019.no_alternative_layer_taxonomy - No competing layer taxonomy roots were found.
+[PASSED/ERROR] canon.020.typed_symfony_role_root - No generic roots or typed-role placement violations were found.
+[WARNING/ERROR] canon.021.cruding_owns_generic_crud - Potential duplicate generic CRUD machinery requires review; EasyAdmin CRUD is exempt.
+  - src/Controller/Crud/ManageCrudControllerCustomizationTrait.php looks like component-local generic CRUD machinery.
+  - src/Controller/Crud/ManageCrudControllerRuntime.php looks like component-local generic CRUD machinery.
+  - src/Controller/Crud/ManageCrudControllerRuntimeInjectionTrait.php looks like component-local generic CRUD machinery.
+  - src/Controller/Crud/ManageCrudControllerSurfaceTrait.php looks like component-local generic CRUD machinery.
+  - src/Extractor/Admin/ManageGeneratedCrudControllerCustomizationExtractor.php looks like component-local generic CRUD machinery.
+  - src/Generator/Admin/ManageCrudControllerGenerator.php looks like component-local generic CRUD machinery.
+  - src/Trait/Crud/ManageCrudControllerRuntimeInjectionTrait.php looks like component-local generic CRUD machinery.
+  - src/Writer/Admin/ManageGeneratedCrudControllerWriter.php looks like component-local generic CRUD machinery.
+[SKIPPED/ERROR] canon.022.standalone_application_dependency_baseline - Target does not expose both bin/console and config/bundles.php standalone Symfony boot surfaces.
+[PASSED/ERROR] canon.023.development_composer_symlink - Development local path repositories use symlinks.
+[PASSED/ERROR] canon.024.production_composer_bundle - Production Composer manifest uses packaged dependencies.
+[FAILED/ERROR] canon.025.component_dual_runtime_mode - Component dual runtime mode is incomplete.
+  - Missing standalone Symfony surface bin/console
+  - Missing standalone Symfony surface config/bundles.php
+[FAILED/ERROR] canon.026.platform_version_baseline - Platform version baseline violations found.
+  - symfony/ux-live-component permits Symfony below 8.1: ^3.0
+  - symfony/ux-turbo permits Symfony below 8.1: ^3.0
+[SKIPPED/ERROR] canon.027.database_engine_baseline - No Doctrine configuration found.
+[SKIPPED/ERROR] canon.028.dual_doctrine_connection - Target is not a standalone Symfony application.
+[PASSED/ERROR] canon.029.mandatory_php_quality_tooling - PHP-CS-Fixer and PHPStan are installed, configured, and executable through Composer scripts.
+[FAILED/ERROR] canon.030.doctrine_schema_parity - Doctrine Entity/migration schema parity contract is incomplete.
+  - Doctrine ORM persistence is present without Doctrine migrations tooling.
+  - Composer/CI scripts do not expose doctrine:schema:validate.
+  - Composer/CI scripts do not expose migration currentness/diff verification.
+[WARNING/ERROR] canon.031.phpdoc_coverage - PHPDoc coverage: classes 112/183 (61.2%), contract methods 40/423 (9.5%), excluded trivial/internal methods 321; threshold 70%.
+  - Semantic PHPDoc review and documentation completion are required.
+  - src/Accessor/Crud/ManageEntityFieldAccessor.php::ManageEntityFieldAccessor [class:missing]
+  - src/Accessor/Crud/ManageEntityFieldAccessor.php::existingFields() [method:tags_only]
+  - src/Accessor/Crud/ManageEntityFieldAccessor.php::readField() [method:missing]
+  - src/Accessor/Crud/ManageEntityFieldAccessor.php::writeField() [method:missing]
+  - src/Accessor/Crud/ManagePublicationFieldStateAccessor.php::writePublishedState() [method:tags_only]
+  - src/Builder/Admin/ManageAdminUserMenuBuilder.php::ManageAdminUserMenuBuilder [class:missing]
+  - src/Builder/Admin/ManageAdminUserMenuBuilder.php::buildUserMenu() [method:missing]
+  - src/BuilderInterface/Admin/ManageAdminUserMenuBuilderInterface.php::ManageAdminUserMenuBuilderInterface [class:missing]
+  - src/BuilderInterface/Admin/ManageAdminUserMenuBuilderInterface.php::buildUserMenu() [method:missing]
+  - src/Cache/Admin/Host/ManageHostCrudResourceCache.php::ManageHostCrudResourceCache [class:missing]
+  - src/Cache/Admin/Host/ManageHostCrudResourceCache.php::load() [method:tags_only]
+  - src/Cache/Admin/Host/ManageHostCrudResourceCache.php::store() [method:tags_only]
+  - src/Cache/Admin/Host/ManageHostCrudResourceCache.php::cacheFilePath() [method:missing]
+  - src/Command/Crud/ManageCrudFieldUserProfileStorageCheckCommand.php::ManageCrudFieldUserProfileStorageCheckCommand [class:missing]
+  - src/Command/Crud/ManageCrudFieldUserProfileStorageCheckCommand.php::execute() [method:missing]
+  - src/Command/Crud/ManageCrudFieldVisibilityExplainCommand.php::ManageCrudFieldVisibilityExplainCommand [class:missing]
+  - src/Command/Crud/ManageCrudFieldVisibilityExplainCommand.php::configure() [method:missing]
+  - src/Command/Crud/ManageCrudFieldVisibilityExplainCommand.php::execute() [method:missing]
+  - src/Controller/Crud/AbstractManageContentCrudController.php::unpublish() [method:tags_only]
+  ... 6 more
+[SKIPPED/ERROR] canon.032.bundle_registration - Target is not a standalone Symfony application.
+[PASSED/ERROR] canon.033.composer_manifest_identity_parity - Development and production Composer manifests describe the same component identity.
+[WARNING/ERROR] canon.034.gitignore_baseline - .gitignore baseline is incomplete.
+  - Missing ignore coverage for IDE state.
+  - Missing ignore coverage for OS noise.
+[SKIPPED/ERROR] canon.035.symfony_container_reuse - Target is not a standalone Symfony kernel application.
+[PASSED/ERROR] canon.036.documentation_producer_ownership - No component-owned Antora site-level surface was detected.
+[PASSED/ERROR] canon.037.generated_reference_artifact - No generated config/reference.php source artifact is present.
+[FAILED/ERROR] canon.038.config_yaml_subject_prefix - Component-owned YAML filename prefix violations found.
+  - config/packages/managing.yaml must start with manage_ or use an established framework/vendor bootstrap filename.
+[FAILED/ERROR] canon.039.php_test_tooling - Canonical PHPUnit testing tooling contract is incomplete.
+  - Branch coverage is not enabled by PHPUnit configuration or coverage execution options.
+[WARNING/ERROR] canon.040.php_test_coverage - Canonical PHPUnit coverage evidence is stale relative to production source.
+  - var/coverage-summary.txt
+[FAILED/ERROR] canon.041.behavioral_ui_test_tooling - Canonical behavioral/UI testing tooling contract is incomplete.
+  - composer.json:require-dev is missing symfony/test-pack.
+  - composer.json:require-dev is missing symfony/panther.
+  - Missing valid package.json with repository-local Playwright tooling.
+  - Missing repository-owned Playwright configuration.
+[WARNING/ERROR] canon.042.behavioral_ui_coverage - Behavioral/UI coverage evidence is missing.
+  - Generate var/coverage/behavioral-ui.json from the repository test-surface coverage workflow.
+[PASSED/ERROR] canon.043.development_composer_dependency_version - Local sibling Composer dependencies use canonical dev-master constraints and stability policy.
+[PASSED/ERROR] canon.044.objecting_system_field_naming - Objecting system fields use entity-native Doctrine names.
+[PASSED/ERROR] canon.045.development_composer_repository_closure - Root Composer manifest exposes the complete reachable local repository closure.
+[SKIPPED/ERROR] canon.mirror_contract - Canonization/Gating sibling mirror roots are not both available.
+[SKIPPED/ERROR] profile.contract_validity - No profile was provided.
+[PASSED/ERROR] structure.forbidden_architecture - No forbidden architecture folders were found.
+[SKIPPED/ERROR] namespace.profile_match - No component namespace is declared in profile.
+[PASSED/ERROR] layer.typed_class_location - Class suffixes match their typed layer directories.
+[FAILED/ERROR] mirror.service_interface - Discovered ServiceInterface contracts must mirror service names, paths, namespaces, and bindings.
+  - src/ServiceInterface/Administration/ManagingFieldAccessMutationApplyServiceInterface.php does not declare expected namespace App\ServiceInterface\Administration
+  - src/Service/Administration/ManagingFieldAccessMutationApplyService.php does not declare expected namespace App\Service\Administration
+  - src/ServiceInterface/Administration/ManagingFieldAccessMutationReviewServiceInterface.php does not declare expected namespace App\ServiceInterface\Administration
+  - src/Service/Administration/ManagingFieldAccessMutationReviewService.php does not declare expected namespace App\Service\Administration
+  - src/ServiceInterface/Administration/ManagingFieldViewProfileApplyServiceInterface.php does not declare expected namespace App\ServiceInterface\Administration
+  - src/Service/Administration/ManagingFieldViewProfileApplyService.php does not declare expected namespace App\Service\Administration
+  - src/ServiceInterface/Administration/ManagingFieldViewProfileReviewServiceInterface.php does not declare expected namespace App\ServiceInterface\Administration
+  - src/Service/Administration/ManagingFieldViewProfileReviewService.php does not declare expected namespace App\Service\Administration
+  - src/ServiceInterface/Administration/ManagingFieldVisibilityInspectionPrepareServiceInterface.php does not declare expected namespace App\ServiceInterface\Administration
+  - src/Service/Administration/ManagingFieldVisibilityInspectionPrepareService.php does not declare expected namespace App\Service\Administration
+  - src/ServiceInterface/Administration/RollingBackedManagingAccessReadinessProviderInterface.php is not a mirrored service interface; expected a name ending in ServiceInterface.
+[PASSED/ERROR] composer.platform_constraint - Composer platform constraints match the Gating profile.
+[SKIPPED/ERROR] database.table_prefix - No database_prefix is declared in profile.
+[SKIPPED/ERROR] route.owner_root - No Symfony route paths were discovered.
+[SKIPPED/ERROR] route.path_segment_separation - No Symfony route paths were discovered.
+[PASSED/ERROR] mutation.safety_firewall - No broad destructive mutation pattern was found (18 mutation-named file(s) observed).
+[PASSED/ERROR] security.secret_leak - No obvious secret material was found (640 file(s) scanned).
+[SKIPPED/WARNING] release.evidence_manifest - Release evidence is not required by profile for this target.
+[PASSED/ERROR] documentation.docblock_preservation - No enabled risky docblock-stripping configuration was found.
+[PASSED/INFO] inventory.component_surface - Application-owned component inventory was collected for reporting.
+  - php_files: 341
+  - controller_files: 15
+  - entity_files: 1
+  - service_files: 7
+  - service_interface_files: 6
+  - repository_files: 1
+  - command_files: 10
+  - route_config_files: 0
+  - composer_files: 3
+  - tool_files: 58
+  - documentation_files: 93
+Gating result: 61 rule(s), 10 failed, 6 warning, 0 suppressed, 18 skipped.

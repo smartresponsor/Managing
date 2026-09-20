@@ -110,3 +110,29 @@
 2. Repair only findings that reproduce after the integrated hardening/configuration changes.
 3. Host/container Symfony composition acceptance if the bundle-local console remains unavailable.
 4. Final PR diff/worktree/head review, then promote and merge only if green.
+
+## 2026-09-19 — local RC closure verification
+
+### Local baseline and WIP preservation
+
+- Revalidated the authoritative local workspace on branch `rc/managing-composer-contour-verify-20260918`, tracking `origin/rc/managing-composer-contour-20260917` at `216414a4bf55ca1153fb5d11a6f190721d332437` before this pass.
+- Existing generated CRUD WIP (`Currencing`, `Ordering`, `Paying`, `Shipping`, `Walleting`, plus current `Attaching/Cataloging/Paging` edits) remains explicitly outside this RC contour and is not staged or rewritten.
+- Repository-local transient `.console-mcp/` and `.gating/` artifacts are also excluded from RC staging.
+
+### Managing-owned fixes and verification
+
+- Removed stale PHPStan suppressions and redundant dynamic type guards now that the Rolling contracts resolve through the declared first-party dependency contour.
+- Extended all nine local first-party path repositories to publish explicit `dev-master` path versions, satisfying Canon043 consistently for direct and transitive path packages.
+- Strengthened `tools/qa/managing-first-party-dependency-contour.php` so every expected local path repository must expose its exact `dev-master` package version.
+- Fresh local verification passed Composer update/strict lock validation, production Composer validation, first-party contour guard, PHP syntax checks, PHPStan, PHPUnit, and CS check. PHPUnit result: 155 tests, 469 assertions, 8 skipped.
+
+### Gating configuration blocker
+
+- The canonical sibling Gating policy root has component profiles for several components but currently has no `.gating/profile/component/managing.yaml`.
+- Gating profile discovery searches the target repository for a local component profile; Managing intentionally does not carry a fake local `.gating` policy copy. With no explicit Managing profile, the runner falls back to the broad registry and defaults the namespace to `App`, producing findings that are not valid Managing component-profile evaluation.
+- Fresh full closure re-run confirms Canon043 now passes. The no-profile Gating invocation still reports 10 failures from the broad registry; these are classified as a Gating configuration/invocation blocker outside the Managing responsibility boundary. The Gating repository is not modified by this RC task.
+
+### Host acceptance blocker
+
+- The host `App` workspace remains independently dirty and currently enables `App\\Facting\\FactingBundle` for all environments; existing local host logs/journal record the unavailable Facting bundle boot failure. Managing does not mutate that host state.
+- Host/container Symfony acceptance therefore remains externally blocked and cannot be attributed to the Managing package changes until the host composition is repaired.

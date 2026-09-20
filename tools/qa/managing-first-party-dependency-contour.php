@@ -60,11 +60,9 @@ foreach ($expectedRepositories as $package => $path) {
             $errors[] = sprintf('Expected symlink=true for path repository %s', $path);
         }
 
-        if (isset($transitivePathPackages[$package])) {
-            $version = $repository['options']['versions'][$package] ?? null;
-            if ('dev-master' !== $version) {
-                $errors[] = sprintf('Expected explicit dev-master path version for %s', $package);
-            }
+        $version = $repository['options']['versions'][$package] ?? null;
+        if ('dev-master' !== $version) {
+            $errors[] = sprintf('Expected explicit dev-master path version for %s', $package);
         }
 
         $matched = true;

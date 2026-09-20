@@ -46,7 +46,6 @@ final readonly class ManagingFieldAccessMutationReviewService implements Managin
         $this->assertRollingReviewClassesAvailable();
         $descriptor = $input->descriptor;
         $fieldRequestClass = self::FIELD_ACCESS_REQUEST_CLASS;
-        // @phpstan-ignore class.notFound
         $fieldRequest = new $fieldRequestClass(
             permissionKey: $descriptor->permissionKey,
             componentKey: $descriptor->target->componentKey,
@@ -60,17 +59,13 @@ final readonly class ManagingFieldAccessMutationReviewService implements Managin
 
         $scopeSetClass = self::FIELD_ACCESS_SCOPE_SET_CLASS;
         $scopeSet = $scopeSetClass::fromRequest($fieldRequest);
-        if (!is_object($scopeSet) || !method_exists($scopeSet, 'mostSpecificScope')) {
-            throw new \LogicException('Rolling field access scope set contract is unavailable.');
-        }
         $scope = $scopeSet->mostSpecificScope();
-        if (!is_string($scope) || '' === $scope) {
+        if ('' === $scope) {
             throw new \LogicException('Rolling field access scope must be a non-empty string.');
         }
 
         $mutationRequestClass = self::MUTATION_REQUEST_CLASS;
 
-        // @phpstan-ignore class.notFound
         return new $mutationRequestClass(
             $this->mutationType($descriptor),
             $this->subjectIdentifier($descriptor),
