@@ -6,9 +6,7 @@ namespace App\Managing\Value\Crud;
 
 /**
  * Config-shaped personal view profile rules for Managing CRUD fields.
- *
- * This is a bridge format for the execution seam. A later persistence-backed resolver can replace
- * it without changing the EasyAdmin field pipeline.
+ * This bridge format can be replaced by a persistence-backed resolver without changing the EasyAdmin field pipeline.
  */
 final readonly class ManageCrudFieldUserProfileRuleSet
 {
@@ -77,7 +75,9 @@ final readonly class ManageCrudFieldUserProfileRuleSet
         return ['subjects' => $this->subjects];
     }
 
-    /** @param mixed $rules @return array<string, array<string, list<string>>> */
+    /**
+     * @return array<string, array<string, list<string>>>
+     */
     private static function normalizePageRules(mixed $rules): array
     {
         if (!is_array($rules)) {
@@ -104,7 +104,9 @@ final readonly class ManageCrudFieldUserProfileRuleSet
         return $normalized;
     }
 
-    /** @param mixed $resources @return array<string, array<string, array<string, list<string>>>> */
+    /**
+     * @return array<string, array<string, array<string, list<string>>>>
+     */
     private static function normalizeResourceRules(mixed $resources): array
     {
         if (!is_array($resources)) {
@@ -128,7 +130,9 @@ final readonly class ManageCrudFieldUserProfileRuleSet
         return $normalized;
     }
 
-    /** @param mixed $values @return list<string> */
+    /**
+     * @return list<string>
+     */
     private static function stringList(mixed $values): array
     {
         if (!is_array($values)) {

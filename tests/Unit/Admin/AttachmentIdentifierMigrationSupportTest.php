@@ -4,33 +4,36 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Admin;
 
-use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationMarker;
-use App\Managing\Migration\Admin\AttachmentIdentifier\AttachmentIdentifierMigrationSql;
+use App\Managing\Trait\Crud\ManageAttachmentIdentifierMigrationTrait;
 use PHPUnit\Framework\TestCase;
 
 final class AttachmentIdentifierMigrationSupportTest extends TestCase
 {
-    public function testMarkerCreatesParentDirectoryAndMarkerFile(): void
+    public function testManagingNoLongerShipsAttachmentMigrationServices(): void
     {
-        $markerFile = sys_get_temp_dir().'/managing-attachment-migration-'.bin2hex(random_bytes(6)).'/marker.done';
-        $marker = new AttachmentIdentifierMigrationMarker($markerFile);
-
-        self::assertFalse($marker->isComplete());
-
-        $marker->markComplete();
-
-        self::assertTrue($marker->isComplete());
-        self::assertSame('1', file_get_contents($markerFile));
+        foreach ([
+            'AttachmentIdentifierMigrationMarker',
+            'AttachmentIdentifierMigrationSql',
+            'AttachmentIdentifierMigrationDataSql',
+            'AttachmentIdentifierMigrationSchemaSql',
+            'AttachmentIdentifierMigrationMetadataSql',
+        ] as $className) {
+            self::assertFalse(class_exists('App\\Managing\\Migration\\Admin\\AttachmentIdentifier\\'.$className));
+        }
     }
 
-    public function testSqlContractKeepsSchemaAndCopyStatementsOutsideOrchestrator(): void
+    public function testCompatibilityHookIsIntentionallyNoOp(): void
     {
-        $sql = new AttachmentIdentifierMigrationSql();
+        $bridge = new class {
+            use ManageAttachmentIdentifierMigrationTrait;
 
-        self::assertStringContainsString('CREATE TABLE attachment', $sql->createAttachmentTable());
-        self::assertStringContainsString('FOREIGN KEY (attachment_id)', $sql->createAttachmentLinkTable());
-        self::assertStringContainsString('FROM attachment_legacy', $sql->copyAttachments());
-        self::assertStringContainsString('FROM attachment_link_legacy', $sql->copyAttachmentLinks());
-        self::assertStringContainsString('information_schema.columns', $sql->attachmentIdDataType());
+            public function run(): void
+            {
+                $this->migrateAttachmentIdentifierIfNeeded();
+            }
+        };
+
+        $bridge->run();
+        self::assertTrue(true);
     }
 }

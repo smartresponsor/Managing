@@ -92,7 +92,11 @@ final readonly class ManageDoctrineCrudFieldViewProfileRuleRepository implements
         return $rule;
     }
 
-    /** @param list<ManageCrudFieldViewProfileRule> $rules @return array<string, mixed> */
+    /**
+     * @param list<ManageCrudFieldViewProfileRule> $rules
+     *
+     * @return array<string, mixed>
+     */
     private function configFromRules(array $rules): array
     {
         $config = ['subjects' => []];

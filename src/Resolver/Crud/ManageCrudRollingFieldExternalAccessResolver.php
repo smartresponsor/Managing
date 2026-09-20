@@ -92,7 +92,7 @@ final class ManageCrudRollingFieldExternalAccessResolver implements ManageCrudFi
         };
     }
 
-    private function readEffect(object $decision): ?string
+    private function readEffect(object $decision): string
     {
         $effect = $this->readStringProperty($decision, 'effect');
         if (null !== $effect) {

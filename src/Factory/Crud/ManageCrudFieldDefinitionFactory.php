@@ -29,12 +29,15 @@ final class ManageCrudFieldDefinitionFactory implements ManageCrudFieldDefinitio
     private const READ_PAGES = [ManageCrudFieldAccessContext::PAGE_INDEX, ManageCrudFieldAccessContext::PAGE_DETAIL];
     private const FORM_PAGES = [ManageCrudFieldAccessContext::PAGE_NEW, ManageCrudFieldAccessContext::PAGE_EDIT];
 
+    private readonly ManageCrudFieldDefinitionTypeResolverInterface $typeResolver;
+
     public function __construct(
         private readonly ManageEntityReflectionInspector $inspector = new ManageEntityReflectionInspector(),
         private readonly ManageCrudFieldPolicy $fieldPolicy = new ManageCrudFieldPolicy(),
         private readonly ManageCrudFieldLabeler $labeler = new ManageCrudFieldLabeler(),
-        private readonly ManageCrudFieldDefinitionTypeResolverInterface $typeResolver = new ManageCrudFieldDefinitionTypeResolver(),
+        ?ManageCrudFieldDefinitionTypeResolverInterface $typeResolver = null,
     ) {
+        $this->typeResolver = $typeResolver ?? new ManageCrudFieldDefinitionTypeResolver($this->inspector, $this->fieldPolicy);
     }
 
     /**
@@ -132,13 +135,23 @@ final class ManageCrudFieldDefinitionFactory implements ManageCrudFieldDefinitio
         return $this->definitionsFor($entityFqcn, $this->fieldPolicy->auditDateFields(), 'audit_date', self::READ_PAGES);
     }
 
-    /** @param list<string> $candidates @param list<string> $availableOn @return list<ManageCrudFieldDefinition> */
+    /**
+     * @param list<string> $candidates
+     * @param list<string> $availableOn
+     *
+     * @return list<ManageCrudFieldDefinition>
+     */
     private function definitionsFor(string $entityFqcn, array $candidates, string $fieldType, array $availableOn): array
     {
         return array_map(fn (string $field): ManageCrudFieldDefinition => $this->definition($entityFqcn, $field, $fieldType, $availableOn), $this->inspector->existingFields($entityFqcn, $candidates));
     }
 
-    /** @param list<string> $candidates @param list<string> $availableOn @return list<ManageCrudFieldDefinition> */
+    /**
+     * @param list<string> $candidates
+     * @param list<string> $availableOn
+     *
+     * @return list<ManageCrudFieldDefinition>
+     */
     private function firstDefinition(string $entityFqcn, array $candidates, string $fieldType, array $availableOn, bool $hideable = true): array
     {
         $fields = $this->inspector->existingFields($entityFqcn, $candidates);
@@ -146,7 +159,10 @@ final class ManageCrudFieldDefinitionFactory implements ManageCrudFieldDefinitio
         return [] === $fields ? [] : [$this->definition($entityFqcn, $fields[0], $fieldType, $availableOn, $hideable)];
     }
 
-    /** @param list<string> $availableOn @param array<string, mixed> $options */
+    /**
+     * @param list<string>         $availableOn
+     * @param array<string, mixed> $options
+     */
     private function definition(string $entityFqcn, string $fieldName, string $fieldType, array $availableOn, bool $hideable = true, array $options = []): ManageCrudFieldDefinition
     {
         return new ManageCrudFieldDefinition(self::COMPONENT_KEY, $entityFqcn, $fieldName, $this->labeler->labelFor($fieldName), $fieldType, $availableOn, $hideable, options: $options);

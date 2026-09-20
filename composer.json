@@ -3,11 +3,18 @@
   "description": "Managing process app",
   "type": "symfony-bundle",
   "license": "proprietary",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": "^8.4",
+    "administering/administration": "dev-master",
+    "cruding/crud": "dev-master",
     "doctrine/doctrine-bundle": "^3.0",
     "doctrine/orm": "^3.3",
     "easycorp/easyadmin-bundle": "^5.0",
+    "interfacing/interface": "dev-master",
+    "objecting/object": "dev-master",
+    "rolling/role": "dev-master",
     "symfony/config": "^8.1",
     "symfony/dependency-injection": "^8.1",
     "symfony/form": "^8.1",
@@ -16,7 +23,8 @@
     "symfony/ux-live-component": "^3.0",
     "symfony/ux-turbo": "^3.0",
     "symfony/yaml": "^8.1",
-    "twig/html-extra": "^3.24"
+    "twig/html-extra": "^3.24",
+    "viewing/view": "dev-master"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.65",
@@ -35,11 +43,116 @@
       "App\\Managing\\Tests\\": "tests/"
     }
   },
+  "scripts": {
+    "test": "phpunit",
+    "test:coverage": "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text=var/coverage-summary.txt",
+    "phpstan": "phpstan analyse -c phpstan.neon --memory-limit=1G",
+    "cs:check": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff --verbose",
+    "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose",
+    "verify:first-party-dependencies": "@php tools/qa/managing-first-party-dependency-contour.php",
+    "quality": [
+      "@cs:check",
+      "@phpstan",
+      "@test"
+    ]
+  },
   "config": {
     "allow-plugins": {
       "symfony/flex": true,
       "symfony/runtime": true
     },
     "sort-packages": true
-  }
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../Administering",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "administering/administration": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Collectioning",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "collectioning/collection": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Configuring",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "configuring/config": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Cruding",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "cruding/crud": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Interfacing",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "interfacing/interface": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Objecting",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "objecting/object": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Rolling",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "rolling/role": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Tabling",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "tabling/table": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Viewing",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "viewing/view": "dev-master"
+        }
+      }
+    }
+  ]
 }

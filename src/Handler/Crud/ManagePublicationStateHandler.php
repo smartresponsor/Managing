@@ -68,8 +68,11 @@ final class ManagePublicationStateHandler
     }
 
     /**
-     * @param list<string> $flagCandidates
-     * @param list<string> $dateCandidates
+     * @template TEntity of object
+     *
+     * @param BatchActionDto<TEntity> $batchActionDto
+     * @param list<string>            $flagCandidates
+     * @param list<string>            $dateCandidates
      */
     public function setBatchPublicationState(BatchActionDto $batchActionDto, EntityManagerInterface $entityManager, bool $published, array $flagCandidates, array $dateCandidates): void
     {

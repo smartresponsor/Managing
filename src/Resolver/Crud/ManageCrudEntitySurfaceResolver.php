@@ -34,49 +34,81 @@ final class ManageCrudEntitySurfaceResolver
         ];
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function searchFields(string $entityFqcn, array $runtimeCandidates = []): array
     {
         return $this->existingFields($entityFqcn, $this->searchFieldCandidates($runtimeCandidates));
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function searchFieldCandidates(array $runtimeCandidates = []): array
     {
         return $this->behaviorPolicy->searchFields($runtimeCandidates);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function statusFields(string $entityFqcn, array $runtimeCandidates = []): array
     {
         return $this->existingFields($entityFqcn, $this->statusFieldCandidates($runtimeCandidates));
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function statusFieldCandidates(array $runtimeCandidates = []): array
     {
         return $this->behaviorPolicy->statusFields($runtimeCandidates);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function publicationFlagFields(string $entityFqcn, array $runtimeCandidates = []): array
     {
         return $this->existingFields($entityFqcn, $this->publicationFlagFieldCandidates($runtimeCandidates));
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function publicationFlagFieldCandidates(array $runtimeCandidates = []): array
     {
         return $this->behaviorPolicy->publicationFlagFields($runtimeCandidates);
     }
 
-    /** @param list<string> $runtimeCandidates */
+    /**
+     * @param list<string> $runtimeCandidates
+     *
+     * @return list<string>
+     */
     public function publicationDateFieldCandidates(array $runtimeCandidates = []): array
     {
         return $this->behaviorPolicy->publicationDateFields($runtimeCandidates);
     }
 
-    /** @param list<string> $publicationDateRuntimeCandidates */
+    /**
+     * @param list<string> $publicationDateRuntimeCandidates
+     *
+     * @return list<string>
+     */
     public function filterDateFields(string $entityFqcn, array $publicationDateRuntimeCandidates = []): array
     {
         return $this->existingFields($entityFqcn, $this->behaviorPolicy->filterDateFields($publicationDateRuntimeCandidates));

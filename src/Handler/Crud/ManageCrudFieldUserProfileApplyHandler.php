@@ -6,6 +6,7 @@ namespace App\Managing\Handler\Crud;
 
 use App\Managing\HandlerInterface\Crud\ManageCrudFieldUserProfileApplyHandlerInterface;
 use App\Managing\ReaderInterface\Crud\ManageCrudFieldUserProfileReaderInterface;
+use App\Managing\Trait\Crud\ManageCrudFieldUserProfileRuleExtractionTrait;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileApplyRequest;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileApplyResult;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileWriteRequest;
@@ -13,6 +14,8 @@ use App\Managing\WriterInterface\Crud\ManageCrudFieldUserProfileWriterInterface;
 
 final readonly class ManageCrudFieldUserProfileApplyHandler implements ManageCrudFieldUserProfileApplyHandlerInterface
 {
+    use ManageCrudFieldUserProfileRuleExtractionTrait;
+
     public function __construct(
         private ManageCrudFieldUserProfileWriterInterface $writer,
         private ?ManageCrudFieldUserProfileReaderInterface $reader = null,
@@ -76,70 +79,6 @@ final readonly class ManageCrudFieldUserProfileApplyHandler implements ManageCru
         return null;
     }
 
-    private function extractSinglePayloadRule(array $payload): array|string
-    {
-        $subjects = $payload['subjects'] ?? null;
-        if (!is_array($subjects) || 1 !== count($subjects)) {
-            return 'field_user_profile_apply_requires_single_subject';
-        }
-
-        $subjectIdentifier = (string) array_key_first($subjects);
-        $subjectProfile = $subjects[$subjectIdentifier] ?? null;
-        if (!is_array($subjectProfile)) {
-            return 'field_user_profile_apply_invalid_subject_profile';
-        }
-        if (isset($subjectProfile['resources'])) {
-            return $this->extractSingleResourceRule($subjectIdentifier, $subjectProfile['resources']);
-        }
-        if (!is_array($subjectProfile['defaults'] ?? null)) {
-            return 'field_user_profile_apply_requires_default_or_resource_rule';
-        }
-
-        return $this->extractSinglePageRule($subjectIdentifier, $subjectProfile['defaults'], null);
-    }
-
-    private function extractSingleResourceRule(string $subjectIdentifier, mixed $resources): array|string
-    {
-        if (!is_array($resources) || 1 !== count($resources)) {
-            return 'field_user_profile_apply_requires_single_resource';
-        }
-
-        $resourceClass = (string) array_key_first($resources);
-        $pageRules = $resources[$resourceClass] ?? null;
-        if (!is_array($pageRules)) {
-            return 'field_user_profile_apply_invalid_resource_profile';
-        }
-
-        return $this->extractSinglePageRule($subjectIdentifier, $pageRules, $resourceClass);
-    }
-
-    private function extractSinglePageRule(string $subjectIdentifier, array $pageRules, ?string $resourceClass): array|string
-    {
-        if (1 !== count($pageRules)) {
-            return 'field_user_profile_apply_requires_single_page_rule';
-        }
-
-        $pageName = (string) array_key_first($pageRules);
-        $rule = $pageRules[$pageName] ?? [];
-        if (!is_array($rule)) {
-            return 'field_user_profile_apply_invalid_page_rule';
-        }
-
-        $visibleFields = $this->stringList($rule['visible'] ?? []);
-        $hiddenFields = $this->stringList($rule['hidden'] ?? []);
-        if ([] !== array_values(array_intersect($visibleFields, $hiddenFields))) {
-            return 'field_user_profile_apply_conflicting_field_preferences';
-        }
-
-        return [
-            'subject_identifier' => $subjectIdentifier,
-            'page_name' => $pageName,
-            'visible_fields' => $visibleFields,
-            'hidden_fields' => $hiddenFields,
-            'resource_class' => $resourceClass,
-        ];
-    }
-
     private function mergeNeedsUnavailableReader(ManageCrudFieldUserProfileApplyRequest $request, string $subjectIdentifier): bool
     {
         if ('merge' !== ($request->reviewContext['mode'] ?? null)) {
@@ -155,23 +94,6 @@ final readonly class ManageCrudFieldUserProfileApplyHandler implements ManageCru
         return in_array($pageName, ['new', 'edit'], true)
             ? ['Managing runtime still enforces required and non-hideable field protections on form pages.']
             : [];
-    }
-
-    /** @return list<string> */
-    private function stringList(mixed $values): array
-    {
-        if (!is_array($values)) {
-            return [];
-        }
-
-        $normalized = [];
-        foreach ($values as $value) {
-            if (is_string($value) && '' !== ($value = trim($value)) && !in_array($value, $normalized, true)) {
-                $normalized[] = $value;
-            }
-        }
-
-        return $normalized;
     }
 
     private function stringOrNull(mixed $value): ?string
