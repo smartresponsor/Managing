@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Managing\Tests\Unit\Crud;
 
 use App\Applicating\Entity\ApplicationUser;
-use App\Attaching\Entity\Persistence\Attachment\Attachment;
+use App\Attaching\Entity\Attachment\Attachment;
 use App\Commissioning\Entity\CommissionPlanEntity;
 use App\Exchanging\Entity\Exchange\Exchange;
 use App\Localizing\Entity\TranslationMessage;
