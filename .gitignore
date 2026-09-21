@@ -25,3 +25,7 @@
 /phpunit.xml
 /.phpunit.cache/
 ###< phpunit/phpunit ###
+
+# Local orchestration runtime artifacts
+/.console-mcp/
+/.gating/
