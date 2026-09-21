@@ -17,7 +17,7 @@ final class AttachingCrudController extends AbstractManageContentCrudController
 
     public static function getEntityFqcn(): string
     {
-        return \App\Attaching\Entity\Attachment\Attachment::class;
+        return \App\Attaching\Entity\Attachment\AttachmentEntity::class;
     }
 
     public function index(\EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext $context): \EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore|\Symfony\Component\HttpFoundation\Response

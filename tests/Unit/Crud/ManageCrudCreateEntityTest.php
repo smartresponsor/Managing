@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Managing\Tests\Unit\Crud;
 
 use App\Applicating\Entity\ApplicationUser;
-use App\Attaching\Entity\Attachment\Attachment;
+use App\Attaching\Entity\Attachment\AttachmentEntity;
 use App\Commissioning\Entity\CommissionPlanEntity;
 use App\Exchanging\Entity\Exchange\Exchange;
 use App\Localizing\Entity\TranslationMessage;
@@ -41,7 +41,7 @@ final class ManageCrudCreateEntityTest extends TestCase
             'commissioning' => [CommissioningCrudController::class, CommissionPlanEntity::class],
             'localizing' => [LocalizingCrudController::class, TranslationMessage::class],
             'paging' => [PagingCrudController::class, Page::class],
-            'attaching' => [AttachingCrudController::class, Attachment::class],
+            'attaching' => [AttachingCrudController::class, AttachmentEntity::class],
         ];
     }
 
