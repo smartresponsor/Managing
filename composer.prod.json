@@ -26,6 +26,15 @@
     "twig/html-extra": "^3.24",
     "viewing/view": "dev-master"
   },
+  "require-dev": {
+    "gating/gate": "dev-master"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/gating.git"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "App\\Managing\\": "src/"
