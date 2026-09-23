@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\DependencyInjection;
 
+use App\Managing\Builder\DependencyInjection\ManageConfigurationNodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -15,34 +16,34 @@ final class Configuration implements ConfigurationInterface
         $children = $treeBuilder->getRootNode()->children();
 
         foreach (self::scalarListNodes() as $nameEntity => $default) {
-            ManagingConfigurationNodeBuilder::scalarList($children, $nameEntity, $default);
+            ManageConfigurationNodeBuilder::scalarList($children, $nameEntity, $default);
         }
 
         foreach (self::scalarMapNodes() as $nameEntity => [$keyName, $default]) {
-            ManagingConfigurationNodeBuilder::scalarMap($children, $nameEntity, $keyName, $default);
+            ManageConfigurationNodeBuilder::scalarMap($children, $nameEntity, $keyName, $default);
         }
 
         foreach (self::scalarListMapNodes() as $nameEntity => [$keyName, $default]) {
-            ManagingConfigurationNodeBuilder::scalarListMap($children, $nameEntity, $keyName, $default);
+            ManageConfigurationNodeBuilder::scalarListMap($children, $nameEntity, $keyName, $default);
         }
 
         foreach (self::intMapMapNodes() as $nameEntity => [$outerKeyName, $innerKeyName, $default]) {
-            ManagingConfigurationNodeBuilder::intMapMap($children, $nameEntity, $outerKeyName, $innerKeyName, $default);
+            ManageConfigurationNodeBuilder::intMapMap($children, $nameEntity, $outerKeyName, $innerKeyName, $default);
         }
 
         foreach (self::scalarMapMapNodes() as $nameEntity => [$outerKeyName, $innerKeyName, $default]) {
-            ManagingConfigurationNodeBuilder::scalarMapMap($children, $nameEntity, $outerKeyName, $innerKeyName, $default);
+            ManageConfigurationNodeBuilder::scalarMapMap($children, $nameEntity, $outerKeyName, $innerKeyName, $default);
         }
 
         self::crudFieldVisibilityNode($children);
         self::crudFieldUserProfilesNode($children);
 
         foreach (self::booleanNodes() as $nameEntity => $default) {
-            ManagingConfigurationNodeBuilder::boolean($children, $nameEntity, $default);
+            ManageConfigurationNodeBuilder::boolean($children, $nameEntity, $default);
         }
 
         foreach (self::scalarNodes() as $nameEntity => $default) {
-            ManagingConfigurationNodeBuilder::scalar($children, $nameEntity, $default);
+            ManageConfigurationNodeBuilder::scalar($children, $nameEntity, $default);
         }
 
         $children->end();

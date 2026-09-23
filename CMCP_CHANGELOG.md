@@ -136,3 +136,23 @@
 
 - The host `App` workspace remains independently dirty and currently enables `App\\Facting\\FactingBundle` for all environments; existing local host logs/journal record the unavailable Facting bundle boot failure. Managing does not mutate that host state.
 - Host/container Symfony acceptance therefore remains externally blocked and cannot be attributed to the Managing package changes until the host composition is repaired.
+
+## 2026-09-22 — compact canonical debt closure
+
+### Baseline
+- Fresh Gating baseline after guard corrections left real hard debt in Canon004, Canon006, Canon018, Canon025, Canon030, Canon038, Canon039, and Canon053.
+- This bounded pass intentionally closes only Canon004/006/038/039 before the larger runtime/topology and subject-prefix migrations.
+
+### Material implementation
+- Renamed the persisted profile-rule class to `ManageCrudFieldViewProfileRuleEntity` and synchronized runtime/tests/docs.
+- Moved `ManagingConfigurationNodeBuilder` from DependencyInjection to `Builder/DependencyInjection` and renamed it `ManageConfigurationNodeBuilder`.
+- Renamed `config/packages/managing.yaml` to `config/packages/manage_runtime.yaml`.
+- Enabled PHPUnit path/branch coverage in the persistent `test:coverage` script.
+
+### Verification
+- `composer validate --strict --check-lock`: PASS.
+- PHP-CS-Fixer: PASS.
+- PHPStan: PASS, 0 errors.
+- PHPUnit: PASS, 155 tests / 469 assertions / 8 skipped.
+- Canon004, Canon006, Canon038, and Canon039: PASS.
+- Remaining hard debt is intentionally scoped to Canon018, Canon025, Canon030, and Canon053.

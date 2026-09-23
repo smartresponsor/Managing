@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Validator\Crud;
 
-use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule;
+use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity;
 use App\Managing\ValidatorInterface\Crud\ManageCrudFieldUserProfileStorageActivationValidatorInterface;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileStorageActivationIssue as Issue;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileStorageActivationReport;
@@ -104,7 +104,7 @@ final readonly class ManageCrudFieldUserProfileStorageActivationValidator implem
         }
 
         try {
-            $manager = $this->managerRegistry->getManagerForClass(ManageCrudFieldViewProfileRule::class);
+            $manager = $this->managerRegistry->getManagerForClass(ManageCrudFieldViewProfileRuleEntity::class);
         } catch (\Throwable $exception) {
             $issues[] = Issue::error('field_user_profile_mapping_check_failed', $exception->getMessage());
 
@@ -114,7 +114,7 @@ final readonly class ManageCrudFieldUserProfileStorageActivationValidator implem
         if (null === $manager) {
             $issues[] = Issue::error(
                 'field_user_profile_rule_mapping_missing',
-                'ManageCrudFieldViewProfileRule is not mapped by a Doctrine EntityManager.',
+                'ManageCrudFieldViewProfileRuleEntity is not mapped by a Doctrine EntityManager.',
             );
 
             return;
@@ -122,7 +122,7 @@ final readonly class ManageCrudFieldUserProfileStorageActivationValidator implem
 
         $issues[] = Issue::info(
             'field_user_profile_rule_mapping_found',
-            'ManageCrudFieldViewProfileRule is mapped by Doctrine; verify the host generated the migration with --em=system.',
+            'ManageCrudFieldViewProfileRuleEntity is mapped by Doctrine; verify the host generated the migration with --em=system.',
         );
     }
 

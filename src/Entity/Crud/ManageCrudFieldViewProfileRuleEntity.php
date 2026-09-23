@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_manage_crud_field_view_profile_subject', columns: ['subject_identifier'])]
 #[ORM\Index(name: 'idx_manage_crud_field_view_profile_resource', columns: ['resource_key'])]
 #[ORM\Index(name: 'idx_manage_crud_field_view_profile_page', columns: ['page_name'])]
-final class ManageCrudFieldViewProfileRule
+final class ManageCrudFieldViewProfileRuleEntity
 {
     use ManageCrudFieldViewProfileRuleAccessorTrait;
 
