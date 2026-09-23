@@ -4,18 +4,23 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ac88e4b07b767574fd7191328d62d1b",
+    "content-hash": "2f8654ce95ff9ec7eeec7ad2e64b54c0",
     "packages": [
         {
             "name": "administering/administration",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smartresponsor/administering.git",
+                "reference": "9815b77f9a3645746bdc8ca208a736975142a09f"
+            },
             "dist": {
-                "type": "path",
-                "url": "../Administering",
-                "reference": "73adfc33df52f63a55dbc7ae634ef71ad37b0147"
+                "type": "zip",
+                "url": "https://api.github.com/repos/smartresponsor/administering/zipball/9815b77f9a3645746bdc8ca208a736975142a09f",
+                "reference": "9815b77f9a3645746bdc8ca208a736975142a09f",
+                "shasum": ""
             },
             "require": {
-                "cruding/crud": "dev-master",
                 "doctrine/doctrine-bundle": "^3.2",
                 "doctrine/doctrine-migrations-bundle": "^4.0",
                 "doctrine/orm": "^3.3",
@@ -24,10 +29,8 @@
                 "ext-iconv": "*",
                 "ext-json": "*",
                 "ext-pdo": "*",
-                "interfacing/interface": "dev-master",
-                "objecting/object": "dev-master",
                 "php": "^8.4",
-                "symfony/asset-mapper": "^8.1",
+                "symfony/asset-mapper": "^8.0",
                 "symfony/config": "^8.1",
                 "symfony/console": "^8.1",
                 "symfony/dotenv": "^8.1",
@@ -35,21 +38,20 @@
                 "symfony/finder": "^8.1",
                 "symfony/form": "^8.1",
                 "symfony/framework-bundle": "^8.1",
-                "symfony/lock": "^8.1",
+                "symfony/lock": "^8.0",
                 "symfony/messenger": "^8.1",
-                "symfony/process": "^8.1",
+                "symfony/process": "^8.0",
                 "symfony/runtime": "^8.1",
-                "symfony/scheduler": "^8.1",
+                "symfony/scheduler": "^8.0",
                 "symfony/security-bundle": "^8.1",
-                "symfony/security-csrf": "^8.1",
+                "symfony/security-csrf": "^8.0",
                 "symfony/serializer": "^8.1",
                 "symfony/stimulus-bundle": "^2.35",
                 "symfony/twig-bundle": "^8.1",
                 "symfony/ux-turbo": "^3.0",
                 "symfony/validator": "^8.1",
                 "symfony/yaml": "^8.1",
-                "twig/twig": "^3.15",
-                "viewing/view": "dev-master"
+                "twig/twig": "^3.15"
             },
             "require-dev": {
                 "ergebnis/composer-normalize": "^2.47",
@@ -61,11 +63,12 @@
                 "phpunit/phpunit": "^11.5",
                 "rector/rector": "^2.0",
                 "symfony/maker-bundle": "^1.64",
-                "symfony/phpunit-bridge": "^8.1"
+                "symfony/phpunit-bridge": "^8.0"
             },
             "suggest": {
                 "configuring/config": "Optional runtime-scope evidence package. Administering discovers it through composer inventory and runtime-scope locks; it must not be required for standalone installation."
             },
+            "default-branch": true,
             "type": "symfony-bundle",
             "extra": {
                 "public-dir": "public",
@@ -300,10 +303,11 @@
                 "proprietary"
             ],
             "description": "Administering administrative governance component for Symfony host applications.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/smartresponsor/administering/tree/master",
+                "issues": "https://github.com/smartresponsor/administering/issues"
+            },
+            "time": "2026-09-11T15:42:57+00:00"
         },
         {
             "name": "collectioning/collection",
@@ -452,10 +456,16 @@
         {
             "name": "configuring/config",
             "version": "dev-master",
-            "dist": {
-                "type": "path",
-                "url": "../Configuring",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smartresponsor/configuring.git",
                 "reference": "805fc205ef43a93301e84637e9477e96e7fa15dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/smartresponsor/configuring/zipball/805fc205ef43a93301e84637e9477e96e7fa15dc",
+                "reference": "805fc205ef43a93301e84637e9477e96e7fa15dc",
+                "shasum": ""
             },
             "require": {
                 "php": "^8.4"
@@ -465,6 +475,7 @@
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^11.5"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -491,10 +502,11 @@
                 "proprietary"
             ],
             "description": "Neutral Smart Responsor contract package for producer configuration tools and component contracts.",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/smartresponsor/configuring/tree/master",
+                "issues": "https://github.com/smartresponsor/configuring/issues"
+            },
+            "time": "2026-06-13T20:05:58+00:00"
         },
         {
             "name": "cruding/crud",
@@ -2535,10 +2547,16 @@
         {
             "name": "rolling/role",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/smartresponsor/rolling.git",
+                "reference": "1a3b59042e3a120ab7cc8a5f832de4da5bf314f2"
+            },
             "dist": {
-                "type": "path",
-                "url": "../Rolling",
-                "reference": "5af5e52b8fc180231298ff8db3d39db310fc8c08"
+                "type": "zip",
+                "url": "https://api.github.com/repos/smartresponsor/rolling/zipball/1a3b59042e3a120ab7cc8a5f832de4da5bf314f2",
+                "reference": "1a3b59042e3a120ab7cc8a5f832de4da5bf314f2",
+                "shasum": ""
             },
             "require": {
                 "configuring/config": "dev-master",
@@ -2554,36 +2572,35 @@
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "ext-pdo": "*",
-                "interfacing/interface": "dev-master",
                 "objecting/object": "dev-master",
                 "php": "^8.4",
                 "psr/simple-cache": "^3.0",
-                "symfony/config": "^8.1",
-                "symfony/dependency-injection": "^8.1",
-                "symfony/error-handler": "^8.1",
-                "symfony/event-dispatcher": "^8.1",
-                "symfony/form": "^8.1",
-                "symfony/framework-bundle": "^8.1",
-                "symfony/http-foundation": "^8.1",
-                "symfony/http-kernel": "^8.1",
-                "symfony/routing": "^8.1",
-                "symfony/security-csrf": "^8.1",
-                "symfony/twig-bundle": "^8.1",
-                "symfony/validator": "^8.1",
-                "symfony/yaml": "^8.1",
-                "twig/twig": "^3.24",
-                "viewing/view": "dev-master"
+                "symfony/config": "^8.0",
+                "symfony/dependency-injection": "^8.0",
+                "symfony/error-handler": "^8.0",
+                "symfony/event-dispatcher": "^8.0",
+                "symfony/form": "^8.0",
+                "symfony/framework-bundle": "^8.0",
+                "symfony/http-foundation": "^8.0",
+                "symfony/http-kernel": "^8.0",
+                "symfony/routing": "^8.0",
+                "symfony/security-csrf": "^8.0",
+                "symfony/twig-bundle": "^8.0",
+                "symfony/validator": "^8.0",
+                "symfony/yaml": "^8.0",
+                "twig/twig": "^3.24"
             },
             "require-dev": {
                 "dbrekelmans/bdi": "^1.4.1",
                 "friendsofphp/php-cs-fixer": "^3.94",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^11.5",
-                "symfony/browser-kit": "^8.1",
-                "symfony/css-selector": "^8.1",
+                "symfony/browser-kit": "^8.0",
+                "symfony/css-selector": "^8.0",
                 "symfony/panther": "^2.2",
-                "symfony/var-dumper": "^8.1"
+                "symfony/var-dumper": "^8.0"
             },
+            "default-branch": true,
             "type": "symfony-bundle",
             "autoload": {
                 "psr-4": {
@@ -2704,10 +2721,11 @@
                 "MIT"
             ],
             "description": "Rolling role Symfony bundle package",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "source": "https://github.com/smartresponsor/rolling/tree/master",
+                "issues": "https://github.com/smartresponsor/rolling/issues"
+            },
+            "time": "2026-09-11T18:04:02+00:00"
         },
         {
             "name": "symfony/asset",
