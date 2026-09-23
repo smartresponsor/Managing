@@ -10,7 +10,7 @@ Field view profile rules are presentation preferences only. They can hide or sho
 
 == Required boundary
 
-The entity `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule` must be mapped only to the host application's system/internal EntityManager.
+The entity `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity` must be mapped only to the host application's system/internal EntityManager.
 In the canonical host setup this EntityManager is backed by SQLite.
 
 Do not map this entity to the user/business PostgreSQL EntityManager.
@@ -22,7 +22,7 @@ Before enabling Doctrine-backed profile storage, verify all items below:
 
 . The host application has a dedicated system/internal EntityManager.
 . The system EntityManager service id is known, for example `doctrine.orm.system_entity_manager`.
-. The system EntityManager maps `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule`.
+. The system EntityManager maps `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity`.
 . The generated migration targets the system/internal SQLite connection.
 . The migration creates `manage_crud_field_view_profile_rule` only in the system database.
 . Managing config explicitly selects the Doctrine profile reader and writer backends.
@@ -135,6 +135,6 @@ After enabling the Doctrine reader/writer backend in the host application, run t
 php bin/console managing:field-view-profile-storage:check
 ----
 
-The command is intentionally conservative. It checks that Doctrine-backed profile storage is not pointed at the default/user-data EntityManager, that the configured EntityManager service is system-scoped, and that `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule` is mapped by Doctrine.
+The command is intentionally conservative. It checks that Doctrine-backed profile storage is not pointed at the default/user-data EntityManager, that the configured EntityManager service is system-scoped, and that `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity` is mapped by Doctrine.
 
 A passing check does not grant field access. It only validates the presentation-profile storage wiring. Rolling/Administering deny decisions remain stronger than any stored user profile.

@@ -89,7 +89,7 @@ Before enabling persistence-backed profile apply, run:
 php bin/console managing:field-view-profile-storage:check
 ----
 
-The `ManageCrudFieldViewProfileRule` entity must be mapped by the system EntityManager only.
+The `ManageCrudFieldViewProfileRuleEntity` entity must be mapped by the system EntityManager only.
 
 == Diagnostics
 

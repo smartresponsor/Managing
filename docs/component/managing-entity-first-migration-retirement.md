@@ -21,7 +21,7 @@ for `attachment` / `attachment_link`.
 
 The current Managing-owned persistent model remains:
 
-- `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule`
+- `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity`
 
 It now explicitly points to its Doctrine repository class:
 
@@ -37,7 +37,7 @@ runtime schema migration behavior from Managing.
 ## Objecting
 
 No Objecting embeddable traits were added in this pass. `createdAt` and
-`updatedAt` in `ManageCrudFieldViewProfileRule` are profile-storage lifecycle
+`updatedAt` in `ManageCrudFieldViewProfileRuleEntity` are profile-storage lifecycle
 facts in the existing Managing model; changing them to Objecting embeddables
 would be a schema change rather than migration retirement.
 

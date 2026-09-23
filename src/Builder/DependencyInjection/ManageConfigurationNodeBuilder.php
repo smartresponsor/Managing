@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Managing\DependencyInjection;
+namespace App\Managing\Builder\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
@@ -12,7 +12,7 @@ use Symfony\Component\Config\Definition\Builder\NodeBuilder;
  * The public configuration shape stays owned by Configuration; this helper only
  * centralizes the low-level TreeBuilder grammar for scalar lists and keyed maps.
  */
-final class ManagingConfigurationNodeBuilder
+final class ManageConfigurationNodeBuilder
 {
     /** @param list<string> $default */
     public static function scalarList(NodeBuilder $children, string $nameEntity, array $default = []): void

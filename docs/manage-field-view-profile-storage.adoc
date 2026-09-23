@@ -24,7 +24,7 @@ This means the component can read static `crud_field_user_profiles` configuratio
 
 == System SQLite storage backend
 
-When the host application is ready to persist profiles, it should map `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule` to the system/internal EntityManager, typically SQLite.
+When the host application is ready to persist profiles, it should map `App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity` to the system/internal EntityManager, typically SQLite.
 Do not map this entity to the PostgreSQL user/business EntityManager.
 
 A host with a system EntityManager can enable runtime storage explicitly:
