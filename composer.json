@@ -68,14 +68,8 @@
   },
   "repositories": [
     {
-      "type": "path",
-      "url": "../Administering",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "administering/administration": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/administering.git"
     },
     {
       "type": "path",
@@ -88,14 +82,8 @@
       }
     },
     {
-      "type": "path",
-      "url": "../Configuring",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "configuring/config": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/configuring.git"
     },
     {
       "type": "path",
@@ -128,14 +116,8 @@
       }
     },
     {
-      "type": "path",
-      "url": "../Rolling",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "rolling/role": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:taa0662621456/rolling.git"
     },
     {
       "type": "path",
