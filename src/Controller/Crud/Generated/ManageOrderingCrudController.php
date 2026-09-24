@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Managing\Controller\Crud\Generated;
+
+use App\Managing\Controller\Crud\ManageContentCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+
+#[AsController]
+#[AdminRoute(path: '/ordering', name: 'ordering')]
+final class ManageOrderingCrudController extends ManageContentCrudController
+{
+    public static function getEntityFqcn(): string
+    {
+        return \App\Ordering\Entity\Order\OrderEntity::class;
+    }
+
+}

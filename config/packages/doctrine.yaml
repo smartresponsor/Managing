@@ -1,0 +1,21 @@
+doctrine:
+  dbal:
+    default_connection: infra
+    connections:
+      infra:
+        driver: pdo_sqlite
+        path: '%kernel.project_dir%/var/managing.sqlite'
+
+  orm:
+    default_entity_manager: infra
+    entity_managers:
+      infra:
+        connection: infra
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        mappings:
+          Managing:
+            is_bundle: false
+            type: attribute
+            dir: '%kernel.project_dir%/src/Entity'
+            prefix: 'App\Managing\Entity'
+            alias: Managing

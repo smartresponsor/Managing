@@ -20,57 +20,60 @@ if (!is_array($require) || !is_array($repositories)) {
 }
 
 $directPackages = [
-    'administering/administration' => '../Administering',
-    'cruding/crud' => '../Cruding',
-    'interfacing/interface' => '../Interfacing',
-    'objecting/object' => '../Objecting',
-    'rolling/role' => '../Rolling',
-    'viewing/view' => '../Viewing',
+    'administering/administration',
+    'collectioning/collection',
+    'cruding/crud',
+    'interfacing/interface',
+    'objecting/object',
+    'rolling/role',
+    'tabling/table',
+    'viewing/view',
 ];
 
-$transitivePathPackages = [
+$allowedPathPackages = [
+    'administering/administration' => '../Administering',
     'collectioning/collection' => '../Collectioning',
-    'configuring/config' => '../Configuring',
+    'cruding/crud' => '../Cruding',
+    'gating/gate' => '../Gating',
+    'interfacing/interface' => '../Interfacing',
+    'objecting/object' => '../Objecting',
     'tabling/table' => '../Tabling',
+    'viewing/view' => '../Viewing',
 ];
 
 $errors = [];
 
-foreach ($directPackages as $package => $path) {
+foreach ($directPackages as $package) {
     if (($require[$package] ?? null) !== 'dev-master') {
         $errors[] = sprintf('Expected %s: dev-master in require', $package);
     }
 }
 
-$expectedRepositories = $directPackages + $transitivePathPackages;
-
-foreach ($expectedRepositories as $package => $path) {
-    $matched = false;
-
-    foreach ($repositories as $repository) {
-        if (!is_array($repository)) {
-            continue;
-        }
-
-        if (($repository['type'] ?? null) !== 'path' || ($repository['url'] ?? null) !== $path) {
-            continue;
-        }
-
-        if (($repository['options']['symlink'] ?? null) !== true) {
-            $errors[] = sprintf('Expected symlink=true for path repository %s', $path);
-        }
-
-        $version = $repository['options']['versions'][$package] ?? null;
-        if ('dev-master' !== $version) {
-            $errors[] = sprintf('Expected explicit dev-master path version for %s', $package);
-        }
-
-        $matched = true;
-        break;
+foreach ($repositories as $repository) {
+    if (!is_array($repository) || 'path' !== ($repository['type'] ?? null)) {
+        continue;
     }
 
-    if (!$matched) {
-        $errors[] = sprintf('Missing path repository for %s (%s)', $package, $path);
+    $path = $repository['url'] ?? null;
+    if (!is_string($path)) {
+        continue;
+    }
+
+    $package = array_search($path, $allowedPathPackages, true);
+    if (false === $package) {
+        $errors[] = sprintf(
+            'Non-canonical sibling path repository %s; use packaged/VCS resolution for non-helper dependencies',
+            $path,
+        );
+        continue;
+    }
+
+    if (($repository['options']['symlink'] ?? null) !== true) {
+        $errors[] = sprintf('Expected symlink=true for path repository %s', $path);
+    }
+
+    if ('dev-master' !== ($repository['options']['versions'][$package] ?? null)) {
+        $errors[] = sprintf('Expected explicit dev-master path version for %s', $package);
     }
 }
 
