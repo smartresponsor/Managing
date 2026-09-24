@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Managing\Validator\Crud;
 
-use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule;
+use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity;
+use App\Managing\RepositoryInterface\Crud\ManageDoctrineClassMappingRepositoryInterface;
 use App\Managing\ValidatorInterface\Crud\ManageCrudFieldUserProfileStorageActivationValidatorInterface;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileStorageActivationIssue as Issue;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileStorageActivationReport;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Validates explicit host activation of Managing field view profile storage.
@@ -20,7 +20,7 @@ final readonly class ManageCrudFieldUserProfileStorageActivationValidator implem
         private string $readerBackend,
         private string $writerBackend,
         private string $entityManagerService,
-        private ?ManagerRegistry $managerRegistry = null,
+        private ?ManageDoctrineClassMappingRepositoryInterface $mappingRepository = null,
     ) {
     }
 
@@ -94,7 +94,7 @@ final readonly class ManageCrudFieldUserProfileStorageActivationValidator implem
     /** @param list<Issue> $issues */
     private function validateDoctrineMapping(array &$issues): void
     {
-        if (null === $this->managerRegistry) {
+        if (null === $this->mappingRepository || !$this->mappingRepository->isAvailable()) {
             $issues[] = Issue::warning(
                 'field_user_profile_manager_registry_unavailable',
                 'Doctrine manager registry is unavailable; mapping must be verified by the host application.',
@@ -104,17 +104,17 @@ final readonly class ManageCrudFieldUserProfileStorageActivationValidator implem
         }
 
         try {
-            $manager = $this->managerRegistry->getManagerForClass(ManageCrudFieldViewProfileRule::class);
+            $mapped = $this->mappingRepository->hasManagerForClass(ManageCrudFieldViewProfileRuleEntity::class);
         } catch (\Throwable $exception) {
             $issues[] = Issue::error('field_user_profile_mapping_check_failed', $exception->getMessage());
 
             return;
         }
 
-        if (null === $manager) {
+        if (!$mapped) {
             $issues[] = Issue::error(
                 'field_user_profile_rule_mapping_missing',
-                'ManageCrudFieldViewProfileRule is not mapped by a Doctrine EntityManager.',
+                'ManageCrudFieldViewProfileRuleEntity is not mapped by a Doctrine EntityManager.',
             );
 
             return;
@@ -122,7 +122,7 @@ final readonly class ManageCrudFieldUserProfileStorageActivationValidator implem
 
         $issues[] = Issue::info(
             'field_user_profile_rule_mapping_found',
-            'ManageCrudFieldViewProfileRule is mapped by Doctrine; verify the host generated the migration with --em=system.',
+            'ManageCrudFieldViewProfileRuleEntity is mapped by Doctrine; verify the host generated the migration with --em=system.',
         );
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Repository\Crud;
 
-use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule;
+use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity;
 use App\Managing\RepositoryInterface\Crud\ManageCrudFieldViewProfileRuleRepositoryInterface;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileRuleSet;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileWriteRequest;
@@ -29,8 +29,8 @@ final readonly class ManageDoctrineCrudFieldViewProfileRuleRepository implements
             $criteria['subjectIdentifier'] = $subjectIdentifier;
         }
 
-        /** @var list<ManageCrudFieldViewProfileRule> $rules */
-        $rules = $this->entityManager->getRepository(ManageCrudFieldViewProfileRule::class)->findBy(
+        /** @var list<ManageCrudFieldViewProfileRuleEntity> $rules */
+        $rules = $this->entityManager->getRepository(ManageCrudFieldViewProfileRuleEntity::class)->findBy(
             $criteria,
             ['subjectIdentifier' => 'ASC', 'resourceKey' => 'ASC', 'pageName' => 'ASC'],
         );
@@ -46,7 +46,7 @@ final readonly class ManageDoctrineCrudFieldViewProfileRuleRepository implements
             return $this->readProfileConfig(null);
         }
 
-        $resourceKey = ManageCrudFieldViewProfileRule::resourceKeyFromClass($request->normalizedResourceClass());
+        $resourceKey = ManageCrudFieldViewProfileRuleEntity::resourceKeyFromClass($request->normalizedResourceClass());
         $visibleFields = $request->normalizedVisibleFields();
         $hiddenFields = $request->normalizedHiddenFields();
 
@@ -61,7 +61,7 @@ final readonly class ManageDoctrineCrudFieldViewProfileRuleRepository implements
         }
 
         if (null === $rule) {
-            $rule = new ManageCrudFieldViewProfileRule(
+            $rule = new ManageCrudFieldViewProfileRuleEntity(
                 $subjectIdentifier,
                 $pageName,
                 '*' === $resourceKey ? null : $resourceKey,
@@ -80,10 +80,10 @@ final readonly class ManageDoctrineCrudFieldViewProfileRuleRepository implements
         return $this->readProfileConfig($subjectIdentifier);
     }
 
-    private function findOneRule(string $subjectIdentifier, string $resourceKey, string $pageName): ?ManageCrudFieldViewProfileRule
+    private function findOneRule(string $subjectIdentifier, string $resourceKey, string $pageName): ?ManageCrudFieldViewProfileRuleEntity
     {
-        /** @var ManageCrudFieldViewProfileRule|null $rule */
-        $rule = $this->entityManager->getRepository(ManageCrudFieldViewProfileRule::class)->findOneBy([
+        /** @var ManageCrudFieldViewProfileRuleEntity|null $rule */
+        $rule = $this->entityManager->getRepository(ManageCrudFieldViewProfileRuleEntity::class)->findOneBy([
             'subjectIdentifier' => $subjectIdentifier,
             'resourceKey' => $resourceKey,
             'pageName' => $pageName,
@@ -93,7 +93,7 @@ final readonly class ManageDoctrineCrudFieldViewProfileRuleRepository implements
     }
 
     /**
-     * @param list<ManageCrudFieldViewProfileRule> $rules
+     * @param list<ManageCrudFieldViewProfileRuleEntity> $rules
      *
      * @return array<string, mixed>
      */

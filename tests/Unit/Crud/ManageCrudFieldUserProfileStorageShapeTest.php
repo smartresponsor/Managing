@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Managing\Tests\Unit\Crud;
 
-use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRule;
+use App\Managing\Entity\Crud\ManageCrudFieldViewProfileRuleEntity;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileReadResult;
 use App\Managing\Value\Crud\ManageCrudFieldUserProfileWriteRequest;
 use App\Managing\Writer\Crud\ManageCrudDoctrineFieldUserProfileWriter;
@@ -15,7 +15,7 @@ final class ManageCrudFieldUserProfileStorageShapeTest extends TestCase
 {
     public function testEntityUsesDefaultResourceScopeForSubjectDefaultRule(): void
     {
-        $rule = new ManageCrudFieldViewProfileRule(
+        $rule = new ManageCrudFieldViewProfileRuleEntity(
             subjectIdentifier: ' user:42 ',
             pageName: ' index ',
             visibleFields: ['status', 'status', ' '],
@@ -35,7 +35,7 @@ final class ManageCrudFieldUserProfileStorageShapeTest extends TestCase
 
     public function testEntityUsesResourceClassAsResourceScope(): void
     {
-        $rule = new ManageCrudFieldViewProfileRule(
+        $rule = new ManageCrudFieldViewProfileRuleEntity(
             subjectIdentifier: 'role:manager',
             pageName: 'detail',
             resourceClass: self::class,

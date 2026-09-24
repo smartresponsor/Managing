@@ -34,7 +34,7 @@ final class ManageGeneratedCrudControllerWriterTest extends TestCase
         );
 
         $source = $writer->controllerSource(
-            'App\\Managing\\Controller\\Crud\\Generated\\AttachingCrudController',
+            'App\\Managing\\Controller\\Crud\\Generated\\ManageAttachingCrudController',
             'App\\Attaching\\Entity\\Attachment\\Attachment',
             'attaching',
         );

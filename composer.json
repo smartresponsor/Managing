@@ -2,20 +2,23 @@
   "name": "managing/manage",
   "description": "Managing process app",
   "type": "symfony-bundle",
-  "license": "proprietary",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
     "php": "^8.4",
     "administering/administration": "dev-master",
+    "collectioning/collection": "dev-master",
     "cruding/crud": "dev-master",
     "doctrine/doctrine-bundle": "^3.0",
+    "doctrine/doctrine-migrations-bundle": "^4.0",
     "doctrine/orm": "^3.3",
     "easycorp/easyadmin-bundle": "^5.0",
     "interfacing/interface": "dev-master",
     "objecting/object": "dev-master",
     "rolling/role": "dev-master",
     "symfony/config": "^8.1",
+    "symfony/console": "^8.1",
     "symfony/dependency-injection": "^8.1",
     "symfony/form": "^8.1",
     "symfony/framework-bundle": "^8.1",
@@ -23,15 +26,18 @@
     "symfony/ux-live-component": "^3.0",
     "symfony/ux-turbo": "^3.0",
     "symfony/yaml": "^8.1",
+    "tabling/table": "dev-master",
     "twig/html-extra": "^3.24",
     "viewing/view": "dev-master"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.65",
+    "gating/gate": "dev-master",
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^12.0",
     "symfony/browser-kit": "^8.1",
-    "symfony/css-selector": "^8.1"
+    "symfony/css-selector": "^8.1",
+    "symfony/panther": "^2.2"
   },
   "autoload": {
     "psr-4": {
@@ -45,16 +51,24 @@
   },
   "scripts": {
     "test": "phpunit",
-    "test:coverage": "@php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-text=var/coverage-summary.txt",
+    "test:coverage": "@php -d xdebug.mode=coverage vendor/bin/phpunit --path-coverage --coverage-text=var/coverage-summary.txt",
     "phpstan": "phpstan analyse -c phpstan.neon --memory-limit=1G",
     "cs:check": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff --verbose",
     "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose",
     "verify:first-party-dependencies": "@php tools/qa/managing-first-party-dependency-contour.php",
+    "schema:validate": "@php bin/console doctrine:schema:validate --env=test",
+    "schema:parity": [
+      "@php bin/console doctrine:migrations:migrate --no-interaction --env=test",
+      "@php bin/console doctrine:migrations:up-to-date --env=test",
+      "@schema:validate"
+    ],
     "quality": [
       "@cs:check",
       "@phpstan",
-      "@test"
-    ]
+      "@test",
+      "@gate"
+    ],
+    "gate": "@php vendor/bin/gating check --target=."
   },
   "config": {
     "allow-plugins": {
@@ -65,14 +79,8 @@
   },
   "repositories": [
     {
-      "type": "path",
-      "url": "../Administering",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "administering/administration": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/administering.git"
     },
     {
       "type": "path",
@@ -85,14 +93,8 @@
       }
     },
     {
-      "type": "path",
-      "url": "../Configuring",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "configuring/config": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:smartresponsor/configuring.git"
     },
     {
       "type": "path",
@@ -125,14 +127,8 @@
       }
     },
     {
-      "type": "path",
-      "url": "../Rolling",
-      "options": {
-        "symlink": true,
-        "versions": {
-          "rolling/role": "dev-master"
-        }
-      }
+      "type": "vcs",
+      "url": "git@github.com:taa0662621456/rolling.git"
     },
     {
       "type": "path",
@@ -151,6 +147,16 @@
         "symlink": true,
         "versions": {
           "viewing/view": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Gating",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "gating/gate": "dev-master"
         }
       }
     }

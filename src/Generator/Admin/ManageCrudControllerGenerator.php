@@ -94,6 +94,6 @@ final class ManageCrudControllerGenerator
 
     private function controllerFqcn(string $componentKey): string
     {
-        return 'App\\Managing\\Controller\\Crud\\Generated\\'.$this->nameFormatter->studly($componentKey).'CrudController';
+        return 'App\\Managing\\Controller\\Crud\\Generated\\Manage'.$this->nameFormatter->studly($componentKey).'CrudController';
     }
 }

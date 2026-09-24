@@ -7,7 +7,7 @@ namespace App\Managing\Controller\Crud;
 /**
  * Extension hooks for generated and hand-written Manage CRUD controllers.
  *
- * Keeping these hooks in a trait keeps AbstractManageContentCrudController
+ * Keeping these hooks in a trait keeps ManageContentCrudController
  * focused on EasyAdmin orchestration while preserving the existing override
  * contract for concrete component controllers.
  */

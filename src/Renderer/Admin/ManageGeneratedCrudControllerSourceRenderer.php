@@ -35,13 +35,13 @@ declare(strict_types=1);
 
 namespace {$namespace};
 
-use App\\Managing\\Controller\\Crud\\AbstractManageContentCrudController;
+use App\\Managing\\Controller\\Crud\\ManageContentCrudController;
 {$traitUse}use EasyCorp\\Bundle\\EasyAdminBundle\\Attribute\\AdminRoute;
 use Symfony\\Component\\HttpKernel\\Attribute\\AsController;
 
 #[AsController]
 #[AdminRoute(path: '{$routePath}', name: '{$routeName}')]
-final class {$className} extends AbstractManageContentCrudController
+final class {$className} extends ManageContentCrudController
 {
 {$this->traitStatement($componentKey)}    public static function getEntityFqcn(): string
     {

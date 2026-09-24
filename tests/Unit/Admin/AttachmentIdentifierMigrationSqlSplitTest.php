@@ -13,7 +13,7 @@ final class AttachmentIdentifierMigrationSqlSplitTest extends TestCase
     public function testGeneratedControllerDoesNotOwnAttachmentMigrationByDefault(): void
     {
         $source = (new ManageGeneratedCrudControllerSourceRenderer())->render(
-            'App\\Managing\\Controller\\Crud\\Generated\\AttachingCrudController',
+            'App\\Managing\\Controller\\Crud\\Generated\\ManageAttachingCrudController',
             'App\\Attaching\\Entity\\Persistence\\Attachment\\Attachment',
             'attaching',
         );
@@ -29,7 +29,7 @@ final class AttachmentIdentifierMigrationSqlSplitTest extends TestCase
             componentsRequiringAttachmentIdentifierMigration: ['attaching'],
         ));
         $source = $renderer->render(
-            'App\\Managing\\Controller\\Crud\\Generated\\AttachingCrudController',
+            'App\\Managing\\Controller\\Crud\\Generated\\ManageAttachingCrudController',
             'App\\Attaching\\Entity\\Persistence\\Attachment\\Attachment',
             'attaching',
         );

@@ -10,12 +10,12 @@ use App\Commissioning\Entity\CommissionPlanEntity;
 use App\Exchanging\Entity\Exchange\Exchange;
 use App\Localizing\Entity\TranslationMessage;
 use App\Managing\Controller\Crud\Generated\ApplicatingCrudController;
-use App\Managing\Controller\Crud\Generated\AttachingCrudController;
 use App\Managing\Controller\Crud\Generated\CommissioningCrudController;
 use App\Managing\Controller\Crud\Generated\ExchangingCrudController;
 use App\Managing\Controller\Crud\Generated\LocalizingCrudController;
-use App\Managing\Controller\Crud\Generated\OrderingCrudController;
-use App\Managing\Controller\Crud\Generated\PagingCrudController;
+use App\Managing\Controller\Crud\Generated\ManageAttachingCrudController;
+use App\Managing\Controller\Crud\Generated\ManageOrderingCrudController;
+use App\Managing\Controller\Crud\Generated\ManagePagingCrudController;
 use App\Managing\Controller\Crud\Generated\SubscriptingCrudController;
 use App\Paging\Entity\Page;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -40,8 +40,8 @@ final class ManageCrudCreateEntityTest extends TestCase
             'exchanging' => [ExchangingCrudController::class, Exchange::class],
             'commissioning' => [CommissioningCrudController::class, CommissionPlanEntity::class],
             'localizing' => [LocalizingCrudController::class, TranslationMessage::class],
-            'paging' => [PagingCrudController::class, Page::class],
-            'attaching' => [AttachingCrudController::class, AttachmentEntity::class],
+            'paging' => [ManagePagingCrudController::class, Page::class],
+            'attaching' => [ManageAttachingCrudController::class, AttachmentEntity::class],
         ];
     }
 
@@ -120,7 +120,7 @@ final class ManageCrudCreateEntityTest extends TestCase
         self::assertContains(DateTimeField::class, $this->fieldClasses($subscriptingFields));
         self::assertContains(TextField::class, $this->fieldClasses($subscriptingFields));
 
-        $orderingFields = $this->fieldMap((new OrderingCrudController())->configureFields(Crud::PAGE_NEW));
+        $orderingFields = $this->fieldMap((new ManageOrderingCrudController())->configureFields(Crud::PAGE_NEW));
         self::assertArrayHasKey('slug', $orderingFields);
         self::assertArrayHasKey('number', $orderingFields);
         self::assertArrayHasKey('currency', $orderingFields);
