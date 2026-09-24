@@ -16,7 +16,7 @@ use App\Managing\Resolver\Crud\ManageCrudEntitySurfaceResolver;
 use App\Managing\Workflow\Crud\ManageCrudPublicationWorkflow;
 
 /**
- * Runtime service holder for AbstractManageContentCrudController.
+ * Runtime service holder for ManageContentCrudController.
  *
  * The base CRUD controller keeps setter-injection hooks for Symfony services and
  * manual construction support for generated-controller tests. This holder owns

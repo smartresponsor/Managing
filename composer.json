@@ -2,20 +2,23 @@
   "name": "managing/manage",
   "description": "Managing process app",
   "type": "symfony-bundle",
-  "license": "proprietary",
+  "license": "PolyForm-Noncommercial-1.0.0",
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
     "php": "^8.4",
     "administering/administration": "dev-master",
+    "collectioning/collection": "dev-master",
     "cruding/crud": "dev-master",
     "doctrine/doctrine-bundle": "^3.0",
+    "doctrine/doctrine-migrations-bundle": "^4.0",
     "doctrine/orm": "^3.3",
     "easycorp/easyadmin-bundle": "^5.0",
     "interfacing/interface": "dev-master",
     "objecting/object": "dev-master",
     "rolling/role": "dev-master",
     "symfony/config": "^8.1",
+    "symfony/console": "^8.1",
     "symfony/dependency-injection": "^8.1",
     "symfony/form": "^8.1",
     "symfony/framework-bundle": "^8.1",
@@ -23,6 +26,7 @@
     "symfony/ux-live-component": "^3.0",
     "symfony/ux-turbo": "^3.0",
     "symfony/yaml": "^8.1",
+    "tabling/table": "dev-master",
     "twig/html-extra": "^3.24",
     "viewing/view": "dev-master"
   },
@@ -32,7 +36,8 @@
     "phpstan/phpstan": "^2.1",
     "phpunit/phpunit": "^12.0",
     "symfony/browser-kit": "^8.1",
-    "symfony/css-selector": "^8.1"
+    "symfony/css-selector": "^8.1",
+    "symfony/panther": "^2.2"
   },
   "autoload": {
     "psr-4": {
@@ -51,6 +56,12 @@
     "cs:check": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff --verbose",
     "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --verbose",
     "verify:first-party-dependencies": "@php tools/qa/managing-first-party-dependency-contour.php",
+    "schema:validate": "@php bin/console doctrine:schema:validate --env=test",
+    "schema:parity": [
+      "@php bin/console doctrine:migrations:migrate --no-interaction --env=test",
+      "@php bin/console doctrine:migrations:up-to-date --env=test",
+      "@schema:validate"
+    ],
     "quality": [
       "@cs:check",
       "@phpstan",

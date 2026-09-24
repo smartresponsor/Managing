@@ -156,3 +156,60 @@
 - PHPUnit: PASS, 155 tests / 469 assertions / 8 skipped.
 - Canon004, Canon006, Canon038, and Canon039: PASS.
 - Remaining hard debt is intentionally scoped to Canon018, Canon025, Canon030, and Canon053.
+
+## 2026-09-23 — RC implementation continuation
+
+### Baseline and reconnaissance
+- Authoritative local workspace: `D:\PhpstormProjects\www\Managing`.
+- Current branch/head at reconnaissance: `rc/managing-attaching-entity-suffix-publish-20260921` @ `32628658bdc34bfb8d4ae0f09c59481b6341dedf`, tracking `origin/rc/managing-attaching-entity-suffix-publish-20260921`, four commits ahead and zero behind.
+- Pre-existing dirty worktree contained exactly `.gating/README.md` and `composer.json`; neither was discarded.
+- Read current Managing `AGENTS.md`, `README.md`, `composer.json`, existing CMCP journal, mandatory helper contracts for Objecting/Cruding/Viewing/Interfacing/Gating, and Canonization textual rules.
+- Market/open-source baseline consulted EasyAdmin's current security/action contracts: server-side action/entity/field authorization and explicit validation of mutating batch actions are mature-admin expectations; UI hiding alone is not authorization.
+
+### Target-to-canon mapping
+- Canon018: `managing/manage` => component namespace `App\Managing\` and subject prefix `Manage*`; remaining findings must be resolved against that identity.
+- Canon025: Managing is a reusable Symfony component and must retain standalone boot surfaces plus bundle integration.
+- Canon030: because Doctrine ORM and migrations are present, Managing must expose and pass an executable schema-parity contract; current composer edits add the missing migrations/console runtime required by that contract.
+- Canon053: only canonical helper symlink repositories are permitted. Current added Collectioning and Tabling paths are allowed exceptions; capability-to-capability symlinks remain prohibited.
+- Gating boundary: consumer `.gating/` is generated artifact state only; normative Gating documentation/policy belongs to Gating, so the current `.gating/README.md` replacement requires correction rather than promotion as Managing-owned documentation.
+
+### RC-critical workstream
+- Close Composer manifest/lock parity first, then run Gating, CS, PHPStan, PHPUnit, dependency contour and Doctrine schema parity.
+- Repair only reproduced Managing-owned hard failures; preserve unrelated existing branch work.
+
+### Growth workstream
+- Richer CMS analytics, bulk workflow UX, management automation and additional presentation refinements remain post-RC unless a gate proves they are required for correctness or operability.
+
+### First reproduced gate
+- `composer validate --strict --check-lock`: FAIL (exit 2) because `composer.lock` is stale and `symfony/panther` is missing from the lock file.
+
+
+## 2026-09-24 — RC convergence and standalone persistence closure
+
+### Canon and runtime repairs
+- Completed Canon018 subject-prefix migration across runtime, generated CRUD controllers, services/interfaces/validators/values, tests, service wiring, and generator output; generated controllers now use the Manage* subject prefix permanently.
+- Closed Canon047 by moving Doctrine manager/registry access behind repository contracts and repository implementations.
+- Restored consumer .gating/ to artifact-only state per Canon052.
+- Added standalone Symfony boot surfaces and canonical infra/SQLite Doctrine configuration with underscore_number_aware naming.
+- Added the executable Doctrine migration chain for ManageCrudFieldViewProfileRuleEntity.
+- Corrected the first-party dependency contour to permit the canonical Gating helper symlink while rejecting non-helper sibling symlinks.
+- Added Playwright tooling and refreshed the npm lock.
+
+### Final verification
+- composer validate --strict --check-lock: PASS after dependency lock closure.
+- Standalone bin/console about --env=test: PASS on Symfony 8.1.7 / PHP 8.4.13.
+- composer verify:first-party-dependencies: PASS.
+- composer schema:parity: PASS; migrations current, ORM mapping valid, database schema synchronized.
+- composer cs:check: PASS.
+- composer phpstan: PASS, 0 errors.
+- composer test: PASS, 155 tests / 469 assertions / 8 skipped.
+- composer test:coverage: PASS; current coverage evidence regenerated.
+- npm test: PASS with the configured Playwright runner.
+- Full Gating: PASS with 70 rules, 0 failed, 5 warnings, 13 skipped. Canon018/025/027/028/030/041/047/052/053/054 all PASS.
+
+### Advisory debt outside hard RC closure
+- Canon011 flags five silent-fallback candidates for later behavioral/contract review.
+- Canon021 is advisory only; the flagged CRUD surfaces are EasyAdmin-specific and covered by the Canon021 exemption.
+- Canon031 semantic PHPDoc coverage remains below the advisory threshold.
+- Canon040 reports HIGH_TEST_DEBT: lines 47.5%, methods 42.6%, branches 66.4%; evidence is current, but coverage growth remains post-RC work.
+- Canon042 behavioral/UI coverage evidence remains absent; Playwright tooling is installed and executable, dedicated UI scenarios remain post-RC growth work.

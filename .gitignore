@@ -29,3 +29,11 @@
 # Local orchestration runtime artifacts
 /.console-mcp/
 /.gating/
+
+# Local IDE and OS state
+/.idea/
+.DS_Store
+Thumbs.db
+
+# JavaScript dependencies
+/node_modules/

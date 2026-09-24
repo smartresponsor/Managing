@@ -33,7 +33,7 @@ final class ManageGeneratedCrudControllerSourceRendererTest extends TestCase
         );
 
         $source = $renderer->render(
-            'App\\Managing\\Controller\\Crud\\Generated\\AttachingCrudController',
+            'App\\Managing\\Controller\\Crud\\Generated\\ManageAttachingCrudController',
             'App\\Attaching\\Entity\\Attachment\\Attachment',
             'attaching',
         );

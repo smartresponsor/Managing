@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Managing\Handler\Crud;
 
 use App\Managing\Accessor\Crud\ManagePublicationFieldStateAccessor;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Managing\RepositoryInterface\Crud\ManagePublicationRepositoryInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 
 final class ManagePublicationStateHandler
@@ -74,13 +74,11 @@ final class ManagePublicationStateHandler
      * @param list<string>            $flagCandidates
      * @param list<string>            $dateCandidates
      */
-    public function setBatchPublicationState(BatchActionDto $batchActionDto, EntityManagerInterface $entityManager, bool $published, array $flagCandidates, array $dateCandidates): void
+    public function setBatchPublicationState(BatchActionDto $batchActionDto, ManagePublicationRepositoryInterface $publicationRepository, bool $published, array $flagCandidates, array $dateCandidates): void
     {
         $entityFqcn = $batchActionDto->getEntityFqcn();
-        $repository = $entityManager->getRepository($entityFqcn);
-
         foreach ($batchActionDto->getEntityIds() as $entityId) {
-            $entity = $repository->find($entityId);
+            $entity = $publicationRepository->find($entityFqcn, $entityId);
             if (!is_object($entity)) {
                 continue;
             }
@@ -88,6 +86,6 @@ final class ManagePublicationStateHandler
             $this->setPublicationState($entityFqcn, $entity, $published, $flagCandidates, $dateCandidates);
         }
 
-        $entityManager->flush();
+        $publicationRepository->flush($entityFqcn);
     }
 }

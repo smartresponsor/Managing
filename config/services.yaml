@@ -64,7 +64,7 @@ services:
       $readerBackend: '%managing.crud_field_user_profile_reader_backend%'
       $writerBackend: '%managing.crud_field_user_profile_writer_backend%'
       $entityManagerService: '%managing.crud_field_user_profile_entity_manager_service%'
-      $managerRegistry: '@?doctrine'
+      $mappingRepository: '@?App\Managing\RepositoryInterface\Crud\ManageDoctrineClassMappingRepositoryInterface'
 
   App\Managing\ValidatorInterface\Crud\ManageCrudFieldUserProfileStorageActivationValidatorInterface:
     alias: App\Managing\Validator\Crud\ManageCrudFieldUserProfileStorageActivationValidator
@@ -215,23 +215,23 @@ services:
   App\Managing\RegistryInterface\Crud\ManageCrudResourceRegistryInterface:
     alias: App\Managing\Registry\Crud\ManageCrudResourceRegistry
 
-  App\Managing\Service\Administration\ManagingFieldAccessMutationReviewService:
+  App\Managing\Service\Administration\ManageFieldAccessMutationReviewService:
     arguments:
       $reviewBuilder: '@?App\Rolling\ServiceInterface\Administration\RollingAclMutationReviewBuilderInterface'
 
-  App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationReviewServiceInterface:
-    alias: App\Managing\Service\Administration\ManagingFieldAccessMutationReviewService
+  App\Managing\ServiceInterface\Administration\ManageFieldAccessMutationReviewServiceInterface:
+    alias: App\Managing\Service\Administration\ManageFieldAccessMutationReviewService
 
-  App\Managing\ServiceInterface\Administration\ManagingFieldAccessMutationApplyServiceInterface:
-    alias: App\Managing\Service\Administration\ManagingFieldAccessMutationApplyService
-  App\Managing\ServiceInterface\Administration\ManagingFieldViewProfileReviewServiceInterface:
-    alias: App\Managing\Service\Administration\ManagingFieldViewProfileReviewService
-  App\Managing\ServiceInterface\Administration\ManagingFieldViewProfileApplyServiceInterface:
-    alias: App\Managing\Service\Administration\ManagingFieldViewProfileApplyService
-  App\Managing\ServiceInterface\Administration\ManagingFieldVisibilityInspectionPrepareServiceInterface:
-    alias: App\Managing\Service\Administration\ManagingFieldVisibilityInspectionPrepareService
-  App\Managing\ValidatorInterface\Administration\ManagingFieldAccessPolicyDescriptorValidatorInterface:
-    alias: App\Managing\Validator\Administration\ManagingFieldAccessPolicyDescriptorValidator
+  App\Managing\ServiceInterface\Administration\ManageFieldAccessMutationApplyServiceInterface:
+    alias: App\Managing\Service\Administration\ManageFieldAccessMutationApplyService
+  App\Managing\ServiceInterface\Administration\ManageFieldViewProfileReviewServiceInterface:
+    alias: App\Managing\Service\Administration\ManageFieldViewProfileReviewService
+  App\Managing\ServiceInterface\Administration\ManageFieldViewProfileApplyServiceInterface:
+    alias: App\Managing\Service\Administration\ManageFieldViewProfileApplyService
+  App\Managing\ServiceInterface\Administration\ManageFieldVisibilityInspectionPrepareServiceInterface:
+    alias: App\Managing\Service\Administration\ManageFieldVisibilityInspectionPrepareService
+  App\Managing\ValidatorInterface\Administration\ManageFieldAccessPolicyDescriptorValidatorInterface:
+    alias: App\Managing\Validator\Administration\ManageFieldAccessPolicyDescriptorValidator
 
   App\Managing\FactoryInterface\Crud\ManageCrudFieldDefinitionFactoryInterface:
     alias: App\Managing\Factory\Crud\ManageCrudFieldDefinitionFactory
@@ -260,6 +260,15 @@ services:
 
   App\Managing\RepositoryInterface\Crud\ManageCrudFieldViewProfileRuleRepositoryInterface:
     alias: App\Managing\Repository\Crud\ManageDoctrineCrudFieldViewProfileRuleRepository
+
+  App\Managing\RepositoryInterface\Crud\ManagePublicationRepositoryInterface:
+    alias: App\Managing\Repository\Crud\ManageDoctrinePublicationRepository
+
+  App\Managing\RepositoryInterface\Crud\ManageDoctrineClassMappingRepositoryInterface:
+    alias: App\Managing\Repository\Crud\ManageDoctrineClassMappingRepository
+
+  App\Managing\RepositoryInterface\Administration\ManageAclMutationReviewRecordRepositoryInterface:
+    alias: App\Managing\Repository\Administration\ManageDoctrineAclMutationReviewRecordRepository
 
   App\Managing\ReaderInterface\Crud\ManageCrudFieldUserProfileReaderInterface:
     alias: App\Managing\Reader\Crud\ManageCrudNullFieldUserProfileReader
