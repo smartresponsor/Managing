@@ -37,3 +37,10 @@ Thumbs.db
 
 # JavaScript dependencies
 /node_modules/
+/test-results/
+
+# Generated Symfony application reference; Managing is a reusable bundle.
+/config/reference.php
+
+# Host-specific EasyAdmin CRUD controllers are generated locally from Managing metadata.
+/src/Controller/Crud/Generated/*CrudController.php

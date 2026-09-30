@@ -14,6 +14,7 @@
     "doctrine/doctrine-migrations-bundle": "^4.0",
     "doctrine/orm": "^3.3",
     "easycorp/easyadmin-bundle": "^5.0",
+    "failing/failure": "dev-master",
     "interfacing/interface": "dev-master",
     "objecting/object": "dev-master",
     "rolling/role": "dev-master",
@@ -103,6 +104,16 @@
         "symlink": true,
         "versions": {
           "cruding/crud": "dev-master"
+        }
+      }
+    },
+    {
+      "type": "path",
+      "url": "../Failing",
+      "options": {
+        "symlink": true,
+        "versions": {
+          "failing/failure": "dev-master"
         }
       }
     },
