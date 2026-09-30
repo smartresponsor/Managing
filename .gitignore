@@ -37,3 +37,7 @@ Thumbs.db
 
 # JavaScript dependencies
 /node_modules/
+/test-results/
+
+# Generated Symfony application reference; Managing is a reusable bundle.
+/config/reference.php

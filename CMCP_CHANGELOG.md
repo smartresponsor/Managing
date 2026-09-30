@@ -294,3 +294,22 @@
 ### First remediation
 - Ran the declared `composer cs:fix` script; it changed only `config/reference.php`, adding the canonical strict-types declaration required by the supplied RED report.
 
+### Verification checkpoint
+- Corrected the PHP-CS-Fixer generated-file boundary by excluding root-relative `reference.php` from the Config Finder; fresh `composer cs:check` PASS (241 files, 0 fixable).
+- `composer validate --strict --check-lock`: PASS.
+- `composer verify:first-party-dependencies`: PASS.
+- `composer phpstan`: PASS, 0 errors.
+- `composer test`: PASS, 155 tests / 460 assertions / 8 skipped.
+- `composer gate`: PASS, 0 failed / 0 warning / 2 skipped in the currently selected Gating profile.
+- `composer schema:parity`: PASS; migrations current, mapping valid, database schema synchronized.
+- `npm test`: PASS, but the configured Playwright command has no repository-owned scenarios and therefore does not provide behavioral screenshot evidence.
+- Standalone PHP web runtime is not applicable: this reusable bundle has no local `public/` document root.
+- Post-mutation Inspecting was invoked twice, but the synchronous Console MCP call exceeded its transport window before returning a normalized result; no GREEN result is inferred.
+- Visual/behavioral evidence for host-generated route removal is therefore NOT_VERIFIED at this checkpoint.
+
+### Git ownership decision
+- Cohesive RC scope: zero checked-in host-generated CRUD controllers, standalone-test compatibility for that zero-controller state, Canon055 terminology cleanup, generated-artifact ignores, PHP-CS-Fixer generated-reference exclusion, package LICENSE/NOTICE, and this journal.
+- Concurrent Composer/lock/bundle/dependency-contour edits that appeared after the initial baseline are preserved in the worktree but are not silently absorbed into this commit unless separately proven to belong to this RC scope.
+- Generated `.gating/README.md` remains consumer artifact state and is not promoted as Managing-owned normative documentation.
+
+
