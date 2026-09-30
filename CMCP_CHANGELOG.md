@@ -312,4 +312,14 @@
 - Concurrent Composer/lock/bundle/dependency-contour edits that appeared after the initial baseline are preserved in the worktree but are not silently absorbed into this commit unless separately proven to belong to this RC scope.
 - Generated `.gating/README.md` remains consumer artifact state and is not promoted as Managing-owned normative documentation.
 
+### Canonical artifact-boundary follow-up
+- A subsequent canonical cleanup removed the generated consumer `.gating/README.md` entirely and updated `AGENTS.md` to state that consumer `.gating/` is artifact-only while policy/profiles/schemas/severity/rules belong to `gating/gate`.
+- Re-verified this follow-up: `composer cs:check` PASS; `composer phpstan` PASS with 0 errors; `composer test` PASS (155 tests / 468 assertions / 8 skipped); `composer gate` PASS with 0 failures and 0 warnings.
+- Post-mutation Inspecting with a bounded 10-second execution returned `INSPECTING_FAILED` with no stdout/stderr; longer attempts previously exceeded the Console MCP transport window. This remains an external verification blocker rather than an inferred repository failure.
+- Host `App` managed PHP runtime on port 8000 is not running, and read-only Symfony Console probes exceeded the MCP transport window against the heavily dirty host workspace. No host UI screenshot was fabricated; behavioral/visual acceptance remains NOT_VERIFIED.
+- RC diagnostic observed all eight `Manage*CrudController.php` files regenerated as untracked artifacts after the tracked copies were removed; the regenerated Attaching controller is byte-for-byte equivalent in content to the prior tracked source, and PHPUnit exercised the regenerated inventory successfully (468 assertions).
+- Added a narrow gitignore rule for `src/Controller/Crud/Generated/*CrudController.php` while preserving `.gitkeep`, making the source/build boundary explicit instead of repeatedly dirtying the worktree with deterministic generated PHP.
+
+
+
 
