@@ -1,6 +1,6 @@
 # Managing
 
-Managing is the content-management (CMS) surface of the Smart Responsor platform. Built on top of EasyAdmin, it defines the base layout, field visibility profiles, permissions, and CRUD behaviors for business-focused content resources.
+Managing is the content-management (CMS) surface of the multi-domain SaaS platform. Built on top of EasyAdmin, it defines the base layout, field visibility profiles, permissions, and CRUD behaviors for business-focused content resources.
 
 This bundle is **not** a system diagnostics viewer or runtime console logs portal. It is strictly dedicated to managing domain content entities (like Products, Carts, and Users).
 

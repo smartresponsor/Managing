@@ -1,5 +1,49 @@
 # CMCP Orchestration Journal
 
+## engine-20260930035606-managing-dbc0e0 — 2026-09-29
+
+### Baseline and reconnaissance
+
+- Authoritative workspace: `D:\\PhpstormProjects\\www\\Managing`, branch `rc/managing-canonical-gates-20260924`, HEAD `ec95fc077be92e14673dd5e8ca4ff06965106683`, synchronized with its upstream at reconnaissance time.
+- Preserved existing dirty work instead of resetting it: `.gating/README.md` terminology remediation, eight removed generated EasyAdmin CRUD controllers, and untracked `LICENSE`, `NOTICE`, `config/reference.php`, and `test-results/`.
+- Consumed supplied CanonScanning reports at fingerprint `ab16b3d16f3558b7932352fdf1910607da53a1366e7e67ef7c231458c401b301`; Gating was RED on Canon022, Canon045, Canon052, and Canon055. Fresh Inspecting evidence contained four medium advisory findings plus a semgrep timeout.
+- Read Canonization rules `Canon011`, `Canon021`, `Canon022`, `Canon045`, `Canon052`, `Canon055` and `GUARD_MATRIX.md`, together with the target runtime/package surfaces and required sibling contour.
+
+### Market and boundary baseline
+
+- Mature admin systems converge on configurable fields, filters, actions, bulk operations, authorization, reusable presentation primitives, and functional verification. EasyAdmin remains the repository's chosen Symfony back-office provider.
+- RC-critical work stays on deterministic dependency/runtime composition, failure visibility, policy correctness, ownership boundaries, diagnostics, and reproducible gates. Richer dashboards, analytics, workflow ergonomics, and additional bulk UX are growth work and do not block RC.
+- Canon021 explicitly exempts EasyAdmin administrative CRUD surfaces; generic application CRUD remains owned by Cruding.
+
+### Canon mapping and selected remediation
+
+- Canon022: add `failing/failure` to development runtime dependencies; add Collectioning, Tabling, and Failing to the production baseline; register `App\\Failing\\FailingBundle`.
+- Canon045: expose `../Failing` as a development Composer path repository with symlink and `dev-master` identity.
+- Canon055: remove consumer-branded umbrella/platform wording from current human-facing `AGENTS.md` and `README.md`.
+- Canon052: consumer `.gating/` still contains historical copied executable/policy material. Physical deletion/relocation is not performed because destructive operations are forbidden; post-remediation Gating is authoritative for the residual blocker.
+- Canon011/Canon021 remain semantic review warnings rather than automatic hard failures.
+
+### Verification plan
+
+- Re-run Composer validation/resolution as needed, PHP lint/static analysis/tests, Gating, and fresh Inspecting after the repository fingerprint changes.
+- Behavioral/UI verification remains applicability-driven; dependency/branding-only remediation does not invent UI changes.
+
+### Verification results
+
+- `composer validate --strict --check-lock`: GREEN after resolving `failing/failure`; the lock refresh also updated current first-party dev-master packages and compatible patch-level transitive dependencies.
+- `composer run-script verify:first-party-dependencies`: GREEN after aligning the local guard with Canon022/045 Failing requirements.
+- `composer run-script quality`: GREEN; PHP-CS-Fixer 0/241 fixable, PHPStan no errors, PHPUnit 155 tests / 460 assertions with 8 host-generated-controller cases skipped, and local Gating 0 failures / 0 warnings.
+- `composer run-script schema:validate`: GREEN; Doctrine mapping and test database schema are in sync.
+- RC diagnostic canon contour: GREEN with zero issues and no readiness blockers.
+- Fresh standalone Inspecting was requested after source-state drift, but the Console MCP quality-inspect call exceeded the transport timeout before returning a report. No Inspecting result is fabricated; the supplied older report is not promoted to post-mutation acceptance evidence.
+- No files changed by this pass affect browser/mobile presentation or interaction. Existing generated-controller retirement WIP is preserved outside this pass's commit scope, so no new visual evidence is claimed for it.
+
+### Integration scope
+
+- Coherent pass-owned files: `AGENTS.md`, `README.md`, `CMCP_CHANGELOG.md`, `composer.json`, `composer.lock`, `composer.prod.json`, `config/bundles.php`, `.php-cs-fixer.dist.php`, and `tools/qa/managing-first-party-dependency-contour.php`.
+- Existing `.gating/README.md` is semantically consistent Canon055 remediation but predates this pass and remains unstaged here.
+- Protected concurrent/pre-existing WIP remains unstaged: `.gitignore`, generated CRUD controller deletions, `tests/Unit/Crud/ManageCrudCreateEntityTest.php`, `LICENSE`, and `NOTICE`.
+
 ## repository-implementation-managing — 2026-09-17
 
 ### Baseline and reconnaissance
@@ -213,3 +257,77 @@
 - Canon031 semantic PHPDoc coverage remains below the advisory threshold.
 - Canon040 reports HIGH_TEST_DEBT: lines 47.5%, methods 42.6%, branches 66.4%; evidence is current, but coverage growth remains post-RC work.
 - Canon042 behavioral/UI coverage evidence remains absent; Playwright tooling is installed and executable, dedicated UI scenarios remain post-RC growth work.
+
+## 2026-09-29 — autonomous RC static-quality convergence
+
+### Baseline and responsibility contour
+- Authoritative workspace: `D:\PhpstormProjects\www\Managing`; branch `rc/managing-canonical-gates-20260924` at `ec95fc077be92e14673dd5e8ca4ff06965106683`, initially 0 ahead / 0 behind its upstream.
+- Fresh CanonScanning evidence fingerprint: `ab16b3d16f3558b7932352fdf1910607da53a1366e7e67ef7c231458c401b301`.
+- Upstream code-style RED reproduced one actionable issue: missing `declare(strict_types=1);` in generated `config/reference.php`.
+- Fresh Inspecting evidence contains four medium advisory findings only: two broad configuration-default APIs, one 64-line review method, and one three-way instanceof dispatch. None is autofixable or promoted to an RC blocker by the supplied evidence.
+- Existing dirty state was preserved for evaluation: one generated Gating README refresh, eight deleted EasyAdmin generated CRUD controllers, and untracked LICENSE, NOTICE, `config/reference.php`, and `test-results/`.
+
+### Canon and helper mapping consulted
+- Canon001: technical role first; Managing remains role-first under `src/`.
+- Canon002: typed interface trees mirror implementation trees where a public typed contract exists.
+- Canon020: Symfony extension classes remain under explicit technical role roots.
+- Canon021: generic application CRUD belongs to Cruding; EasyAdmin back-office CRUD is an explicit exception, so the eight pending generated-controller deletions require behavioral/gate evidence rather than filename-based acceptance.
+- Objecting contract: reusable system-field vocabulary stays in Objecting; Managing owns only its CMS/presentation behavior and local persistence.
+- Cruding contract: generic CRUD route grammar/processing stays in Cruding.
+- Viewing contract: rendering/presentation helpers remain in Viewing.
+- Interfacing contract: shared shell/interface behavior remains outside Managing unless it is a Managing-owned business interface.
+- Gating contract: consumer `.gating/` is artifact state, while normative policy remains in Gating/Canonization.
+
+### Market / maturity baseline
+- Mature admin/CMS systems such as EasyAdmin, SonataAdmin, Directus, Strapi and comparable enterprise back-office products converge on server-side authorization, explicit field/action visibility policy, deterministic CRUD lifecycle behavior, bulk-operation safety, auditability, and stable extension points.
+- For Managing, RC-critical parity is correctness and policy enforcement around content administration, deterministic diagnostics, dependency contracts and regression gates. Rich analytics, workflow builders, additional automation and UI refinements remain growth work and must not expand the component boundary.
+
+### RC-critical work selected
+- Repair the supplied static-quality RED without hand-editing generated semantics beyond the repository's formatter contract.
+- Run first-party dependency contour, Composer validity, CS, PHPStan, PHPUnit, Gating, schema parity, and post-mutation Inspecting.
+- Accept or reject the pending generated CRUD-controller deletions only after the relevant runtime/tests/gates establish that behavior and responsibility boundaries remain valid.
+- Reconcile valuable in-scope dirty files into coherent commits without deleting/stashing unrelated work.
+
+### Growth work kept outside RC
+- Richer bulk workflows, management analytics/observability, additional UI scenarios, and broader CMS UX automation remain post-RC unless verification proves they are required for correctness or operability.
+
+### First remediation
+- Ran the declared `composer cs:fix` script; it changed only `config/reference.php`, adding the canonical strict-types declaration required by the supplied RED report.
+
+### Verification checkpoint
+- Corrected the PHP-CS-Fixer generated-file boundary by excluding root-relative `reference.php` from the Config Finder; fresh `composer cs:check` PASS (241 files, 0 fixable).
+- `composer validate --strict --check-lock`: PASS.
+- `composer verify:first-party-dependencies`: PASS.
+- `composer phpstan`: PASS, 0 errors.
+- `composer test`: PASS, 155 tests / 460 assertions / 8 skipped.
+- `composer gate`: PASS, 0 failed / 0 warning / 2 skipped in the currently selected Gating profile.
+- `composer schema:parity`: PASS; migrations current, mapping valid, database schema synchronized.
+- `npm test`: PASS, but the configured Playwright command has no repository-owned scenarios and therefore does not provide behavioral screenshot evidence.
+- Standalone PHP web runtime is not applicable: this reusable bundle has no local `public/` document root.
+- Post-mutation Inspecting was invoked twice, but the synchronous Console MCP call exceeded its transport window before returning a normalized result; no GREEN result is inferred.
+- Visual/behavioral evidence for host-generated route removal is therefore NOT_VERIFIED at this checkpoint.
+
+### Git ownership decision
+- Cohesive RC scope: zero checked-in host-generated CRUD controllers, standalone-test compatibility for that zero-controller state, Canon055 terminology cleanup, generated-artifact ignores, PHP-CS-Fixer generated-reference exclusion, package LICENSE/NOTICE, and this journal.
+- Concurrent Composer/lock/bundle/dependency-contour edits that appeared after the initial baseline are preserved in the worktree but are not silently absorbed into this commit unless separately proven to belong to this RC scope.
+- Generated `.gating/README.md` remains consumer artifact state and is not promoted as Managing-owned normative documentation.
+
+### Canonical artifact-boundary follow-up
+- A subsequent canonical cleanup removed the generated consumer `.gating/README.md` entirely and updated `AGENTS.md` to state that consumer `.gating/` is artifact-only while policy/profiles/schemas/severity/rules belong to `gating/gate`.
+- Re-verified this follow-up: `composer cs:check` PASS; `composer phpstan` PASS with 0 errors; `composer test` PASS (155 tests / 468 assertions / 8 skipped); `composer gate` PASS with 0 failures and 0 warnings.
+- Post-mutation Inspecting with a bounded 10-second execution returned `INSPECTING_FAILED` with no stdout/stderr; longer attempts previously exceeded the Console MCP transport window. This remains an external verification blocker rather than an inferred repository failure.
+- Host `App` managed PHP runtime on port 8000 is not running, and read-only Symfony Console probes exceeded the MCP transport window against the heavily dirty host workspace. No host UI screenshot was fabricated; behavioral/visual acceptance remains NOT_VERIFIED.
+- RC diagnostic observed all eight `Manage*CrudController.php` files regenerated as untracked artifacts after the tracked copies were removed; the regenerated Attaching controller is byte-for-byte equivalent in content to the prior tracked source, and PHPUnit exercised the regenerated inventory successfully (468 assertions).
+- Added a narrow gitignore rule for `src/Controller/Crud/Generated/*CrudController.php` while preserving `.gitkeep`, making the source/build boundary explicit instead of repeatedly dirtying the worktree with deterministic generated PHP.
+
+
+
+
+
+### Post-merge integration replay — 2026-09-30
+- PR #10 had already integrated the historical RC line through `ec95fc077be92e14673dd5e8ca4ff06965106683`; a direct rebase of the old RC branch would replay already-integrated commits and was therefore aborted.
+- Created `rc/managing-post-merge-convergence-20260930` from current `origin/master` `5bb6c424ad2438bf29865f3f94a3e426eae7b046`.
+- Replayed only the authoritative post-PR aggregate delta `ec95fc..a14ceb2`, covering commits `a80175e`, `7fe00f7`, and `a14ceb2`.
+- Generated/artifact removals were applied index-only with working-tree preservation: consumer `.gating/README.md` plus eight deterministic `Manage*CrudController.php` files remain local artifacts but are no longer repository-owned source.
+- Fresh acceptance on the current-master base: Composer strict/lock PASS; first-party dependency contour PASS; CS PASS (241 files); PHPStan PASS; PHPUnit PASS (155 tests / 468 assertions / 8 skipped); Gating PASS (0 failures / 0 warnings); Doctrine schema parity PASS; npm/Playwright harness PASS with no repository-owned scenarios.
+- Inspecting remains an external acceptance blocker: bounded post-mutation execution previously returned `INSPECTING_FAILED` without diagnostic output and longer synchronous runs exceeded the Console MCP transport window. No GREEN Inspecting result is inferred.
